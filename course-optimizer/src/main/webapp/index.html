@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GA-Tech Course Optimizer</title>
+    <link rel="stylesheet" href="styles/bootstrap.min.css">
+    <link rel="stylesheet" href="styles/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="styles/app.css">
+</head>
+<body ng-app="courseOpt">
+<!-- class="container-fluid"-->
+<div class="container container-fluid" style="height: 1000px;">
+    <!--
+    <div class="row">
+        <ul class="nav navbar-nav">
+            <li><a ui-sref="auth">AUTH</a></li>
+            <li><a ui-sref="admin">ADMIN</a></li>
+            <li><a ui-sref="student">STUDENT</a></li>
+        </ul>
+    </div>
+    -->
+    <div class="row col-md-12" ui-view=""></div>
+</div>
+
+
+<!-- LIBRARIES -->
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-resource/angular-resource.js"></script>
+<script src="bower_components/angular-cookies/angular-cookies.js"></script>
+<script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+<script src="bower_components/angular-route/angular-route.js"></script>
+<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+<script src="bower_components/angular-ui-select2/src/select2.js"></script>
+
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/select2/select2.js"></script>
+<script src="bower_components/bootstrap-select/bootstrap-select.js"></script>
+<script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+
+<!-- APP SCRIPTS -->
+<script src="scripts/app.js"></script>
+<script src="scripts/admin/AdminCtrl.js"></script>
+<script src="scripts/admin/AdminService.js"></script>
+<script src="scripts/student/StudentCtrl.js"></script>
+<script src="scripts/student/StudentService.js"></script>
+<script src="scripts/auth/AuthCtrl.js"></script>
+<script src="scripts/auth/AuthService.js"></script>
+
+</body>
+</html>

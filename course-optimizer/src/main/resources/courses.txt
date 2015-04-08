@@ -1,0 +1,19 @@
+# Course Id ; Course Name ; Semesters Offered ; Prerequisites
+1 ; CS 6210 Advanced Operating Systems ; FALL ; 12
+2 ; CS 6250 Computer Networks ; ALL ;
+3 ; CS 6300 Software Development Process ; ALL ;
+4 ; CS 7641 Machine Learning ; ALL ;
+5 ; CS 6290 High Performance Computer Architecture ; SPRING ;
+6 ; CS 6310 Software Architecture and Design ; ALL ;
+7 ; CS 6440 Intro to Health Informatics ; FALL ; 3
+8 ; CS 6505 Computability, Complexity and Algorithms ; ALL ;
+9 ; CS 7637 Knowledge-Based Artificial Intelligence, Cognitive Systems ; ALL ;
+10; CS 4495 Computer Vision ; SPRING ;
+11; CS 6475 Computational Photography ; FALL ;
+12; CS 8803-002 Introduction to Operating Systems ; ALL ;
+13; CS 8803-001 Artificial Intelligence for Robotics ; ALL ; 9
+14; CS 6035 Introduction to Information Security ; SPRING ;
+15; CSE 6220 High-Performance Computing ; FALL ;
+16; CS 7646 Machine Learning for Trading ; SPRING ; 4
+17; CS 8803 Special Topics : Reinforcement Learning ; FALL ;
+18; CSE 8803 Special Topics: Big Data ; SPRING ;
