@@ -1,7 +1,13 @@
+@font-face {
+    font-family: HelveticaNeue;
+    src: url(helveticaneue.ttf);
+}
+
+
 body {
     background-image: url("../img/background-dark.jpg");
     background-size: 100% auto;
-    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    font-family: "HelveticaNeue-UltraLight","HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 
 
@@ -31,4 +37,8 @@ body {
     margin-top: 5px;
     border-radius: 15px;
 
+}
+
+.login-error {
+    background: #ff9616;
 }

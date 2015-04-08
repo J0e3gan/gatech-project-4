@@ -1,10 +1,11 @@
 angular.module('courseOpt').controller('AuthCtrl', function ($rootScope, $scope, $window, $http, $state, AuthService) {
 
     //var loggedInUser = null;
-    $scope.username = 902880094;
-    $scope.password = 'Pawel';
-    //$scope.username = null;
-    //$scope.password = null;
+    //$scope.username = 902880094;
+    //$scope.password = 'Pawel';
+    $scope.username = null;
+    $scope.password = null;
+    $scope.loginError = false;
 
     $scope.login = function() {
         console.log($scope.username +" --  "+$scope.password);
@@ -22,6 +23,7 @@ angular.module('courseOpt').controller('AuthCtrl', function ($rootScope, $scope,
             console.log("Login Failed");
             $scope.username = null;
             $scope.password = "";
+            $scope.loginError = true;
         });
     }
 });
