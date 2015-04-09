@@ -27,6 +27,7 @@ public class CourseOffering {
 
     @OneToMany
     private Set<Faculty> teacherAssistants;
+
     private int studentCapacity;
 
     @OneToMany

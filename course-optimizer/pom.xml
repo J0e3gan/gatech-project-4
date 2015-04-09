@@ -29,11 +29,13 @@
     </repositories>
 
     <dependencies>
+        <!--
         <dependency>
             <groupId>org.gnu.glpk</groupId>
             <artifactId>glpk-java</artifactId>
             <version>1.0.37</version>
         </dependency>
+        -->
 
         <dependency>
             <groupId>gurobi</groupId>
@@ -65,11 +67,13 @@
             <scope>test</scope>
         </dependency>
 
+        <!--
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-           <!--  <scope>test</scope> -->
+            <scope>test</scope>
         </dependency>
+        -->
 
         <dependency>
             <groupId>org.postgresql</groupId>

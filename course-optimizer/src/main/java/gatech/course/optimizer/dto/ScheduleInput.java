@@ -18,6 +18,15 @@ public class ScheduleInput {
     private Set<Student> students;
     private Set<Faculty> professors;
     private Set<Faculty> teacherAssistants;
+    private int allowedClassesPerSemester;
+
+    public int getAllowedClassesPerSemester() {
+        return allowedClassesPerSemester;
+    }
+
+    public void setAllowedClassesPerSemester(int allowedClassesPerSemester) {
+        this.allowedClassesPerSemester = allowedClassesPerSemester;
+    }
 
     public Set<CourseOffering> getRequiredOfferings() {
         return requiredOfferings;

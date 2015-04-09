@@ -21,6 +21,7 @@ public class Student extends User {
     @OneToMany(fetch= FetchType.EAGER)
     private List<Course> takenCourses;
 
+    //@OneToMany(fetch= FetchType.EAGER)
     //private List<CourseOffering> recommendedCourses;
 
     public List<Course> getDesiredCourses() {
@@ -48,4 +49,13 @@ public class Student extends User {
     }
 
 
+    /*
+    public List<CourseOffering> getRecommendedCourses() {
+        return recommendedCourses;
+    }
+
+    public void setRecommendedCourses(List<CourseOffering> recommendedCourses) {
+        this.recommendedCourses = recommendedCourses;
+    }
+    */
 }

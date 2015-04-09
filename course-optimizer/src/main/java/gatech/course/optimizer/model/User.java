@@ -10,7 +10,7 @@ import javax.persistence.Id;
  * Created by 204069126 on 3/16/15.
  */
 
-@Entity(name = "\"user\"")
+@Entity(name = "gt_user")
 public class User  {
 
     public enum Role {
@@ -22,8 +22,8 @@ public class User  {
 
     public User() {}
 
-    public User(Long id, String password, String name, String lastName, Role role) {
-        this.id = id;
+    public User(String username, String password, String name, String lastName, Role role) {
+        this.username = username;
         this.password = password;
         this.firstName = name;
         this.lastName = lastName;
@@ -33,10 +33,20 @@ public class User  {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
+
+    private String username;
     private String password;
     private String firstName;
     private String lastName;
     private Role role;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public Long getId() {
         return id;

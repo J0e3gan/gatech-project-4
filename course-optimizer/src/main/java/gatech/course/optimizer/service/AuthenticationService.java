@@ -25,16 +25,16 @@ public class AuthenticationService {
     @RequestMapping(value = "/auth", method = RequestMethod.POST)
     public
     @ResponseBody
-    User authenticate(@RequestParam("id") Long id,
+    User authenticate(@RequestParam("username") String username,
                       @RequestParam("password") String password) {
 
 
-        if (id == null || password == null) {
+        if (username == null || password == null) {
             throw new WebServiceException("Missing username or password", HttpStatus.BAD_REQUEST);
         }
 
-        logger.info("Login attempt 'id='" + id + " 'password='" + password);
-        User user = userRepo.findById(id);
+        logger.info("Login attempt 'username'" + username + " 'password='" + password);
+        User user = userRepo.findByUsername(username);
 
         if (user == null) {
             throw new WebServiceException("Unauthorized", HttpStatus.UNAUTHORIZED);
@@ -45,28 +45,6 @@ public class AuthenticationService {
         } else {
             throw new WebServiceException("Unauthorized", HttpStatus.UNAUTHORIZED);
         }
-    }
-
-    @PostConstruct
-    public void createSuperAdminUsers() {
-        /*
-            John Raffensperger [902302881]
-            Pawel Drozdz [902880094]
-            Jaclyn Adams [902922234]
-            Joe Egan [903124450]
-         */
-
-        User john = new User(902302881L,"John","John","Raffensperger", User.Role.ADMIN);
-        userRepo.save(john);
-
-        User pawel = new User(902880094L,"Pawel","Pawel","Drozdz", User.Role.ADMIN);
-        userRepo.save(pawel);
-
-        User jaclyn = new User(902922234L,"Jaclyn","Jaclyn","Adams", User.Role.ADMIN);
-        userRepo.save(jaclyn);
-
-        User joe = new User(903124450L,"Joe","Joe","Egan", User.Role.ADMIN);
-        userRepo.save(joe);
     }
 
 }

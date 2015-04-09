@@ -2,10 +2,10 @@ angular.module('courseOpt').service('AuthService', function ($http, $q) {
 
     var loggedInUser = null;
 
-    this.login = function (id, password) {
+    this.login = function (username, password) {
 
         var formData = new FormData();
-        formData.append('id', id);
+        formData.append('username', username);
         formData.append('password', password);
 
         var deferred = $q.defer();

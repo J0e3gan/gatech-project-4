@@ -60,4 +60,5 @@ public class Course {
     public void setPrerequisites(Set<Course> prerequisites) {
         this.prerequisites = prerequisites;
     }
+
 }
