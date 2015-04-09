@@ -1,17 +1,24 @@
 package gatech.course.optimizer.model;
 
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import java.util.Set;
 
 /**
  * Created by 204069126 on 2/6/15.
  */
-//@Entity(name = "")
+@Entity(name = "course")
 public class Course {
 
+    @Id
     private Long id;
     private String name;
     private String description;
     private String number;
+
+    @OneToMany(fetch= FetchType.EAGER)
     private Set<Course> prerequisites;
 
     public Long getId() {

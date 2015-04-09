@@ -9,6 +9,9 @@
         <version>1.2.2.RELEASE</version>
     </parent>
 
+    <properties>
+        <postgresql.version>9.3-1100-jdbc41</postgresql.version>
+    </properties>
 
     <artifactId>course-optimizer</artifactId>
     <version>0.1.0</version>
@@ -65,7 +68,13 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <!-- <scope>test</scope> -->
+           <!--  <scope>test</scope> -->
+        </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgresql.version}</version>
         </dependency>
 
     </dependencies>

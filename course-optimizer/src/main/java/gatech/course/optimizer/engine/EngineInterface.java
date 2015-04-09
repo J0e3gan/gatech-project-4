@@ -1,6 +1,6 @@
 package gatech.course.optimizer.engine;
 
-import gatech.course.optimizer.model.ScheduleInput;
+import gatech.course.optimizer.dto.ScheduleInput;
 import gatech.course.optimizer.model.ScheduleSolution;
 
 /**
