@@ -2,6 +2,7 @@ package gatech.course.optimizer.conf;
 
 import gatech.course.optimizer.model.User;
 import gatech.course.optimizer.repo.UserRepo;
+import gatech.course.optimizer.utils.DataLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.io.InputStream;
 
 /**
  * Created by 204069126 on 4/9/15.
@@ -17,6 +19,9 @@ import javax.annotation.PostConstruct;
 public class OptimizerConfiguration {
 
     public static Logger logger = LoggerFactory.getLogger(OptimizerConfiguration.class);
+
+    @Autowired
+    private DataLoader loader;
 
     @Autowired
     private UserRepo userRepo;
@@ -36,8 +41,10 @@ public class OptimizerConfiguration {
     @PostConstruct
     public void loadData() {
         if(loadFromCSV == true){
-            logger.info("Loading data from CSV files ...");
-            //createSuperAdminUsers();
+            createSuperAdminUsers();
+            logger.info("Loading data from CSV files into the database ...");
+            InputStream studentsFile  = this.getClass().getResourceAsStream("/OMS-CS-CourseGrades_Final.csv");
+            loader.loadStudents(studentsFile);
 
 
         } else {

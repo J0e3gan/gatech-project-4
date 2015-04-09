@@ -27,6 +27,9 @@ spring.datasource.username=vevgcipnscotnw
 spring.datasource.password=-ND1O4y2hen_1KNCtvlrnFcNEF
 spring.datasource.driver-class-name=org.postgresql.Driver
 
+
+mvn spring-boot:run
+
 ?ssl=true
 jdbc:postgresql://<host>:5432/<db>?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory
 
