@@ -1,13 +1,18 @@
 package gatech.course.optimizer.service;
 
+import gatech.course.optimizer.dto.StudentDTO;
+import gatech.course.optimizer.dto.TakenCourseDTO;
+import gatech.course.optimizer.model.CourseOffering;
 import gatech.course.optimizer.model.Student;
+import gatech.course.optimizer.repo.CourseOfferingRepo;
+import gatech.course.optimizer.repo.StudentRecordRepo;
 import gatech.course.optimizer.repo.StudentRepo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,61 +24,38 @@ public class StudentService {
     @Autowired
     private StudentRepo studentRepo;
 
+    @Autowired
+    private CourseOfferingRepo courseOfferingRepo;
+
+    @Autowired
+    private StudentRecordRepo studentRecordRepo;
+
+    public static Logger logger = LoggerFactory.getLogger(StudentService.class);
+
     @RequestMapping(value = "/students", method = RequestMethod.GET)
     public
     @ResponseBody
     List<Student> getAllStudents() {
-
         return studentRepo.getAllStudents();
     }
 
+    @RequestMapping(value = "/student/{studentId}", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    StudentDTO getStudentDetails(@PathVariable("studentId") String studentId) {
+        logger.info("Getting student details for studentId='{}'", studentId);
+        Student student = studentRepo.findByStudentId(studentId);
+        StudentDTO studentDTO = new StudentDTO(student);
 
+        List<TakenCourseDTO> takenCourses = new ArrayList<TakenCourseDTO>();
+        List<CourseOffering> courseOfferings = courseOfferingRepo.findCoursesByStudent(student);
+        for (CourseOffering courseOffering : courseOfferings) {
+            String grade = studentRecordRepo.getGradeForStudent(courseOffering.getId(),student.getId());
+            TakenCourseDTO takenCourseDTO = new TakenCourseDTO(courseOffering, grade);
+            takenCourses.add(takenCourseDTO);
+        }
+        studentDTO.setTakenCourses(takenCourses);
+
+        return studentDTO;
+    }
 }
-
-
-
-/*
-
-
-@RequestMapping(value = "/", method = RequestMethod.GET)
-    public
-    @ResponseBody
-    String index();
-
-    @RequestMapping(value = "/file/{folder}/{filename:.+}", method = RequestMethod.GET)
-    public
-    @ResponseBody
-    FileSystemResource getFile(@PathVariable("folder") String folder,
-                               @PathVariable("filename") String filename);
-
-    @RequestMapping(value = "/search", method = RequestMethod.GET)
-    public
-    @ResponseBody
-    SearchResult find(@RequestHeader(value = VCAPCredentials.SERVICE_INSTANCE_ID) String instanceId,
-                      @RequestParam(value = "searchKey", required = true) String searchKey);
-
-    @RequestMapping(value = "/store", method = RequestMethod.POST)
-    public
-    @ResponseBody
-    ContentInfo store(@RequestHeader(value = VCAPCredentials.SERVICE_INSTANCE_ID) String instanceId,
-                      @RequestParam("name") String name,
-                      @RequestParam(value = "description") String description,
-                      @RequestParam(value = "uploader", required = false) String uploader,
-                      @RequestParam(value = "assetType", required = false) String assetType,
-                      @RequestParam(value = "assetId", required = false) String assetId,
-                      @RequestParam(value = "tag", required = false) List<String> tags,
-                      @RequestParam("file") MultipartFile[] files);
-
-
-    @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public
-    @ResponseBody
-    ContentInfo update(@RequestHeader(value = VCAPCredentials.SERVICE_INSTANCE_ID) String instanceId,
-                       @RequestBody ContentInfo contentInfo);
-
-    @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
-    public void delete(@RequestHeader(value = VCAPCredentials.SERVICE_INSTANCE_ID) String instanceId,
-                       @PathVariable("id") String id);
-
-
- */

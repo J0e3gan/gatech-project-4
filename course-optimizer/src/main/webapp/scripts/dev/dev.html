@@ -4,7 +4,14 @@
     <h2>Services</h2>
 
     <div class="dev-service-div" data-ng-repeat="service in services">
-        <h3 class="dev-api-header"> {{service.title}} <span class="label label-info">{{service.method}}</span> {{service.endpoint}} <a class="btn btn-info" ng-click="service.execute()" >RUN</a></h3>
+        <h3 class="dev-api-header"> {{service.title}} <span class="label label-info">{{service.method}}</span> {{service.endpoint}}
+            <a class="btn btn-info" ng-click="service.execute()" >RUN</a>
+            <ul class="list-unstyled"">
+            <li  data-ng-repeat="param in service.params">
+                <span>{{param.name}}  : </span><input type="text" data-ng-model="param.value"/>
+            </li>
+            </ul></h3>
+
         <pre ng-show="service.result !== null" class="dev-result-div">{{service.result | json }}</pre>
         <span ng-show="service.loading"><img src="img/spinner.gif" width="50px" style="margin-left:40%"></span>
     </div>

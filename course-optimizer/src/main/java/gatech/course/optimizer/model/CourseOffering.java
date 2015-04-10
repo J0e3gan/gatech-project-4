@@ -31,7 +31,7 @@ public class CourseOffering {
     @OneToMany
     private Set<Faculty> teacherAssistants;
 
-    @OneToMany
+    @ManyToMany
     private List<Student> enrolledStudents;
 
     @OneToMany

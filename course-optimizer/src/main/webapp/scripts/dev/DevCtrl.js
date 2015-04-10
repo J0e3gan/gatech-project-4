@@ -3,7 +3,7 @@
  */
 angular.module('courseOpt').controller('DevCtrl', function ($rootScope, $scope, $window, $http, DevService) {
 
-      $scope.services = [];
+    $scope.services = [];
 
     var getAllStudents = {}
     getAllStudents.title = 'Get All Students';
@@ -22,6 +22,28 @@ angular.module('courseOpt').controller('DevCtrl', function ($rootScope, $scope, 
     };
 
 
+    var getStudentDetails = {};
+    getStudentDetails.title = 'Get Student Details';
+    getStudentDetails.method = 'GET';
+    getStudentDetails.endpoint = '/student/{studentId}';
+    var param = {
+        "name" : "studentId",
+        "value" : null
+    };
+    getStudentDetails.params = [];
+    getStudentDetails.params.push(param);
+    getStudentDetails.result = null;
+    getStudentDetails.loading = false;
+    getStudentDetails.execute = function() {
+        getStudentDetails.loading = true;
+        getStudentDetails.result = null;
+        DevService.getStudentDetails(getStudentDetails.params[0].value).then(function(response){
+            getStudentDetails.loading = false;
+            getStudentDetails.result = response;
+        });
+    };
+
     $scope.services.push(getAllStudents);
+    $scope.services.push(getStudentDetails);
 
 });
