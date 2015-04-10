@@ -1,0 +1,11 @@
+<div class="container gatech-admin">
+    <h1>DEV API Exploration</h1>
+
+    <h2>Services</h2>
+
+    <div class="dev-service-div" data-ng-repeat="service in services">
+        <h3 class="dev-api-header"> {{service.title}} <span class="label label-info">{{service.method}}</span> {{service.endpoint}} <a class="btn btn-info" ng-click="service.execute()" >RUN</a></h3>
+        <pre ng-show="service.result !== null" class="dev-result-div">{{service.result | json }}</pre>
+        <span ng-show="service.loading"><img src="img/spinner.gif" width="50px" style="margin-left:40%"></span>
+    </div>
+</div>

@@ -18,11 +18,13 @@ public class Student extends User {
     private int seniority;
     private String studentId;
 
-    //@OneToMany(fetch = FetchType.EAGER)
-    //private List<Course> takenCourses;
+    /*
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<Course> takenCourses;
 
-    //@OneToMany(fetch= FetchType.EAGER)
-    //private List<CourseOffering> recommendedCourses;
+    @OneToMany(fetch= FetchType.EAGER)
+    private List<CourseOffering> recommendedCourses;
+    */
 
     public Student() {
     }
@@ -43,11 +45,6 @@ public class Student extends User {
     public void setStudentId(String studentId) {
         this.studentId = studentId;
     }
-    /*
-    public void addTakenCourse(Course course) {
-        this.takenCourses.add(course);
-    }
-    */
 
     public List<Course> getDesiredCourses() {
         return desiredCourses;
@@ -66,6 +63,10 @@ public class Student extends User {
     }
 
     /*
+    public void addTakenCourse(Course course) {
+        this.takenCourses.add(course);
+    }
+
     public List<Course> getTakenCourses() {
         return takenCourses;
     }
