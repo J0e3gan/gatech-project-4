@@ -3,16 +3,16 @@
  * Locale: DE (German, deutsch)
  * Region: DE (Germany, Deutschland)
  */
-(function($) {
-	$.fn.selectpicker.defaults = {
+(function ($) {
+    $.fn.selectpicker.defaults = {
         style: 'btn-default',
         size: 'auto',
         title: null,
-        selectedTextFormat : 'ausgewählt',
-        noneSelectedText : 'Bitte wählen...',
-    		noneResultsText : 'Keine Ergebnisse für',
-    		countSelectedText : '{0} von {1} ausgewählt',
-        maxOptionsText: ['Limit erreicht ({n} {var} max.)', 'Gruppen-Limit erreicht ({n} {var} max.)', ['Eintrag','Einträge']],
+        selectedTextFormat: 'ausgewählt',
+        noneSelectedText: 'Bitte wählen...',
+        noneResultsText: 'Keine Ergebnisse für',
+        countSelectedText: '{0} von {1} ausgewählt',
+        maxOptionsText: ['Limit erreicht ({n} {var} max.)', 'Gruppen-Limit erreicht ({n} {var} max.)', ['Eintrag', 'Einträge']],
         width: false,
         container: false,
         hideDisabled: false,

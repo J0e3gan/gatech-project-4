@@ -1,9 +1,6 @@
 package gatech.course.optimizer.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
 
@@ -11,9 +8,10 @@ import java.util.Set;
  * Created by 204069126 on 3/16/15.
  */
 @Entity(name = "schedule_solution")
-public class ScheduleSolution  {
+public class ScheduleSolution {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Date computedTime;
     private String triggeredReason;

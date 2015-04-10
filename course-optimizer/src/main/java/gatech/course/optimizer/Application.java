@@ -8,7 +8,7 @@ import org.springframework.boot.context.web.SpringBootServletInitializer;
  * Created by 204069126 on 4/7/15.
  */
 @SpringBootApplication
-public class Application  extends SpringBootServletInitializer {
+public class Application extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);

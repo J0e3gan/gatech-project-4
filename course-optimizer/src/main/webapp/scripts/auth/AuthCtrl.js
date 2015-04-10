@@ -7,19 +7,19 @@ angular.module('courseOpt').controller('AuthCtrl', function ($rootScope, $scope,
     $scope.password = null;
     $scope.loginError = false;
 
-    $scope.login = function() {
-        console.log($scope.username +" --  "+$scope.password);
-        AuthService.login($scope.username,$scope.password).then(function(response){
+    $scope.login = function () {
+        console.log($scope.username + " --  " + $scope.password);
+        AuthService.login($scope.username, $scope.password).then(function (response) {
             console.log("Login successfull");
             console.log(JSON.stringify(response));
             console.log(response);
             AuthService.setUser(response);
-            if(response.role === 'ADMIN'){
+            if (response.role === 'ADMIN') {
                 $state.go('admin');
             } else {
                 $state.go('student');
             }
-        }, function(error){
+        }, function (error) {
             console.log("Login Failed");
             $scope.username = null;
             $scope.password = "";

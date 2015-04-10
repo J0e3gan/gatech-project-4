@@ -3,16 +3,16 @@
  * Locale: CZ (Czech Republic)
  * Region: EU
  */
-(function($) {
-	$.fn.selectpicker.defaults = {
+(function ($) {
+    $.fn.selectpicker.defaults = {
         style: 'btn-default',
         size: 'auto',
         title: null,
-        selectedTextFormat : 'values',
-        noneSelectedText : 'Nic není výbráno',
-	noneResultsText : 'Žádné výsledky',
-	countSelectedText : 'Označeno {0} z {1}',
-        maxOptionsText: ['Limit překročen ({n} {var} max)', 'Limit skupiny překročen ({n} {var} max)', ['položek','položka']],
+        selectedTextFormat: 'values',
+        noneSelectedText: 'Nic není výbráno',
+        noneResultsText: 'Žádné výsledky',
+        countSelectedText: 'Označeno {0} z {1}',
+        maxOptionsText: ['Limit překročen ({n} {var} max)', 'Limit skupiny překročen ({n} {var} max)', ['položek', 'položka']],
         width: false,
         container: false,
         hideDisabled: false,

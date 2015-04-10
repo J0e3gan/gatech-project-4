@@ -3,13 +3,11 @@
     src: url(helveticaneue.ttf);
 }
 
-
 body {
     background-image: url("../img/background-dark.jpg");
     background-size: 100% auto;
-    font-family: "HelveticaNeue-UltraLight","HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    font-family: "HelveticaNeue-UltraLight", "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 }
-
 
 .gatech-login {
     position: absolute;

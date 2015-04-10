@@ -32,7 +32,7 @@ angular.module('courseOpt').service('AuthService', function ($http, $q) {
 
     this.getUser = function () {
         console.log("Getting logged in user");
-        if(loggedInUser){
+        if (loggedInUser) {
             return loggedInUser;
         } else {
             console.log("Reject")
@@ -41,7 +41,7 @@ angular.module('courseOpt').service('AuthService', function ($http, $q) {
 
     };
 
-    this.logout = function() {
+    this.logout = function () {
         loggedInUser = null;
     }
 

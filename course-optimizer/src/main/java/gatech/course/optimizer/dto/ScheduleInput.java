@@ -5,7 +5,6 @@ import gatech.course.optimizer.model.CourseOffering;
 import gatech.course.optimizer.model.Faculty;
 import gatech.course.optimizer.model.Student;
 
-import java.util.List;
 import java.util.Set;
 
 /**

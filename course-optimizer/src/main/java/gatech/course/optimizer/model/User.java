@@ -11,7 +11,7 @@ import javax.persistence.Id;
  */
 
 @Entity(name = "gt_user")
-public class User  {
+public class User {
 
     public enum Role {
         ADMIN,
@@ -20,18 +20,19 @@ public class User  {
         TA
     }
 
-    public User() {}
+    public User() {
+    }
 
-    public User(String username, String password, String name, String lastName, Role role) {
+    public User(String username, String password, String firstName, String lastName, Role role) {
         this.username = username;
         this.password = password;
-        this.firstName = name;
+        this.firstName = firstName;
         this.lastName = lastName;
         this.role = role;
     }
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String username;

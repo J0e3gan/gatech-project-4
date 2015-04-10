@@ -40,11 +40,11 @@ public class OptimizerConfiguration {
 
     @PostConstruct
     public void loadData() {
-        if(loadFromCSV == true){
+        if (loadFromCSV == true) {
             createSuperAdminUsers();
             logger.info("Loading data from CSV files into the database ...");
-            InputStream studentsFile  = this.getClass().getResourceAsStream("/OMS-CS-CourseGrades_Final.csv");
-            loader.loadStudents(studentsFile);
+            InputStream studentsFile = this.getClass().getResourceAsStream("/OMS-CS-CourseGrades_Final.csv");
+            loader.loadData(studentsFile);
 
 
         } else {
@@ -54,16 +54,16 @@ public class OptimizerConfiguration {
 
 
     public void createSuperAdminUsers() {
-        User john = new User("John","John","John","Raffensperger", User.Role.ADMIN);
+        User john = new User("John", "John", "John", "Raffensperger", User.Role.ADMIN);
         userRepo.save(john);
 
-        User pawel = new User("Pawel","Pawel","Pawel","Drozdz", User.Role.ADMIN);
+        User pawel = new User("Pawel", "Pawel", "Pawel", "Drozdz", User.Role.ADMIN);
         userRepo.save(pawel);
 
-        User jaclyn = new User("Jaclyn","Jaclyn","Jaclyn","Adams", User.Role.ADMIN);
+        User jaclyn = new User("Jaclyn", "Jaclyn", "Jaclyn", "Adams", User.Role.ADMIN);
         userRepo.save(jaclyn);
 
-        User joe = new User("Joe","Joe","Joe","Egan", User.Role.ADMIN);
+        User joe = new User("Joe", "Joe", "Joe", "Egan", User.Role.ADMIN);
         userRepo.save(joe);
     }
 

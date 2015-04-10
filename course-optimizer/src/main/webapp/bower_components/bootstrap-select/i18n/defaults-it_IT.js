@@ -4,16 +4,16 @@
  * Region: IT (Italy; Italia)
  * Author: Michele Beltrame <mb@cattlegrid.info>
  */
-(function($) {
-	$.fn.selectpicker.defaults = {
+(function ($) {
+    $.fn.selectpicker.defaults = {
         style: 'btn-default',
         size: 'auto',
         title: null,
-        selectedTextFormat : 'values',
-        noneSelectedText : 'Nessuna selezione',
-		noneResultsText : 'Nessun risultato',
-		countSelectedText : 'Selezionati {0} di {1}',
-        maxOptionsText: ['Limite raggiunto ({n} {var} max)', 'Limite del gruppo raggiunto ({n} {var} max)', ['elementi','elemento']],
+        selectedTextFormat: 'values',
+        noneSelectedText: 'Nessuna selezione',
+        noneResultsText: 'Nessun risultato',
+        countSelectedText: 'Selezionati {0} di {1}',
+        maxOptionsText: ['Limite raggiunto ({n} {var} max)', 'Limite del gruppo raggiunto ({n} {var} max)', ['elementi', 'elemento']],
         width: false,
         container: false,
         hideDisabled: false,

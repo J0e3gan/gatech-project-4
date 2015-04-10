@@ -1,9 +1,6 @@
 package gatech.course.optimizer.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.util.List;
 import java.util.Set;
 
@@ -14,7 +11,10 @@ import java.util.Set;
 public class CourseOffering {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    private Integer crn;
 
     @OneToOne
     private Course course;
@@ -42,6 +42,14 @@ public class CourseOffering {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getCrn() {
+        return crn;
+    }
+
+    public void setCrn(Integer crn) {
+        this.crn = crn;
     }
 
     public Course getCourse() {

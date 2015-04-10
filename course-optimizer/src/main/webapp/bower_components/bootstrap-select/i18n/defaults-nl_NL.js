@@ -4,16 +4,16 @@
  * Region: EU (Europe)
  * Author: Daan Rosbergen (Badmuts)
  */
-(function($) {
+(function ($) {
     $.fn.selectpicker.defaults = {
         style: 'btn-default',
         size: 'auto',
         title: null,
-        selectedTextFormat : 'values',
-        noneSelectedText : 'Niets geselecteerd',
-        noneResultsText : 'Geen resultaten gevonden voor',
+        selectedTextFormat: 'values',
+        noneSelectedText: 'Niets geselecteerd',
+        noneResultsText: 'Geen resultaten gevonden voor',
         countSelectedText: '{0} van {1} geselecteerd',
-        maxOptionsText: ['Limiet bereikt ({n} {var} max)', 'Groep limiet bereikt ({n} {var} max)', ['items','item']],
+        maxOptionsText: ['Limiet bereikt ({n} {var} max)', 'Groep limiet bereikt ({n} {var} max)', ['items', 'item']],
         width: false,
         container: false,
         hideDisabled: false,
