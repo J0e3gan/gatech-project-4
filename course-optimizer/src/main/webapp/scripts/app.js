@@ -45,4 +45,6 @@ app.run(function ($rootScope, $state) {
         console.log("State change error - unauthorized");
         $state.go('auth');
     });
+
+    $rootScope.state = $state;
 });
