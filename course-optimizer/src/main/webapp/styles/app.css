@@ -47,6 +47,14 @@ body {
     width:100%;
     background-color: #000044;
     height: 100px;
+    color:#fff;
+    font-size: 30px;
+}
+.masthead-separator{
+    width:inherit;
+    background-color: #FFD700;
+    height: 10px;
+    display: -webkit-box;
 }
 
 .dev-result-div {
