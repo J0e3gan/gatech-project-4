@@ -9,4 +9,18 @@
 </div>
 <div class="container">
     <h2>Student</h2>
+    <table class="table"> 
+    	<thead>
+    		<th>Course Number</th>
+    		<th>Course Name</th>
+    		<th>Grade</th>
+    	</thead>
+    	<tbody>
+    		<tr ng-repeat="course in studentDetails.takenCourses">
+    			<td>{{course.course.number}}</td>
+    			<td>{{course.course.name}}</td>
+    			<td>{{course.grade}}</td>
+    		</tr>
+    	</tbody>
+    </table>
 </div>

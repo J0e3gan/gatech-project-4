@@ -2,5 +2,10 @@ angular.module('courseOpt').controller('StudentCtrl', function ($rootScope, $sco
 
 	$scope.user = AuthService.getUser();
 
-	StudentService.details = StudentService.getDetails($scope.user.studentId);
+	StudentService.getDetails($scope.user.studentId).success(function (response) {
+                $scope.studentDetails = response; 
+    }).error(function (response) {
+            $scope.error = "Not able to retrive student details."
+            console.log("Error getting user details. " + response);
+    });;
 });
