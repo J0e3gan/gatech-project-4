@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="styles/app.css">
 </head>
 <body ng-app="courseOpt">
+
 <!-- class="container container-fluid"-->
 <div style="height: 1000px;" ng-class="{'atl-img':state.current.name == 'auth'}">
     <!--
@@ -21,6 +22,8 @@
         </ul>
     </div>
     -->
+
+<div class="container container-fluid" style="height: 1000px;">
     <div class="row col-md-12" ui-view=""></div>
 </div>
 
@@ -47,6 +50,9 @@
 <script src="scripts/student/StudentService.js"></script>
 <script src="scripts/auth/AuthCtrl.js"></script>
 <script src="scripts/auth/AuthService.js"></script>
+
+<script src="scripts/dev/DevCtrl.js"></script>
+<script src="scripts/dev/DevService.js"></script>
 
 </body>
 </html>

@@ -36,6 +36,11 @@ app.config(function ($stateProvider) {
             templateUrl: 'scripts/auth/auth.html',
             url: '/',
             resolve: {}
+        }).state('dev', {
+            controller: 'DevCtrl',
+            templateUrl: 'scripts/dev/dev.html',
+            url: '/dev',
+            resolve: {}
         });
 
 });

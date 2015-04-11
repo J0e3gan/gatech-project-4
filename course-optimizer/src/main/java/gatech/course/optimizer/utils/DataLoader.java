@@ -1,13 +1,7 @@
 package gatech.course.optimizer.utils;
 
-import gatech.course.optimizer.model.Course;
-import gatech.course.optimizer.model.CourseOffering;
-import gatech.course.optimizer.model.Semester;
-import gatech.course.optimizer.model.Student;
-import gatech.course.optimizer.repo.CourseOfferingRepo;
-import gatech.course.optimizer.repo.CourseRepo;
-import gatech.course.optimizer.repo.SemesterRepo;
-import gatech.course.optimizer.repo.StudentRepo;
+import gatech.course.optimizer.model.*;
+import gatech.course.optimizer.repo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +12,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -40,6 +35,45 @@ public class DataLoader {
     @Autowired
     private CourseOfferingRepo courseOfferingRepo;
 
+    @Autowired
+    private StudentRecordRepo studentRecordRepo;
+
+
+    static Map<Integer, String> firstNames = new HashMap<Integer, String>();
+
+    static {
+        firstNames.put(0, "Bruce");
+        firstNames.put(1, "Kelly");
+        firstNames.put(2, "John");
+        firstNames.put(3, "Michael");
+        firstNames.put(4, "Kate");
+        firstNames.put(5, "Arnold");
+        firstNames.put(6, "Robert");
+        firstNames.put(7, "Peter");
+        firstNames.put(8, "Maggie");
+        firstNames.put(9, "Pawel");
+        firstNames.put(10, "Faith");
+
+    }
+
+
+    static Map<Integer, String> lastNames = new HashMap<Integer, String>();
+
+    static {
+        lastNames.put(0, "Downey");
+        lastNames.put(1, "Roberts");
+        lastNames.put(2, "Parker");
+        lastNames.put(3, "Rambo");
+        lastNames.put(4, "Smith");
+        lastNames.put(5, "Kowalski");
+        lastNames.put(6, "Ohearn");
+        lastNames.put(7, "Patel");
+        lastNames.put(8, "Freeman");
+        lastNames.put(9, "Springsteam");
+        lastNames.put(10, "Caine");
+
+    }
+
 
     public void loadData(InputStream in) {
 
@@ -60,10 +94,10 @@ public class DataLoader {
                 continue;
             }
 
-            // Create object from the line
+            // Create object from the line so its easier to create model objects down the line
             String[] parts = line.split(",");
             InfoLine infoLine = new InfoLine(parts);
-
+            logger.info("Processing: " + infoLine.toString());
             // Extract distinct semesters
             String semesterKey = infoLine.year + "-" + infoLine.semester;
             if (!semestersMap.containsKey(semesterKey)) {
@@ -79,26 +113,58 @@ public class DataLoader {
 
             // Create students
             if (!studentsMap.containsKey(infoLine.studentId)) {
-                Student student = studentRepo.save(new Student(infoLine.studentId, "password", "Bruce", "Wayne", infoLine.studentId));
+                Student student = studentRepo.save(new Student(infoLine.studentId, "password", makeupFirstName(), makeupLastName(), infoLine.studentId));
                 studentsMap.put(infoLine.studentId, student);
             }
-            // TODO: should taken course be CourseInstance - that would cause a problem because CourseInstance has students inside of itself
-            // so student has courseInstance that has student, I ll just leave it for now we can search CourseInstances by Student
-            // so maybe remove this takenCourse attribute
-            //studentsMap.get(infoLine.studentId).addTakenCourse(courseMap.get(infoLine.courseNumber));
+
 
             //Extract distinct course instances
             if (!courseOfferingsMap.containsKey(infoLine.courseRefNumber)) {
-
-            } else {
-
+                CourseOffering courseOffering = courseOfferingRepo.save(new CourseOffering(infoLine.courseRefNumber,
+                        courseMap.get(infoLine.courseNumber), semestersMap.get(semesterKey)));
+                courseOfferingsMap.put(infoLine.courseRefNumber, courseOffering);
 
             }
 
+            courseOfferingsMap.get(infoLine.courseRefNumber).enrollStudent(studentsMap.get(infoLine.studentId));
 
-            logger.info(infoLine.toString());
+            // Save student grades for differnt course offerings
+            Long courseOfferingId = courseOfferingsMap.get(infoLine.courseRefNumber).getId();
+            Long studentId = studentsMap.get(infoLine.studentId).getId();
+            String grade = (infoLine.courseGrade.length() == 0) ? makeUpGrade() : infoLine.courseGrade;
+            studentRecordRepo.save(new StudentRecord(courseOfferingId, studentId, grade));
+
+        }
+
+        // Update course offerings with enrolled students
+        for (String crn : courseOfferingsMap.keySet()) {
+            courseOfferingRepo.save(courseOfferingsMap.get(crn));
         }
         scanner.close();
+    }
+
+    private String makeUpGrade() {
+        int randomNum = getRandomNumber();
+        if (randomNum < 4) {
+            return "A";
+        }
+        if (randomNum < 7) {
+            return "B";
+        }
+        return "C";
+    }
+
+    private String makeupFirstName() {
+        return firstNames.get(getRandomNumber());
+    }
+
+    private String makeupLastName() {
+        return lastNames.get(getRandomNumber());
+    }
+
+    private Integer getRandomNumber() {
+        Random rand = new Random();
+        return rand.nextInt((10 - 1) + 1) + 1;
     }
 
 
@@ -129,7 +195,6 @@ public class DataLoader {
             this.courseName = fileLine[8];
             this.courseGrade = (fileLine.length > 9) ? fileLine[9] : "";
         }
-
 
         private String getSemesterName(String semesterCode) {
             if ("02".equals(semesterCode)) {

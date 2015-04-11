@@ -1,6 +1,8 @@
 package gatech.course.optimizer.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -15,6 +17,7 @@ public class CourseOffering {
     private Long id;
 
     private Integer crn;
+    private int studentCapacity;
 
     @OneToOne
     private Course course;
@@ -28,13 +31,29 @@ public class CourseOffering {
     @OneToMany
     private Set<Faculty> teacherAssistants;
 
-    private int studentCapacity;
-
-    @OneToMany
+    @ManyToMany
     private List<Student> enrolledStudents;
 
     @OneToMany
     private List<Student> studentsOnWaitList;
+
+
+    public CourseOffering() {
+    }
+
+    public CourseOffering(String crn, Course course, Semester semester) {
+        this.crn = Integer.valueOf(crn);
+        this.course = course;
+        this.semester = semester;
+        this.teacherAssistants = new HashSet<Faculty>();
+        this.enrolledStudents = new ArrayList<Student>();
+        this.studentsOnWaitList = new ArrayList<Student>();
+        this.studentCapacity = Integer.MAX_VALUE;
+    }
+
+    public void enrollStudent(Student student) {
+        this.enrolledStudents.add(student);
+    }
 
     public Long getId() {
         return id;

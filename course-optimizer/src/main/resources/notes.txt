@@ -1,13 +1,7 @@
-# Semester mapping:
-5 is summer
-8 is fall
-2 is spring
-
+# FROM PIAZZA
 # Google Linear Alg Interface - https://developers.google.com/optimization/
 
-
-# Heroku
-
+# HEROKU DB INFO
 Host	ec2-54-163-225-82.compute-1.amazonaws.com
 Database	d4tr1e9p6vqete
 User	vevgcipnscotnw
@@ -16,23 +10,21 @@ Password	Hide -ND1O4y2hen_1KNCtvlrnFcNEF
 Psql	heroku pg:psql --app heroku-postgres-1f07e69c HEROKU_POSTGRESQL_COBALT
 URL	Hide postgres://vevgcipnscotnw:-ND1O4y2hen_1KNCtvlrnFcNEF@ec2-54-163-225-82.compute-1.amazonaws.com:5432/d4tr1e9p6vqete
 
-
-#appDataUploadPersistenceUnit.datasource.URL=jdbc\:postgresql\://3.56.161.42:5432/anhffq01
-#appDataUploadPersistenceUnit.datasource.user=rdf_stage_owner
-#appDataUploadPersistenceUnit.datasource.pass=kac66mda
-
-
-spring.datasource.url=jdbc\:postgresql\://ec2-54-163-225-82.compute-1.amazonaws.com:5432/d4tr1e9p6vqete
-spring.datasource.username=vevgcipnscotnw
-spring.datasource.password=-ND1O4y2hen_1KNCtvlrnFcNEF
-spring.datasource.driver-class-name=org.postgresql.Driver
-
-
+# MVN COMMANDS
 mvn spring-boot:run
 
-?ssl=true
-jdbc:postgresql://<host>:5432/<db>?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory
+# TODO ITEMS
+- recording student grades
+- determining student seniority based on taken courses - derived attribute
+- association of course offering to schedule solution
+- ??? can we have cyclic associations Student has CourseOffering and CourseOffering has list of students including THE student
 
-            setProperty("hibernate.hbm2ddl.auto", "create");
-            setProperty("hibernate.show_sql", "false");
-            setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
+
+# ASSUMPTIONS
+- if student did not withdraw from class W it means he passed the class - can we make up grade A,B,C
+- in OMC courses have no pre-reqs
+
+# OTHER
+setProperty("hibernate.hbm2ddl.auto", "create");
+setProperty("hibernate.show_sql", "false");
+setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
