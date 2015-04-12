@@ -1,0 +1,19 @@
+<div ng-controller="MastheadCtrl">
+    <div class="masthead-banner">
+        <img src="../../img/gatech_logo.gif" class="pull-left" style="height:inherit;padding:10px 40px;">
+        <strong>Welcome </strong> {{user.firstName}}
+        <div class="pull-right" style="padding-right:50px">
+    	    <i class="fa fa-user" style="font-size: 45px; padding-top: 9px; padding-left:25%"></i>
+    	    <br><span style="font-size:18px;">{{user.studentId}}</span>
+    	</div>
+        <div class="masthead-separator"></div>
+    </div> <!-- end masthead -->
+    <div class="top-nav">
+        <ul class="nav nav-pills">
+            <li role="presentation" class="active"><a ui-sref="student"><i class="fa fa-home"> Home</i></a></li>
+            <li role="presentation" ng-repeat="tab in tabs">
+                <a ui-sref="{{tab.link}}"><i class="fa {{tab.icon}}"> {{tab.name}}</i></a>
+            </li>
+        </ul>
+    </div>
+</div>

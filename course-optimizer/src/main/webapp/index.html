@@ -24,6 +24,7 @@
     </div>
     -->
 <!-- class="container container-fluid" -->
+<div ng-include src="'scripts/masthead/masthead.html'" ng-if="state.current.name!='auth'"></div>
 <div  style="height: 1000px;">
     <div class="row col-md-12" ui-view=""></div>
 </div>
@@ -51,6 +52,7 @@
 <script src="scripts/student/StudentService.js"></script>
 <script src="scripts/auth/AuthCtrl.js"></script>
 <script src="scripts/auth/AuthService.js"></script>
+<script src="scripts/masthead/MastheadCtrl.js"></script>
 
 <script src="scripts/dev/DevCtrl.js"></script>
 <script src="scripts/dev/DevService.js"></script>

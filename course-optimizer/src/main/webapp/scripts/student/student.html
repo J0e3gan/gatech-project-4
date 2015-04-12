@@ -1,4 +1,4 @@
-<div class="masthead-banner">
+<!-- <div class="masthead-banner">
     <img src="../../img/gatech_logo.gif" class="pull-left" style="height:inherit;padding:10px 40px;">
     <strong>Welcome </strong> {{user.firstName}}
     <div class="pull-right" style="padding-right:50px">
@@ -6,21 +6,30 @@
 	    <br><span style="font-size:18px;">{{user.studentId}}</span>
 	</div>
     <div class="masthead-separator"></div>
-</div>
+</div> 
+<div class="top-nav">
+    <ul class="nav nav-pills">
+        <li role="presentation" class="active"><a ui-sref="student"><i class="fa fa-home"> Home</i></a></li>
+        <li role="presentation"><a ui-sref="courseCatalog"><i class="fa fa-list-alt"> Course Catalog</i></a></li>
+        <li role="presentation"><a ui-sref="schedule"><i class="fa fa-calendar"> Schedule Generator</i></a></li>
+    </ul>
+</div> -->
 <div class="container">
-    <h2>Student</h2>
-    <table class="table"> 
+	<h2>Courses Taken</h2>
+    <table class="table" style="margin:40px 0px"> 
     	<thead>
     		<th>Course Number</th>
     		<th>Course Name</th>
+    		<th>Semester</th>
     		<th>Grade</th>
     	</thead>
     	<tbody>
     		<tr ng-repeat="course in studentDetails.takenCourses">
     			<td>{{course.course.number}}</td>
     			<td>{{course.course.name}}</td>
+    			<td style="text-transform:capitalize;">{{course.semester.term | lowercase}} {{course.semester.year}}</td>
     			<td>{{course.grade}}</td>
     		</tr>
     	</tbody>
     </table>
-</div>
+</div>=

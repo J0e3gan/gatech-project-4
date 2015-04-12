@@ -6,6 +6,17 @@
 body {
     font-family: "HelveticaNeue-UltraLight", "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 }
+
+/**** Override Bootstrap CSS **/ 
+.nav-pills > li > a {
+    border-radius: 0px;
+}
+/********/
+.top-nav{
+    padding-top: 10px;
+    border-bottom: 1px solid #ddd;
+    padding-left: 40px;
+}
 .atl-img{
     background-image: url("../img/background-dark.jpg");
     background-size: 100% auto;
