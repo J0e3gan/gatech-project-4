@@ -5,6 +5,22 @@ angular.module('courseOpt').controller('DevCtrl', function ($rootScope, $scope, 
 
     $scope.services = [];
 
+    var getAllCourses = {}
+    getAllCourses.title = 'Get All Courses';
+    getAllCourses.method = 'GET';
+    getAllCourses.endpoint = '/courses';
+    getAllCourses.params = [];
+    getAllCourses.result = null;
+    getAllCourses.loading = false;
+    getAllCourses.execute = function() {
+        getAllCourses.loading = true;
+        getAllCourses.result = null;
+        DevService.getAllCourses().then(function(response){
+            getAllCourses.loading = false;
+            getAllCourses.result = response;
+        });
+    };
+
     var getAllStudents = {}
     getAllStudents.title = 'Get All Students';
     getAllStudents.method = 'GET';
@@ -43,6 +59,7 @@ angular.module('courseOpt').controller('DevCtrl', function ($rootScope, $scope, 
         });
     };
 
+    $scope.services.push(getAllCourses);
     $scope.services.push(getAllStudents);
     $scope.services.push(getStudentDetails);
 
