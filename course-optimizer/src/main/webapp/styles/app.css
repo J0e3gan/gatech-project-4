@@ -84,3 +84,12 @@ body {
     padding : 5px;
 
 }
+ul.no-bullets{
+    list-style-type: none;
+    padding: 0;
+}
+
+li.selected{
+    background-color: #d3d3d3;
+    color: #ffffff;
+}

@@ -10,8 +10,8 @@
     </div> <!-- end masthead -->
     <div class="top-nav">
         <ul class="nav nav-pills">
-            <li role="presentation" class="active"><a ui-sref="student"><i class="fa fa-home"> Home</i></a></li>
-            <li role="presentation" ng-repeat="tab in tabs">
+            <li role="presentation" class="active" ng-class="{active: state.includes('student')}"><a ui-sref="student"><i class="fa fa-home"> Home</i></a></li>
+            <li role="presentation" ng-repeat="tab in tabs" ng-class="{active: state.includes(tab.link)}"> 
                 <a ui-sref="{{tab.link}}"><i class="fa {{tab.icon}}"> {{tab.name}}</i></a>
             </li>
         </ul>

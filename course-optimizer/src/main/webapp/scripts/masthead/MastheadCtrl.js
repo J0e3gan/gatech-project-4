@@ -1,7 +1,15 @@
 angular.module('courseOpt').controller('MastheadCtrl', function ($rootScope, $scope, AuthService) {
 
 	$scope.user = AuthService.getUser();
-	var adminTabs = [];
+	var adminTabs = [{
+							name:'Course Catalog',
+							link:'courseCatalog',
+							icon: 'fa-list-alt'
+					},{
+						name:'Students',
+						link:'admin.students',
+						icon: 'fa-list-alt'
+					}];
 	var studentTabs = [{
 							name:'Course Catalog',
 							link:'courseCatalog',

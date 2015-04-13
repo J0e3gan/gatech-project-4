@@ -31,6 +31,9 @@ app.config(function ($stateProvider) {
                     return AuthService.getUser();
                 }
             }
+        }).state('admin.students', {
+            templateUrl: 'scripts/admin/studentsList.html',
+            url: '/students'
         }).state('auth', {
             controller: 'AuthCtrl',
             templateUrl: 'scripts/auth/auth.html',
