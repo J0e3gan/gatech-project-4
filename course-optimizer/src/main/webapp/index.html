@@ -11,24 +11,32 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 </head>
 <body ng-app="courseOpt">
+    <div class="wrapper">
 
-<!-- class="container container-fluid"-->
-<div style="height: 1000px;" ng-class="{'atl-img':state.current.name == 'auth'}">
-    <!--
-    <div class="row">
-        <ul class="nav navbar-nav">
-            <li><a ui-sref="auth">AUTH</a></li>
-            <li><a ui-sref="admin">ADMIN</a></li>
-            <li><a ui-sref="student">STUDENT</a></li>
-        </ul>
+    <!-- class="container container-fluid"-->
+        <div ng-class="{'atl-img':state.current.name == 'auth'}">
+            <!--
+            <div class="row">
+                <ul class="nav navbar-nav">
+                    <li><a ui-sref="auth">AUTH</a></li>
+                    <li><a ui-sref="admin">ADMIN</a></li>
+                    <li><a ui-sref="student">STUDENT</a></li>
+                </ul>
+            </div>
+            -->
+        <!-- class="container container-fluid" -->
+            <div ng-include src="'scripts/masthead/masthead.html'" ng-if="state.current.name!='auth'"></div>
+            <div>
+                <div class="row col-md-12" ui-view="" style="float:none;"></div>
+            </div>
+        </div>
+        <div class="push"></div>
     </div>
-    -->
-<!-- class="container container-fluid" -->
-<div ng-include src="'scripts/masthead/masthead.html'" ng-if="state.current.name!='auth'"></div>
-<div  style="height: 1000px;">
-    <div class="row col-md-12" ui-view=""></div>
+<div class="footer" style="background-color:#000044;color:#FFD700;margin-top:40px;">
+    <div class="pull-left" style="padding:30px;">
+        Created by: <br>Jaclyn Adams &nbsp&nbsp&nbsp&nbsp Joe Egan<br>Pawel Drozdz &nbsp&nbsp&nbsp&nbsp John Raffensperger
+    </div>
 </div>
-
 
 <!-- LIBRARIES -->
 <script src="bower_components/angular/angular.js"></script>
