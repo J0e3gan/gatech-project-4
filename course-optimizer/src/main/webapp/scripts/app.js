@@ -1,7 +1,7 @@
 /*
  *  Dependencies
  */
-var app = angular.module('courseOpt', ['ngRoute', 'ui.router']);
+var app = angular.module('courseOpt', ['ngRoute', 'ui.router', 'ui.bootstrap']);
 
 /*
  *  Config
@@ -22,6 +22,14 @@ app.config(function ($stateProvider) {
             },
             onExit: function () {
             }
+        }).state('studentsList', {
+            controller: 'AdminCtrl',
+            templateUrl: 'scripts/admin/studentsList.html',
+            url: '/students'
+        }).state('taList', {
+            controller: 'AdminCtrl',
+            templateUrl: 'scripts/admin/taList.html',
+            url: '/taList',
         }).state('student', {
             controller: 'StudentCtrl',
             templateUrl: 'scripts/student/student.html',
@@ -31,9 +39,6 @@ app.config(function ($stateProvider) {
                     return AuthService.getUser();
                 }
             }
-        }).state('admin.students', {
-            templateUrl: 'scripts/admin/studentsList.html',
-            url: '/students'
         }).state('auth', {
             controller: 'AuthCtrl',
             templateUrl: 'scripts/auth/auth.html',
@@ -47,6 +52,10 @@ app.config(function ($stateProvider) {
             controller: 'ScheduleCtrl',
             templateUrl: 'scripts/scheduleGenerator/schedule.html',
             url: '/scheduleGenerator'
+        }).state('rules', {
+            controller: 'RulesCtrl',
+            templateUrl: 'scripts/rules/rules.html',
+            url: '/rules',
         }).state('dev', {
             controller: 'DevCtrl',
             templateUrl: 'scripts/dev/dev.html',

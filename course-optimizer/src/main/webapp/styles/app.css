@@ -93,3 +93,6 @@ li.selected{
     background-color: #d3d3d3;
     color: #ffffff;
 }
+.desiredCourseSelector{
+    margin: 20px 40px 20px 0px;
+}

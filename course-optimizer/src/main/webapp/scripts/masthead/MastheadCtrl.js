@@ -2,15 +2,32 @@ angular.module('courseOpt').controller('MastheadCtrl', function ($rootScope, $sc
 
 	$scope.user = AuthService.getUser();
 	var adminTabs = [{
+							name:'Home',
+							link:'admin',
+							icon: 'fa-home'
+					},
+					{
 							name:'Course Catalog',
 							link:'courseCatalog',
 							icon: 'fa-list-alt'
 					},{
 						name:'Students',
-						link:'admin.students',
-						icon: 'fa-list-alt'
+						link:'studentsList',
+						icon: 'fa-group'
+					},{
+						name:'TAs',
+						link:'taList',
+						icon: 'fa-sitemap'
+					},{
+						name:'Rules',
+						link:'rules',
+						icon: 'fa-pencil-square-o'
 					}];
 	var studentTabs = [{
+							name:'Home',
+							link:'student',
+							icon: 'fa-home'
+						},{
 							name:'Course Catalog',
 							link:'courseCatalog',
 							icon: 'fa-list-alt'
@@ -32,5 +49,13 @@ angular.module('courseOpt').controller('MastheadCtrl', function ($rootScope, $sc
 			$scope.tabs = studentTabs;
 			break;
 	}
+
+	$scope.logout = function(){
+		AuthService.logout();
+	}
+
+	$scope.status = {
+    	isopen: false
+  	};
 
 });
