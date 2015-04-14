@@ -1,4 +1,4 @@
-angular.module('courseOpt').controller('CourseCatalogCtrl', function ($rootScope, $scope, $http) {
+angular.module('courseOpt').controller('CourseCatalogCtrl', function ($rootScope, $scope, $http, $sce) {
 
 	$http.get('/courses').success(function(response){
 		$scope.courses = response;
@@ -21,7 +21,20 @@ angular.module('courseOpt').controller('CourseCatalogCtrl', function ($rootScope
 			course.prerequisites = 'No required prerequisites';
 		}
 		$scope.selectedCourse = course;
+		$scope.selectedCourse.description = $scope.parseDescription(course.description);
 	};
 
+	$scope.parseDescription = function(description){
+
+		description = description.replace('"',"<div>");
+		description = description.replace('"',"</div>");
+
+		return description;
+
+	}
+
+	$scope.trust= function(description){
+		return $sce.trustAsHtml(description);
+	}
 
 });
