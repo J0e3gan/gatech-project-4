@@ -3,11 +3,13 @@ angular.module('courseOpt').controller('AdminCtrl', function ($rootScope, $scope
 
    $scope.user = AuthService.getUser();
 
-   $http.get('/students').success(function(response){
-    	 $scope.students = response;
-    }).error(function(response){
+   var getStudents = function(){
+	   $http.get('/students').success(function(response){
+	    	 $scope.students = response;
+	    }).error(function(response){
 
-    });
+	    });
+	}
 
     $scope.openModal = function(size){
 
@@ -20,8 +22,11 @@ angular.module('courseOpt').controller('AdminCtrl', function ($rootScope, $scope
     	modalInstance.result.then(function () {
         }, function () {
             console.log("modal closed");
+            getStudents();
         });
     }
+
+    getStudents();
 
 
 });
