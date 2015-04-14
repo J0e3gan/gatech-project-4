@@ -1,7 +1,7 @@
 /*
  *  Dependencies
  */
-var app = angular.module('courseOpt', ['ngRoute', 'ui.router']);
+var app = angular.module('courseOpt', ['ngRoute', 'ui.router', 'ui.bootstrap']);
 
 /*
  *  Config
@@ -22,6 +22,14 @@ app.config(function ($stateProvider) {
             },
             onExit: function () {
             }
+        }).state('studentsList', {
+            controller: 'AdminCtrl',
+            templateUrl: 'scripts/admin/studentsList.html',
+            url: '/students'
+        }).state('taList', {
+            controller: 'AdminCtrl',
+            templateUrl: 'scripts/admin/taList.html',
+            url: '/taList',
         }).state('student', {
             controller: 'StudentCtrl',
             templateUrl: 'scripts/student/student.html',
@@ -36,6 +44,18 @@ app.config(function ($stateProvider) {
             templateUrl: 'scripts/auth/auth.html',
             url: '/',
             resolve: {}
+        }).state('courseCatalog', {
+            controller: 'CourseCatalogCtrl',
+            templateUrl: 'scripts/courseCatalog/courseCatalog.html',
+            url:'/courseCatalog'
+        }).state('schedule', {
+            controller: 'ScheduleCtrl',
+            templateUrl: 'scripts/scheduleGenerator/schedule.html',
+            url: '/scheduleGenerator'
+        }).state('rules', {
+            controller: 'RulesCtrl',
+            templateUrl: 'scripts/rules/rules.html',
+            url: '/rules',
         }).state('dev', {
             controller: 'DevCtrl',
             templateUrl: 'scripts/dev/dev.html',
@@ -50,4 +70,6 @@ app.run(function ($rootScope, $state) {
         console.log("State change error - unauthorized");
         $state.go('auth');
     });
+
+    $rootScope.state = $state;
 });

@@ -8,9 +8,24 @@
     <link rel="stylesheet" href="styles/bootstrap.min.css">
     <link rel="stylesheet" href="styles/bootstrap-theme.min.css">
     <link rel="stylesheet" href="styles/app.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 </head>
 <body ng-app="courseOpt">
-<div class="container container-fluid" style="height: 1000px;">
+
+<!-- class="container container-fluid"-->
+<div style="height: 1000px;" ng-class="{'atl-img':state.current.name == 'auth'}">
+    <!--
+    <div class="row">
+        <ul class="nav navbar-nav">
+            <li><a ui-sref="auth">AUTH</a></li>
+            <li><a ui-sref="admin">ADMIN</a></li>
+            <li><a ui-sref="student">STUDENT</a></li>
+        </ul>
+    </div>
+    -->
+<!-- class="container container-fluid" -->
+<div ng-include src="'scripts/masthead/masthead.html'" ng-if="state.current.name!='auth'"></div>
+<div  style="height: 1000px;">
     <div class="row col-md-12" ui-view=""></div>
 </div>
 
@@ -37,6 +52,10 @@
 <script src="scripts/student/StudentService.js"></script>
 <script src="scripts/auth/AuthCtrl.js"></script>
 <script src="scripts/auth/AuthService.js"></script>
+<script src="scripts/masthead/MastheadCtrl.js"></script>
+<script src="scripts/courseCatalog/CourseCatalogCtrl.js"></script>
+<script src="scripts/scheduleGenerator/ScheduleCtrl.js"></script>
+<script src="scripts/rules/RulesCtrl.js"></script>
 
 <script src="scripts/dev/DevCtrl.js"></script>
 <script src="scripts/dev/DevService.js"></script>

@@ -1,6 +1,7 @@
 package gatech.course.optimizer.dto;
 
 import gatech.course.optimizer.model.Course;
+import gatech.course.optimizer.model.Specialization;
 import gatech.course.optimizer.model.Student;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class StudentDTO {
     private int seniority;
     private String studentId;
 
+    private Specialization chosenSpecialization;
     private List<TakenCourseDTO> takenCourses;
 
     public StudentDTO() {}
@@ -96,5 +98,13 @@ public class StudentDTO {
 
     public void setTakenCourses(List<TakenCourseDTO> takenCourses) {
         this.takenCourses = takenCourses;
+    }
+    
+    public Specialization getChosenSpecialization(){
+    	return this.chosenSpecialization;
+    }
+    
+    public void setChosenSpecialization(Specialization specialization){
+    	this.chosenSpecialization = specialization;
     }
 }

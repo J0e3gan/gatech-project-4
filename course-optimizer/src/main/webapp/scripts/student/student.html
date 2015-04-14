@@ -1,3 +1,19 @@
 <div class="container">
-    <h2>Student</h2>
-</div>
+	<h2>Courses Taken</h2>
+    <table class="table" style="margin:40px 0px"> 
+    	<thead>
+    		<th>Course Number</th>
+    		<th>Course Name</th>
+    		<th>Semester</th>
+    		<th>Grade</th>
+    	</thead>
+    	<tbody>
+    		<tr ng-repeat="course in studentDetails.takenCourses">
+    			<td>{{course.course.number}}</td>
+    			<td>{{course.course.name}}</td>
+    			<td style="text-transform:capitalize;">{{course.semester.term | lowercase}} {{course.semester.year}}</td>
+    			<td>{{course.grade}}</td>
+    		</tr>
+    	</tbody>
+    </table>
+</div>=

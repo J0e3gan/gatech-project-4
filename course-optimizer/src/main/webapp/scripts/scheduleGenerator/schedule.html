@@ -1,0 +1,17 @@
+<div class="container">
+	<h2 style="padding-bottom:20px;">Schedule Generator</h2>
+	Enter your desired number of courses:  <input ng-model="numDesiredCourses"></input><br>
+
+	<div ng-repeat="i in arr track by $index" style="padding-left:400px;">
+		{{$index+1}}. Course: 
+		<select class="desiredCourseSelector" ng-model="desiredCourses[$index]">
+			<option value="">---</option>
+			<option data-ng-repeat="course in courses" value="{{course}}">{{course.number}} {{course.name}}</option>
+		</select>
+		Preference: <select ng-model="courseRank[$index]">
+			<option value="">---</option>
+			<option ng-repeat="k in arr track by $index">{{$index+1}}</option>
+		</select><br>
+	</div>
+	<button class="btn">Apply</button>
+</div>
