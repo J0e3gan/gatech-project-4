@@ -3,16 +3,22 @@
 
     <h2>Services</h2>
 
-    <div class="dev-service-div" data-ng-repeat="service in services">
-        <h3 class="dev-api-header"> {{service.title}} <span class="label label-info">{{service.method}}</span> {{service.endpoint}}
-            <a class="btn btn-info" ng-click="service.execute()" >RUN</a>
-            <ul class="list-unstyled">
-            <li  data-ng-repeat="param in service.params">
-                <span>{{param.name}}  : </span><input type="text" data-ng-model="param.value"/>
-            </li>
-            </ul></h3>
+    <div style="max-height:700px;overflow:scroll;margin:0">
+        <div class="dev-service-div" data-ng-repeat="service in services">
+            <h3 class="dev-api-header"> {{service.title}} <span class="label label-info">{{service.method}}</span>
+                {{service.endpoint}}
+                <a class="btn btn-info" ng-click="service.execute()">RUN</a>
+                <ul class="list-unstyled">
+                    <textarea ng-if="service.body" ng-model="service.body"
+                              style="width:100%;height:60px;font-size:12px;font-family: 'Menlo'"></textarea>
+                    <li data-ng-repeat="param in service.params">
+                        <span>{{param.name}}  : </span><input type="text" data-ng-model="param.value"/>
+                    </li>
+                </ul>
+            </h3>
 
-        <pre ng-show="service.result !== null" class="dev-result-div">{{service.result | json }}</pre>
-        <span ng-show="service.loading"><img src="img/spinner.gif" width="50px" style="margin-left:40%"></span>
+            <pre ng-show="service.result !== null" class="dev-result-div">{{service.result | json }}</pre>
+            <span ng-show="service.loading"><img src="img/spinner.gif" width="50px" style="margin-left:40%"></span>
+        </div>
     </div>
 </div>

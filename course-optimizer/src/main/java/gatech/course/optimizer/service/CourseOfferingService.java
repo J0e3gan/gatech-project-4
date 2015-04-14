@@ -29,7 +29,7 @@ public class CourseOfferingService {
         return courseOfferingRepo.getAllCourseOfferings();
     }
 
-    @RequestMapping(value = "offering/schedule", method = RequestMethod.POST)
+    @RequestMapping(value = "/offering/schedule", method = RequestMethod.POST)
     public
     @ResponseBody
     CourseOffering createOffering(@RequestBody CourseOffering courseOffering) {

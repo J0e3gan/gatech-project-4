@@ -59,8 +59,65 @@ angular.module('courseOpt').controller('DevCtrl', function ($rootScope, $scope, 
         });
     };
 
+    var getAllConstriants = {};
+    getAllConstriants.title = "Get All Constraints";
+    getAllConstriants.method = 'GET';
+    getAllConstriants.endpoint = '/constraints';
+    getAllConstriants.loading = false;
+    getAllConstriants.result = null;
+    getAllConstriants.execute = function() {
+        getAllConstriants.loading = true;
+        getAllConstriants.result = null;
+        DevService.getConstraints().then(function(response){
+            getAllConstriants.loading = false;
+            getAllConstriants.result = response.data;
+        });
+    };
+
+
+    var someConstraint =  {
+        "name": "NEW_CONSTRAINT",
+        "description": "Wazzup ???",
+        "value": "Some Value"
+    };
+
+    var createConstraint = {};
+    createConstraint.title = "Create Constraint";
+    createConstraint.method = 'POST';
+    createConstraint.endpoint = '/constraint/create';
+    createConstraint.loading = false;
+    createConstraint.result = null;
+    createConstraint.body = JSON.stringify(someConstraint);
+    createConstraint.execute = function() {
+        createConstraint.loading = true;
+        createConstraint.result = null;
+        DevService.createConstraint(JSON.parse(createConstraint.body)).then(function(response){
+            createConstraint.loading = false;
+            createConstraint.result = response.data;
+        });
+    };
+
+
+    var getCourseOfferings = {};
+    getCourseOfferings.title = "Get All Scheduled Courses (Past and Present)";
+    getCourseOfferings.method = 'GET';
+    getCourseOfferings.endpoint = '/offerings';
+    getCourseOfferings.loading = false;
+    getCourseOfferings.result = null;
+    getCourseOfferings.execute = function() {
+        getCourseOfferings.loading = true;
+        getCourseOfferings.result = null;
+        DevService.getAllCourseOfferings().then(function(response){
+            getCourseOfferings.loading = false;
+            getCourseOfferings.result = response.data;
+        });
+    };
+
     $scope.services.push(getAllCourses);
     $scope.services.push(getAllStudents);
     $scope.services.push(getStudentDetails);
+    $scope.services.push(getAllConstriants);
+    $scope.services.push(createConstraint);
+    $scope.services.push(getCourseOfferings);
 
 });

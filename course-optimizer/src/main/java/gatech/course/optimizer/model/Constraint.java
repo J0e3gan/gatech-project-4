@@ -19,6 +19,15 @@ public class Constraint {
     private String description;
     private String value;
 
+
+    public Constraint() {}
+
+    public Constraint(String name, String description, String value) {
+        this.name = name;
+        this.description = description;
+        this.value = value;
+    }
+
     public Long getId() {
         return id;
     }

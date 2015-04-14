@@ -43,4 +43,18 @@ angular.module('courseOpt').service('DevService', function ($http, $q) {
     };
 
 
+    this.getConstraints = function() {
+        return $http.get("/constraints");
+    };
+
+    this.createConstraint = function(constraint) {
+        return $http.post("/constraint/create",constraint);
+    };
+
+    this.getAllCourseOfferings = function() {
+        return $http.get("/offerings");
+    }
+
+
+
 });

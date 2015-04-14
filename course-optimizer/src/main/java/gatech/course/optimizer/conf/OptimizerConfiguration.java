@@ -1,6 +1,8 @@
 package gatech.course.optimizer.conf;
 
+import gatech.course.optimizer.model.Constraint;
 import gatech.course.optimizer.model.User;
+import gatech.course.optimizer.repo.ConstraintRepo;
 import gatech.course.optimizer.repo.UserRepo;
 import gatech.course.optimizer.utils.DataLoader;
 import org.slf4j.Logger;
@@ -26,6 +28,9 @@ public class OptimizerConfiguration {
     @Autowired
     private UserRepo userRepo;
 
+    @Autowired
+    private ConstraintRepo constraintRepo;
+
     @Value("${load.from.csv}")
     private boolean loadFromCSV;
 
@@ -47,6 +52,9 @@ public class OptimizerConfiguration {
             InputStream studentsFile = this.getClass().getResourceAsStream("/OMS-CS-CourseGrades_Final_Subset.csv");
             loader.loadData(studentsFile,courseFile);
 
+            // Create sample constraints
+            constraintRepo.save(new Constraint("MAX_COURSE_PER_SEMSESTER","Student can only take a certain amount of courses per semester", "3"));
+            constraintRepo.save(new Constraint("SMARTNESS_LEVEL","Students must be smart to attend GA-Tech", "IQ of at least 120"));
 
         } else {
             logger.info("Loading data from CSV files skipped");
