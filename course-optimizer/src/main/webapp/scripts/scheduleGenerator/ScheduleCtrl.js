@@ -7,8 +7,10 @@ angular.module('courseOpt').controller('ScheduleCtrl', function ($rootScope, $sc
 		console.log("Error retrieving courses. " + error);
 	});
 
+	$scope.numDesiredCourses = 0;
 	$scope.desiredCourses = [];
 	$scope.courseRank = [];
+
 
 	function compare(a,b) {
 	  if (a.number < b.number)
@@ -17,5 +19,16 @@ angular.module('courseOpt').controller('ScheduleCtrl', function ($rootScope, $sc
 	    return 1;
 	  return 0;
 	}
+
+	$scope.$watch('numDesiredCourses', function(){
+		$scope.arr = getNumber($scope.numDesiredCourses);
+	});
+
+	var getNumber = function(num) {
+		var arr = [];
+		arr.length = num;
+	    return arr;   
+	}
+
 
 });
