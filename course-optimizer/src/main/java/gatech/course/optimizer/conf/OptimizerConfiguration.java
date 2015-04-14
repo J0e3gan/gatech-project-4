@@ -43,9 +43,9 @@ public class OptimizerConfiguration {
         if (loadFromCSV == true) {
             createSuperAdminUsers();
             logger.info("Loading data from CSV files into the database ...");
-            //InputStream studentsFile = this.getClass().getResourceAsStream("/OMS-CS-CourseGrades_Final.csv");
+            InputStream courseFile = this.getClass().getResourceAsStream("/courses.csv");
             InputStream studentsFile = this.getClass().getResourceAsStream("/OMS-CS-CourseGrades_Final_Subset.csv");
-            loader.loadData(studentsFile);
+            loader.loadData(studentsFile,courseFile);
 
 
         } else {

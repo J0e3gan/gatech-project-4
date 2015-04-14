@@ -75,16 +75,45 @@ public class DataLoader {
     }
 
 
-    public void loadData(InputStream in) {
-
-        Scanner scanner;
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-        scanner = new Scanner(reader);
+    public void loadData(InputStream in,InputStream courses) {
 
         Map<String, Student> studentsMap = new HashMap<String, Student>();
         Map<String, Course> courseMap = new HashMap<String, Course>();
         Map<String, Semester> semestersMap = new HashMap<String, Semester>();
         Map<String, CourseOffering> courseOfferingsMap = new HashMap<String, CourseOffering>();
+
+        // Process courses file
+        Scanner scanner;
+        BufferedReader reader = new BufferedReader(new InputStreamReader(courses));
+        scanner = new Scanner(reader);
+
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            String[] parts = line.split(",");
+            //Extract distinct courses
+            String courseNumber = parts[0];
+            String courseShortName = parts[1];
+            String courseName = parts[2];
+            //String creditHours = parts[3];
+            String description = "";
+            for(int i=4;i<parts.length;i++){
+                description = description+parts[i];
+            }
+            if (!courseMap.containsKey(courseNumber)) {
+                Course course = new Course(courseShortName, courseName);
+                course.setDescription(description);
+                Course savedCourse = courseRepo.save(course);
+                courseMap.put(courseNumber, savedCourse );
+            }
+        }
+
+
+        // Process students file
+        //Scanner scanner;
+        reader = new BufferedReader(new InputStreamReader(in));
+        scanner = new Scanner(reader);
+
+
 
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
@@ -166,7 +195,6 @@ public class DataLoader {
         Random rand = new Random();
         return rand.nextInt((10 - 1) + 1) + 1;
     }
-
 
     private class InfoLine {
 
