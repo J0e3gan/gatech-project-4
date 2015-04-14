@@ -58,4 +58,9 @@ public class StudentService {
 
         return studentDTO;
     }
+
+    @RequestMapping(value = "/student", method = RequestMethod.POST)
+    public @ResponseBody StudentDTO createStudent(@RequestBody StudentDTO studentDTO) {
+           return null;
+    }
 }
