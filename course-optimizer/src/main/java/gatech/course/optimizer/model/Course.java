@@ -13,6 +13,8 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
+
+    @Lob
     private String description;
     private String number;
 

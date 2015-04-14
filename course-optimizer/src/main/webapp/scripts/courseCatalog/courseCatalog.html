@@ -1,6 +1,6 @@
 <div class="container">
 	<h2 style="padding-bottom:20px;">Course Catalog</h2>
-	<div style="margin-left:20px;display:inline-block;width:25%;">
+	<div style="margin-left:20px;display:inline-block;width:25%;max-height:800px;overflow:scroll">
 		<h3>Courses Offered </h3>
 		<ul class="no-bullets">
 			<li ng-repeat="course in courses" style="padding:10px 0px;cursor:pointer" ng-class="{selected : selectedCourse == course}" ng-click="setSelectedCourse(course)">
@@ -12,7 +12,7 @@
 		<h3>{{selectedCourse.number}} {{selectedCourse.name}}</h3>
 		<p>Credit Hours: 3</p>
 		<p>Prerequisites: {{selectedCourse.prerequisites}}</p>
-		<p>{{course.description}}</p>
+		<p>{{selectedCourse.description}}</p>
 
 	</div>
 </div>
