@@ -3,7 +3,7 @@ package gatech.course.optimizer.dto;
 import gatech.course.optimizer.model.Course;
 import gatech.course.optimizer.model.CourseOffering;
 import gatech.course.optimizer.model.Faculty;
-import gatech.course.optimizer.model.Student;
+import gatech.course.optimizer.model.Specialization;
 
 import java.util.Set;
 
@@ -14,9 +14,11 @@ public class ScheduleInput {
 
     private Set<CourseOffering> requiredOfferings;
     private Set<Course> coursesThatCanBeOffered;
-    private Set<Student> students;
+    private Set<StudentDTO> students;
     private Set<Faculty> professors;
     private Set<Faculty> teacherAssistants;
+    private Set<Specialization> availableSpecializations;
+    
     private int allowedClassesPerSemester;
 
     public int getAllowedClassesPerSemester() {
@@ -38,16 +40,20 @@ public class ScheduleInput {
     public Set<Course> getCoursesThatCanBeOffered() {
         return coursesThatCanBeOffered;
     }
+    
+    public Set<Specialization> getAvailableSpecializations(){
+    	return this.availableSpecializations;
+    }
 
     public void setCoursesThatCanBeOffered(Set<Course> coursesThatCanBeOffered) {
         this.coursesThatCanBeOffered = coursesThatCanBeOffered;
     }
 
-    public Set<Student> getStudents() {
+    public Set<StudentDTO> getStudents() {
         return students;
     }
 
-    public void setStudents(Set<Student> students) {
+    public void setStudents(Set<StudentDTO> students) {
         this.students = students;
     }
 
@@ -65,5 +71,9 @@ public class ScheduleInput {
 
     public void setTeacherAssistants(Set<Faculty> teacherAssistants) {
         this.teacherAssistants = teacherAssistants;
+    }
+    
+    public void setAvailableSpecializations(Set<Specialization> specializations){
+    	this.availableSpecializations = specializations;
     }
 }
