@@ -113,11 +113,77 @@ angular.module('courseOpt').controller('DevCtrl', function ($rootScope, $scope, 
         });
     };
 
+
+    var student = {
+        "username": "99999999",
+        "password": "password",
+        "firstName": "Steward",
+        "lastName": "Little",
+        "desiredCourses": [],
+        "seniority": 0,
+        "studentId": "99999999"
+    }
+
+    var enrollStudent = {};
+    enrollStudent.title = "Enroll Student";
+    enrollStudent.method = 'POST';
+    enrollStudent.endpoint = '/student/enroll';
+    enrollStudent.loading = false;
+    enrollStudent.body = JSON.stringify(student);
+    enrollStudent.result = null;
+    enrollStudent.execute = function() {
+        enrollStudent.loading = true;
+        enrollStudent.result = null;
+        DevService.enrollStudent(JSON.parse(enrollStudent.body)).then(function(response){
+            enrollStudent.loading = false;
+            enrollStudent.result = response.data;
+        });
+    };
+
+
+    var courseOffering = {
+        "crn": 999999,
+        "studentCapacity": 100,
+        "course": {
+            "id": 1,
+            "name": "Advanced OS",
+            "number": "CS 6210",
+            "prerequisites": []
+        },
+        "semester": {
+            "id": 2,
+            "term": "SPRING",
+            "year": 2015
+        },
+        "professor": null,
+        "teacherAssistants": [],
+        "enrolledStudents": [],
+        "studentsOnWaitList": []
+    };
+
+    var scheduleCourse = {};
+    scheduleCourse.title = "Schedule Course";
+    scheduleCourse.method = 'POST';
+    scheduleCourse.endpoint = '/offering/schedule';
+    scheduleCourse.loading = false;
+    scheduleCourse.body = JSON.stringify(courseOffering);
+    scheduleCourse.result = null;
+    scheduleCourse.execute = function() {
+        scheduleCourse.loading = true;
+        scheduleCourse.result = null;
+        DevService.scheduleCourse(JSON.parse(scheduleCourse.body)).then(function(response){
+            scheduleCourse.loading = false;
+            scheduleCourse.result = response.data;
+        });
+    };
+
     $scope.services.push(getAllCourses);
     $scope.services.push(getAllStudents);
     $scope.services.push(getStudentDetails);
     $scope.services.push(getAllConstriants);
     $scope.services.push(createConstraint);
     $scope.services.push(getCourseOfferings);
+    $scope.services.push(enrollStudent);
+    $scope.services.push(scheduleCourse);
 
 });

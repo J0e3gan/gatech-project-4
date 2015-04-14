@@ -53,6 +53,14 @@ angular.module('courseOpt').service('DevService', function ($http, $q) {
 
     this.getAllCourseOfferings = function() {
         return $http.get("/offerings");
+    };
+
+    this.enrollStudent = function(student) {
+        return $http.post("/student/enroll",student);
+    };
+
+    this.scheduleCourse = function(courseOffering) {
+        return $http.post("/offering/schedule",courseOffering);
     }
 
 

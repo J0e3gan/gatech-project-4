@@ -59,7 +59,7 @@ public class StudentService {
         return studentDTO;
     }
 
-    @RequestMapping(value = "student/enroll", method = RequestMethod.POST)
+    @RequestMapping(value = "/student/enroll", method = RequestMethod.POST)
     public
     @ResponseBody
     Student createStudent(@RequestBody Student student) {
