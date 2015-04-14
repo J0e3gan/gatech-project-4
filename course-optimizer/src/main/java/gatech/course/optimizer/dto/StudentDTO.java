@@ -11,6 +11,7 @@ import java.util.List;
  */
 public class StudentDTO {
 
+    private Long id;
     private String username;
     private String password;
     private String firstName;
@@ -25,6 +26,7 @@ public class StudentDTO {
     public StudentDTO() {}
 
     public StudentDTO(Student student) {
+        this.id = student.getId();
         this.username = student.getUsername();
         this.password = student.getPassword();
         this.firstName = student.getFirstName();
@@ -34,6 +36,24 @@ public class StudentDTO {
         this.studentId = student.getStudentId();
 
 
+    }
+
+    public Student toStudent() {
+
+        Student student = new Student(this.getUsername(), this.getPassword(), this.getFirstName(),
+                this.getLastName(), this.getStudentId());
+        student.setId(this.getId());
+        student.setDesiredCourses(this.getDesiredCourses());
+        student.setSeniority(this.getSeniority());
+        return student;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUsername() {

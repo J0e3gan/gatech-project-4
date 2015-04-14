@@ -50,7 +50,7 @@ public class StudentService {
         List<TakenCourseDTO> takenCourses = new ArrayList<TakenCourseDTO>();
         List<CourseOffering> courseOfferings = courseOfferingRepo.findCoursesByStudent(student);
         for (CourseOffering courseOffering : courseOfferings) {
-            String grade = studentRecordRepo.getGradeForStudent(courseOffering.getId(),student.getId());
+            String grade = studentRecordRepo.getGradeForStudent(courseOffering.getId(), student.getId());
             TakenCourseDTO takenCourseDTO = new TakenCourseDTO(courseOffering, grade);
             takenCourses.add(takenCourseDTO);
         }
@@ -59,8 +59,28 @@ public class StudentService {
         return studentDTO;
     }
 
-    @RequestMapping(value = "/student", method = RequestMethod.POST)
-    public @ResponseBody StudentDTO createStudent(@RequestBody StudentDTO studentDTO) {
-           return null;
+    @RequestMapping(value = "student/enroll", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    Student createStudent(@RequestBody Student student) {
+
+        logger.info("Creating new student");
+        return studentRepo.save(student);
     }
+
+
+    /*
+    @RequestMapping(value = "/student", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    StudentDTO updateStudent(@RequestBody StudentDTO studentDTO) {
+
+        logger.info("Creating new student");
+        studentRepo.save(studentDTO.toStudent());
+        studentDTO.ge
+        return null;
+    }
+    */
+
+
 }
