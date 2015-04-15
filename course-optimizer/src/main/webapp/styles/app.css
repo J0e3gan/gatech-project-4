@@ -258,3 +258,7 @@ li.selected{
 .spacing{
     margin:20px 0px;
 }
+#studentRow:hover{
+    background-color: #d3d3d3;
+    color: #ffffff
+}

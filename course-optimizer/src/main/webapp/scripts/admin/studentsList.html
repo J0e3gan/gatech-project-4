@@ -14,7 +14,7 @@
 			</tr>
 		</thead>
 		<tbody style="display:block;height:800px;overflow-y:auto;width:100%">
-			<tr ng-repeat="student in students" style="width:100%">
+			<tr id="studentRow" ng-repeat="student in students" style="width:100%;cursor:pointer;" ui-sref="studentDetails({id: student.studentId})">
 				<td style="width:113px;">{{$index+1}}</td>
 				<td style="width:283px;">{{student.firstName}}</td>
 				<td style="width:283px;">{{student.lastName}}</td>

@@ -1,4 +1,4 @@
-angular.module('courseOpt').controller('AdminCtrl', function ($rootScope, $scope, $window, $http, $modal, AuthService) {
+angular.module('courseOpt').controller('AdminCtrl', function ($rootScope, $scope, $window, $http, $modal,$state,$stateParams, AuthService) {
 
 
    $scope.user = AuthService.getUser();
@@ -26,7 +26,21 @@ angular.module('courseOpt').controller('AdminCtrl', function ($rootScope, $scope
         });
     }
 
+    var getStudentDetails = function(studentId){
+    	$http.get("/student/" + studentId).success(function(response){
+    		$scope.studentDetails = response;
+    	}).error(function(error){
+    		console.log("error fetching student details for "+ studentId);
+    	});
+    }
+
     getStudents();
+
+    if($state.current.name=='studentDetails'){
+    	
+    	var currentStudent = $stateParams.id;
+    	getStudentDetails(currentStudent);
+    }
 
 
 });
