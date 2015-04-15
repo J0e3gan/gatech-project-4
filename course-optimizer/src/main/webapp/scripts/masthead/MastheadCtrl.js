@@ -22,10 +22,6 @@ angular.module('courseOpt').controller('MastheadCtrl', function ($rootScope, $sc
 						name:'Professors',
 						link:'professors',
 						icon: 'fa-mortar-board'
-					},{
-						name:'Rules',
-						link:'rules',
-						icon: 'fa-pencil-square-o'
 					}];
 	var studentTabs = [{
 							name:'Home',

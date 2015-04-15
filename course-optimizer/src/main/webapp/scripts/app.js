@@ -60,11 +60,7 @@ app.config(function ($stateProvider) {
             controller: 'ScheduleCtrl',
             templateUrl: 'scripts/scheduleGenerator/schedule.html',
             url: '/scheduleGenerator'
-        }).state('rules', {
-            controller: 'RulesCtrl',
-            templateUrl: 'scripts/rules/rules.html',
-            url: '/rules',
-        }).state('dev', {
+        })state('dev', {
             controller: 'DevCtrl',
             templateUrl: 'scripts/dev/dev.html',
             url: '/dev',
