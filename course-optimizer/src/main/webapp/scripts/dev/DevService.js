@@ -14,6 +14,34 @@ angular.module('courseOpt').service('DevService', function ($http, $q) {
         return deferred.promise;
     };
 
+    this.getAllProfessors = function () {
+
+        var deferred = $q.defer();
+
+        $http.get("/professors").success(function (response) {
+            deferred.resolve(response);
+        })
+            .error(function (response) {
+                deferred.reject(response);
+            });
+
+        return deferred.promise;
+    };
+
+    this.getAllTAs = function () {
+
+        var deferred = $q.defer();
+
+        $http.get("/tas").success(function (response) {
+            deferred.resolve(response);
+        })
+            .error(function (response) {
+                deferred.reject(response);
+            });
+
+        return deferred.promise;
+    };
+
     this.getAllStudents = function () {
 
         var deferred = $q.defer();
