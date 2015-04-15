@@ -32,5 +32,21 @@ public class CourseService {
         return courseRepo.getAllCourses();
     }
 
+    @RequestMapping(value = "/course/{courseId}", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    Course getCourse(@PathVariable("courseId") Long courseId) {
+        logger.info("Getting course for id='{}'", courseId);
+        return courseRepo.getCourse(courseId);
+    }
+
+    @RequestMapping(value = "/course/number/{courseNumber}", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    Course getCourseByNumber(@PathVariable("courseNumber") String courseNumber) {
+        logger.info("Getting course for number='{}'", courseNumber);
+        return courseRepo.getCourseByNumber(courseNumber);
+    }
+
 
 }

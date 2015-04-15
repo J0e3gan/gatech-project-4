@@ -21,6 +21,48 @@ angular.module('courseOpt').controller('DevCtrl', function ($rootScope, $scope, 
         });
     };
 
+    var getCourse = {};
+    getCourse.title = 'Get Course';
+    getCourse.method = 'GET';
+    getCourse.endpoint = '/course/{courseId}';
+    var param = {
+        "name" : "courseId",
+        "value" : null
+    };
+    getCourse.params = [];
+    getCourse.params.push(param);
+    getCourse.result = null;
+    getCourse.loading = false;
+    getCourse.execute = function() {
+        getCourse.loading = true;
+        getCourse.result = null;
+        DevService.getCourse(getCourse.params[0].value).then(function(response){
+            getCourse.loading = false;
+            getCourse.result = response;
+        });
+    };
+
+    var getCourseByNumber = {};
+    getCourseByNumber.title = 'Get Course By Number';
+    getCourseByNumber.method = 'GET';
+    getCourseByNumber.endpoint = '/course/number/{courseNumber}';
+    var param = {
+        "name" : "courseNumber",
+        "value" : null
+    };
+    getCourseByNumber.params = [];
+    getCourseByNumber.params.push(param);
+    getCourseByNumber.result = null;
+    getCourseByNumber.loading = false;
+    getCourseByNumber.execute = function() {
+        getCourseByNumber.loading = true;
+        getCourseByNumber.result = null;
+        DevService.getCourseByNumber(getCourseByNumber.params[0].value).then(function(response){
+            getCourseByNumber.loading = false;
+            getCourseByNumber.result = response;
+        });
+    };
+
     var getAllProfessors = {}
     getAllProfessors.title = 'Get All Professors';
     getAllProfessors.method = 'GET';
@@ -210,6 +252,8 @@ angular.module('courseOpt').controller('DevCtrl', function ($rootScope, $scope, 
     };
 
     $scope.services.push(getAllCourses);
+    $scope.services.push(getCourse);
+    $scope.services.push(getCourseByNumber);
     $scope.services.push(getAllProfessors);
     $scope.services.push(getAllTAs);
     $scope.services.push(getAllStudents);

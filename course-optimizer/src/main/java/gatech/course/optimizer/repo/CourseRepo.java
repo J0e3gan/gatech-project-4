@@ -15,4 +15,10 @@ public interface CourseRepo extends CrudRepository<Course, Long> {
     @Query("select c from course c order by c.number asc")
     public List<Course> getAllCourses();
 
+    @Query("select c from course c where c.id = :courseId")
+    public Course getCourse(@Param("courseId") Long courseId);
+
+    @Query("select c from course c where c.number = :courseNumber")
+    public Course getCourseByNumber(@Param("courseNumber") String courseNumber);
+
 }
