@@ -13,11 +13,36 @@ angular.module('courseOpt').controller('AdminCtrl', function ($rootScope, $scope
 
     var getCourseOfferings = function(){
         $http.get('/offerings').success(function(response){
-            $scope.offerings = response;
+            $scope.offerings = parseOfferings(response);
 
         }).error(function(response){
 
         });
+    }
+
+    var parseOfferings = function(offerings){
+        var parsed = {};
+        var finalObj = {};
+
+        angular.forEach(offerings, function(course){
+            if(!parsed[course.semester.year.toString() + ' ' + course.semester.term.toString()]){
+                parsed[course.semester.year.toString() + ' ' + course.semester.term.toString()] = [];
+            }
+            parsed[course.semester.year.toString() + ' ' + course.semester.term.toString()].push(course);
+        });
+
+        var keys = Object.keys(parsed);
+        var i, len = keys.length;
+
+        keys.sort();
+        var m =0;
+        for(i=len-1; i>=0; i--){
+            k=keys[i];
+            finalObj[m]=(parsed[k]);
+            m++;
+        }
+
+        return finalObj;
     }
 
     $scope.openModal = function(size, template){
@@ -67,4 +92,9 @@ angular.module('courseOpt').controller('AdminCtrl', function ($rootScope, $scope
     }
 
 
+}).filter('titleCase', function() {
+        return function(input) {
+          input = input || '';
+          return input.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+        };
 });

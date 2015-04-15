@@ -45,5 +45,11 @@ angular.module('courseOpt').controller('ModalCtrl', function ($rootScope, $scope
 
         $scope.addTA = function(){
             //TODO: add content
+
+            if($scope.newTA.firstName=="" || $scope.newTA.lastName==""){
+                $scope.err = "Please make sure all fields have data";
+                return;
+            }
+
         }
 });
