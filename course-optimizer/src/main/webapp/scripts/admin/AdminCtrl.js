@@ -39,7 +39,7 @@ angular.module('courseOpt').controller('AdminCtrl', function ($rootScope, $scope
     	$http.get("/student/" + studentId).success(function(response){
     		$scope.studentDetails = response;
     	}).error(function(error){
-    		console.log("error fetching student details for "+ studentId);
+    		console.log("error fetching student details for " + studentId);
     	});
     }
 
