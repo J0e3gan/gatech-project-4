@@ -21,6 +21,38 @@ angular.module('courseOpt').controller('DevCtrl', function ($rootScope, $scope, 
         });
     };
 
+    var getAllProfessors = {}
+    getAllProfessors.title = 'Get All Professors';
+    getAllProfessors.method = 'GET';
+    getAllProfessors.endpoint = '/professors';
+    getAllProfessors.params = [];
+    getAllProfessors.result = null;
+    getAllProfessors.loading = false;
+    getAllProfessors.execute = function() {
+        getAllProfessors.loading = true;
+        getAllProfessors.result = null;
+        DevService.getAllProfessors().then(function(response){
+            getAllProfessors.loading = false;
+            getAllProfessors.result = response;
+        });
+    };
+
+    var getAllTAs = {}
+    getAllTAs.title = 'Get All TAs';
+    getAllTAs.method = 'GET';
+    getAllTAs.endpoint = '/tas';
+    getAllTAs.params = [];
+    getAllTAs.result = null;
+    getAllTAs.loading = false;
+    getAllTAs.execute = function() {
+        getAllTAs.loading = true;
+        getAllTAs.result = null;
+        DevService.getAllTAs().then(function(response){
+            getAllTAs.loading = false;
+            getAllTAs.result = response;
+        });
+    };
+
     var getAllStudents = {}
     getAllStudents.title = 'Get All Students';
     getAllStudents.method = 'GET';
@@ -178,6 +210,8 @@ angular.module('courseOpt').controller('DevCtrl', function ($rootScope, $scope, 
     };
 
     $scope.services.push(getAllCourses);
+    $scope.services.push(getAllProfessors);
+    $scope.services.push(getAllTAs);
     $scope.services.push(getAllStudents);
     $scope.services.push(getStudentDetails);
     $scope.services.push(getAllConstriants);
