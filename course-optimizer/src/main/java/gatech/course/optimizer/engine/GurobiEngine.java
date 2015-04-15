@@ -1,9 +1,21 @@
 package gatech.course.optimizer.engine;
 
 import gatech.course.optimizer.dto.ScheduleInput;
+import gatech.course.optimizer.dto.StudentDTO;
 import gatech.course.optimizer.model.Course;
+import gatech.course.optimizer.model.CourseOffering;
+import gatech.course.optimizer.model.Faculty;
 import gatech.course.optimizer.model.ScheduleSolution;
-import gurobi.*;
+import gatech.course.optimizer.model.Semester;
+import gatech.course.optimizer.model.Specialization;
+import gurobi.GRB;
+import gurobi.GRBEnv;
+import gurobi.GRBException;
+import gurobi.GRBLinExpr;
+import gurobi.GRBModel;
+import gurobi.GRBVar;
+
+import java.util.Set;
 
 
 /**
@@ -25,7 +37,12 @@ public class GurobiEngine implements EngineInterface {
             int numberOfCourses = scheduleInput.getCoursesThatCanBeOffered().size(); // j
             //int numberOfSemesters = university.getSemesters().size(); // k
             int numberOfSemesters = 1;
+            
+            int numberOfProfessors = scheduleInput.getProfessors().size();
+            int numberOfTAs = scheduleInput.getTeacherAssistants().size();
 
+            int minEnrollmentToBeOffered = 1;
+            
             // Add variables
             double upperBound = numberOfStudents * numberOfCourses * numberOfStudents;
             GRBVar x = model.addVar(0.0, upperBound, 0.0, GRB.INTEGER, "X");
@@ -38,6 +55,28 @@ public class GurobiEngine implements EngineInterface {
                     }
                 }
             }
+            
+            Faculty[] facultyTemp = new Faculty[0];
+            Faculty[] professors = scheduleInput.getProfessors().toArray( facultyTemp );
+            GRBVar[][][] professorVariables = new GRBVar[numberOfProfessors][numberOfCourses][numberOfSemesters];
+            for (int i = 0; i < numberOfProfessors; i++){
+            	for (int j = 0; j < numberOfCourses; j++) {
+                    for (int k = 0; k < numberOfSemesters; k++) {
+                        professorVariables[i][j][k] = model.addVar(0, 1, 0, GRB.BINARY, "p_" + (i+1) + "_" + (j+1) + "_" + (k+1));
+                    }
+                }
+            }
+
+            Faculty[] teachingAssistants = scheduleInput.getTeacherAssistants().toArray( facultyTemp );
+            GRBVar[][][] taVariables = new GRBVar[numberOfTAs][numberOfCourses][numberOfSemesters];
+            for (int i = 0; i < numberOfTAs; i++){
+            	for (int j = 0; j < numberOfCourses; j++) {
+                    for (int k = 0; k < numberOfSemesters; k++) {
+                        taVariables[i][j][k] = model.addVar(0, 1, 0, GRB.BINARY, "t_" + (i+1) + "_" + (j+1) + "_" + (k+1));
+                    }
+                }
+            }
+            
             model.update();
 
             // Add the capacity limit constraint
@@ -95,42 +134,91 @@ public class GurobiEngine implements EngineInterface {
                         model.addConstr(firstSemesterNoCoursesWithPrerequisites, GRB.EQUAL, 0, "noStudentCanTakeCourse" + course.getId() + "inFirstSemester");
                     }
                 }
-
-                // Constraints for course offerings during certain semesters
-
-                /*
-                if (course.getSemestersOffered().size() != university.getSemesters().size()) {
-                    List<Integer> semestersNotOffered = EntityUtil.semestersNotOffered(university.getSemesters(), course);
-                    System.out.println(course.getId() + " is not offered during semesters :" + semestersNotOffered.toString());
-                    for (int k = 0; k < semestersNotOffered.size(); k++) {
-                        GRBLinExpr courseNotOffered = new GRBLinExpr();
-                        int semesterNotOfferedId = semestersNotOffered.get(k).intValue();
-                        for (int i = 0; i < numberOfStudents; i++) {
-                            courseNotOffered.addTerm(1, modelVariables[i][course.getId() - 1][semesterNotOfferedId - 1]);
-                        }
-                        model.addConstr(courseNotOffered, GRB.EQUAL, 0, "course" + course.getId() + "notOfferedDuringSemester" + semestersNotOffered.get(k));
-                    }
-                }
-                */
+            }
+            
+            // Add constraint that required courses have at least one student
+            for (CourseOffering course : scheduleInput.getRequiredOfferings()){
+            	GRBLinExpr expr = new GRBLinExpr();
+            	int courseIndex = course.getId().intValue() - 1;
+            	for (int i = 0; i < numberOfStudents; i++){
+            		expr.addTerm(1, modelVariables[i][courseIndex][getSemesterIndex(course.getSemester())]);
+            	}
+            	model.addConstr( expr, GRB.GREATER_EQUAL, minEnrollmentToBeOffered, "requiredCourseOffering" + (course.getId().intValue()));
             }
 
-            // Add constraint that students must take certain courses
-            /*
-            for (int i = 0; i < numberOfStudents; i++) {
-                Student student = university.getStudents().get(i);
-                //int[] courseIds = student.getDesiredCourses();
-                for (int j = 0; j < student.getDesiredCourses().size(); j++) {
-                    GRBLinExpr expr = new GRBLinExpr();
-                    int desiredCourseId = student.getDesiredCourses().get(j); // Ids start from 1 indexed from 0
-                    for (int k = 0; k < numberOfSemesters; k++) {
-                        expr.addTerm(1, modelVariables[i][desiredCourseId - 1][k]);
-                    }
-                    model.addConstr(expr, GRB.EQUAL, 1, "student" + (i + 1) + "mustTakeCourse" + desiredCourseId);
-                }
+            // Add constraint that students must complete a specialization
+            for (StudentDTO student : scheduleInput.getStudents()){
+            	int studentIndex = student.getId().intValue() - 1;
+            	Specialization specialization = student.getChosenSpecialization();
+            	if (specialization != null){
+	            	// Add constraint that the student must take the required courses
+            		Set<Course> requiredCourses = specialization.getRequiredCourses();
+            		if (requiredCourses != null){
+            			for (Course requiredCourse : requiredCourses){
+		            		int courseIndex = requiredCourse.getId().intValue() - 1;
+	            			GRBLinExpr expr = new GRBLinExpr();
+		            		for (int k = 0; k < numberOfSemesters; k++){
+		            			expr.addTerm( 1, modelVariables[studentIndex][courseIndex][k]);
+		            		}
+		            		model.addConstr( expr, GRB.EQUAL, 1, "requiredSpecializationCourse" + (requiredCourse.getId().intValue()) + "forStudent" + student.getId().intValue() );
+            			}
+            		}
+            		
+            		// Add constraint for core courses
+            		Set<Course> coreCourses = specialization.getCoreCourses();
+            		if (coreCourses != null && specialization.getNumberOfCoreCoursesRequired() > 0){
+            			GRBLinExpr expr = new GRBLinExpr();
+            			for (Course coreCourse : coreCourses){
+            				int courseIndex = coreCourse.getId().intValue();
+            				for (int k = 0; k < numberOfSemesters; k++){
+            					expr.addTerm(1, modelVariables[studentIndex][courseIndex][k]);
+            				}
+            			}
+            			// This is an okay constraint because of the other constraint that says 
+            			// a student may take a course only once.
+            			model.addConstr( expr, GRB.GREATER_EQUAL, specialization.getNumberOfCoreCoursesRequired(), "specializationCoreCoursesForStudent" + student.getId().intValue() );
+            		}
+            		
+            		// Add constraint for elective courses
+            		Set<Course> electiveCourses = specialization.getCoreCourses();
+            		if (electiveCourses != null && specialization.getNumberOfElectiveCoursesRequired() > 0){
+            			GRBLinExpr expr = new GRBLinExpr();
+            			for (Course electiveCourse : electiveCourses){
+            				int courseIndex = electiveCourse.getId().intValue();
+            				for (int k = 0; k < numberOfSemesters; k++){
+            					expr.addTerm(1, modelVariables[studentIndex][courseIndex][k]);
+            				}
+            			}
+            			// This is an okay constraint because of the other constraint that says 
+            			// a student may take a course only once.
+            			model.addConstr( expr, GRB.GREATER_EQUAL, specialization.getNumberOfElectiveCoursesRequired(), "specializationElectiveCoursesForStudent" + student.getId().intValue() );
+            		}
+            	}
             }
-            */
+            
+            // Add constraint that a student can only take a course once
+            for (int i = 0; i < numberOfStudents; i++){
+            	for (int j = 0; j < numberOfCourses; j++){
+            		GRBLinExpr expr = new GRBLinExpr();
+            		for (int k = 0; k < numberOfSemesters; k++){
+            			expr.addTerm( 1, modelVariables[i][j][k] );
+            		}
+            		model.addConstr( expr, GRB.LESS_EQUAL, 1, "courseRepetitionLimitForStudent" + (i+1) + "Course" + (j+1) );
+            	}
+            }
+            
+            // Add constraint that each course offered has 1 professor assigned to it
+            
+            // Add constraint that each course offered has 1 TA assigned to it
+            
+            // Add constraint that each faculty only assigned to 1 course a semester
+            
+            // Add constraint that each faculty only assigned to relevant courses
+            
+            // Add constraint that each faculty only assigned to courses in available times
 
             // Add objective
+            // TODO : Tie to priorities of each student.
             GRBLinExpr expr = new GRBLinExpr();
             expr.addTerm(1, x);
             model.setObjective(expr, GRB.MINIMIZE);
@@ -191,5 +279,9 @@ public class GurobiEngine implements EngineInterface {
 
     private String getVariableName(int i, int j, int k) {
         return "y" + (i + 1) + "_" + (j + 1) + "_" + (k + 1);
+    }
+    
+    private int getSemesterIndex(Semester semester){
+    	return 0;
     }
 }
