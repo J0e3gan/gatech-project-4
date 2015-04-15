@@ -1,18 +1,56 @@
 <div class="container">
-	<div ui-sref="studentsList" style="cursor:pointer;margin-left:-200px;display:inline-block;margin-top:30px;">
+	<h2 style="display:inline-block;" class="pull-left">Student Details</h2>
+	<div ui-sref="studentsList" class="pull-right" style="cursor:pointer;display:inline-block;margin-top:30px;">
 		<i class="fa fa-chevron-left"> Back to Students List</i>
 	</div>
-	<h2 style="margin-top:-20px;">Student Details</h2>
+	<br>
+	<h3 style="padding:40px 0px 10px 0px;"><b>{{studentDetails.firstName}} {{studentDetails.lastName}}</b> &nbsp<i>{{studentDetails.studentId}}</i></h3>
 
-	<h3><b>{{studentDetails.firstName}} {{studentDetails.lastName}}</b> &nbsp<i>{{studentDetails.studentId}}</i></h3>
-
-	{{studentDetails.chosenSpecialization}} <!--if null then show 'Not yet specified'-->
-	{{studentDetails.desiredCourses}} <!--if empty, show, 'No coures selected'-->
-	{{studentDetails.seniority}}
-	{{studentDetails.takenCourses}}
-
-
-
-
+	<div>
+		<h4 class="inline">Specialization: </h4>
+		<span ng-if="studentDetails.chosenSpecialization!=null">{{studentDetails.chosenSpecialization}}</span> <!--if null then show 'Not yet specified'-->
+		<span ng-if="studentDetails.chosenSpecialization==null"> Not yet specified</span>
+	</div>
+	<div>
+		<h4 class="inline">Seniority: </h4>{{studentDetails.seniority}}
+	</div>
+	<div id="desiredCoursesTable">
+		<h4 ng-class="{'inline': studentDetails.desiredCourses.length==0}">Desired Courses: </h4>
+		<span ng-if="studentDetails.desiredCourses.length==0"> No courses selected</span> <!--if empty, show, 'No coures selected'-->
+		<table ng-if="studentDetails.desiredCourses.length!=0">
+			<thead>
+	    		<th>Course Number</th>
+	    		<th>Course Name</th>
+	    		<th>Preference</th>
+	    	</thead>
+	    	<tbody>
+	    		<tr ng-repeat="course in studentDetails.desiredCourses">
+	    			<td>{{course.course.number}}</td>
+	    			<td>{{course.course.name}}</td>
+	    			<td>{{course.preference}}</td>
+	    		</tr>
+	    	</tbody>
+		</table>
+	</div>	
+	<div id="takenCoursesTable">
+		<h4 ng-class="{'inline': studentDetails.takenCourses.length==0}">Courses Completed: </h4>
+		<span ng-if="studentDetails.takenCourses.length==0"> No courses completed yet</span>
+		<table class="table" ng-if="studentDetails.takenCourses.length!=0"> 
+	    	<thead>
+	    		<th>Course Number</th>
+	    		<th>Course Name</th>
+	    		<th>Semester</th>
+	    		<th>Grade</th>
+	    	</thead>
+	    	<tbody>
+	    		<tr ng-repeat="course in studentDetails.takenCourses">
+	    			<td>{{course.course.number}}</td>
+	    			<td>{{course.course.name}}</td>
+	    			<td style="text-transform:capitalize;">{{course.semester.term | lowercase}} {{course.semester.year}}</td>
+	    			<td>{{course.grade}}</td>
+	    		</tr>
+	    	</tbody>
+	    </table>
+	</div>
 
 </div>

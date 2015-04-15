@@ -262,3 +262,6 @@ li.selected{
     background-color: #d3d3d3;
     color: #ffffff
 }
+.inline{
+    display:inline-block;
+}
