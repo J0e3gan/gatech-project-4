@@ -27,6 +27,12 @@ public class DataLoader {
     private StudentRepo studentRepo;
 
     @Autowired
+    private ProfessorRepo professorRepo;
+
+    @Autowired
+    private TARepo taRepo;
+
+    @Autowired
     private CourseRepo courseRepo;
 
     @Autowired
@@ -75,16 +81,21 @@ public class DataLoader {
     }
 
 
-    public void loadData(InputStream in,InputStream courses) {
+    public void loadData(InputStream studentFile, InputStream courseFile, InputStream professorFile, InputStream taFile) {
 
-        Map<String, Student> studentsMap = new HashMap<String, Student>();
+        Map<String, Student> studentMap = new HashMap<String, Student>();
+        Map<String, Professor> professorMap = new HashMap<String, Professor>();
+        Map<String, TA> taMap = new HashMap<String, TA>();
         Map<String, Course> courseMap = new HashMap<String, Course>();
-        Map<String, Semester> semestersMap = new HashMap<String, Semester>();
-        Map<String, CourseOffering> courseOfferingsMap = new HashMap<String, CourseOffering>();
+        Map<String, Semester> semesterMap = new HashMap<String, Semester>();
+        Map<String, CourseOffering> courseOfferingMap = new HashMap<String, CourseOffering>();
 
-        // Process courses file
+        BufferedReader reader;
         Scanner scanner;
-        BufferedReader reader = new BufferedReader(new InputStreamReader(courses));
+
+
+        // Process course data.
+        reader = new BufferedReader(new InputStreamReader(courseFile));
         scanner = new Scanner(reader);
 
         while (scanner.hasNextLine()) {
@@ -108,12 +119,49 @@ public class DataLoader {
         }
 
 
-        // Process students file
-        //Scanner scanner;
-        reader = new BufferedReader(new InputStreamReader(in));
+        // Process professor data.
+        reader = new BufferedReader(new InputStreamReader(professorFile));
         scanner = new Scanner(reader);
 
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            String[] parts = line.split(",");
+            String profFirstName = parts[0];
+            String profLastName = parts[1];
 
+            // Ensure no duplicates are loaded.
+            String profKey = profFirstName + " " + profLastName;
+            if (!professorMap.containsKey(profKey)) {
+                Professor prof = new Professor(profFirstName, profLastName);
+                Professor savedProf = professorRepo.save(prof);
+                professorMap.put(profKey, savedProf);
+            }
+        }
+
+
+        // Process TA data.
+        reader = new BufferedReader(new InputStreamReader(taFile));
+        scanner = new Scanner(reader);
+
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            String[] parts = line.split(",");
+            String taFirstName = parts[0];
+            String taLastName = parts[1];
+
+            // Ensure no duplicates are loaded.
+            String taKey = taFirstName + " " + taLastName;
+            if (!taMap.containsKey(taKey)) {
+                TA ta = new TA(taFirstName, taLastName);
+                TA savedTA = taRepo.save(ta);
+                taMap.put(taKey, savedTA);
+            }
+        }
+
+
+        // Process student data.
+        reader = new BufferedReader(new InputStreamReader(studentFile));
+        scanner = new Scanner(reader);
 
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
@@ -129,45 +177,45 @@ public class DataLoader {
             logger.info("Processing: " + infoLine.toString());
             // Extract distinct semesters
             String semesterKey = infoLine.year + "-" + infoLine.semester;
-            if (!semestersMap.containsKey(semesterKey)) {
+            if (!semesterMap.containsKey(semesterKey)) {
                 Semester semester = semesterRepo.save(new Semester(infoLine.year, infoLine.semester));
-                semestersMap.put(semesterKey, semester);
+                semesterMap.put(semesterKey, semester);
             }
 
-            //Extract distinct courses
+            //Extract distinct courseFile
             if (!courseMap.containsKey(infoLine.courseNumber)) {
                 Course course = courseRepo.save(new Course(infoLine.courseShortName, infoLine.courseName));
                 courseMap.put(infoLine.courseNumber, course);
             }
 
             // Create students
-            if (!studentsMap.containsKey(infoLine.studentId)) {
+            if (!studentMap.containsKey(infoLine.studentId)) {
                 Student student = studentRepo.save(new Student(infoLine.studentId, "password", makeupFirstName(), makeupLastName(), infoLine.studentId));
-                studentsMap.put(infoLine.studentId, student);
+                studentMap.put(infoLine.studentId, student);
             }
 
 
             //Extract distinct course instances
-            if (!courseOfferingsMap.containsKey(infoLine.courseRefNumber)) {
+            if (!courseOfferingMap.containsKey(infoLine.courseRefNumber)) {
                 CourseOffering courseOffering = courseOfferingRepo.save(new CourseOffering(infoLine.courseRefNumber,
-                        courseMap.get(infoLine.courseNumber), semestersMap.get(semesterKey)));
-                courseOfferingsMap.put(infoLine.courseRefNumber, courseOffering);
+                        courseMap.get(infoLine.courseNumber), semesterMap.get(semesterKey)));
+                courseOfferingMap.put(infoLine.courseRefNumber, courseOffering);
 
             }
 
-            courseOfferingsMap.get(infoLine.courseRefNumber).enrollStudent(studentsMap.get(infoLine.studentId));
+            courseOfferingMap.get(infoLine.courseRefNumber).enrollStudent(studentMap.get(infoLine.studentId));
 
             // Save student grades for differnt course offerings
-            Long courseOfferingId = courseOfferingsMap.get(infoLine.courseRefNumber).getId();
-            Long studentId = studentsMap.get(infoLine.studentId).getId();
+            Long courseOfferingId = courseOfferingMap.get(infoLine.courseRefNumber).getId();
+            Long studentId = studentMap.get(infoLine.studentId).getId();
             String grade = (infoLine.courseGrade.length() == 0) ? makeUpGrade() : infoLine.courseGrade;
             studentRecordRepo.save(new StudentRecord(courseOfferingId, studentId, grade));
 
         }
 
         // Update course offerings with enrolled students
-        for (String crn : courseOfferingsMap.keySet()) {
-            courseOfferingRepo.save(courseOfferingsMap.get(crn));
+        for (String crn : courseOfferingMap.keySet()) {
+            courseOfferingRepo.save(courseOfferingMap.get(crn));
         }
         scanner.close();
     }

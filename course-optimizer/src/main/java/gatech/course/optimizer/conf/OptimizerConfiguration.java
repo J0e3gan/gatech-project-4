@@ -48,9 +48,11 @@ public class OptimizerConfiguration {
         if (loadFromCSV == true) {
             createSuperAdminUsers();
             logger.info("Loading data from CSV files into the database ...");
+            InputStream studentFile = this.getClass().getResourceAsStream("/OMS-CS-CourseGrades_Final_Subset.csv");
             InputStream courseFile = this.getClass().getResourceAsStream("/courses.csv");
-            InputStream studentsFile = this.getClass().getResourceAsStream("/OMS-CS-CourseGrades_Final_Subset.csv");
-            loader.loadData(studentsFile,courseFile);
+            InputStream professorFile = this.getClass().getResourceAsStream("/professors.csv");
+            InputStream taFile = this.getClass().getResourceAsStream("/TAs.csv");
+            loader.loadData(studentFile, courseFile, professorFile, taFile);
 
             // Create sample constraints
             constraintRepo.save(new Constraint("MAX_COURSE_PER_SEMSESTER","Student can only take a certain amount of courses per semester", "3"));
