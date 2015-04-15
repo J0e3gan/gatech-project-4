@@ -34,6 +34,10 @@ app.config(function ($stateProvider) {
             controller: 'AdminCtrl',
             templateUrl: 'scripts/admin/taList.html',
             url: '/taList',
+        }).state('professors', {
+            controller: 'AdminCtrl',
+            templateUrl: 'scripts/admin/professorList.html',
+            url: '/professors',
         }).state('student', {
             controller: 'StudentCtrl',
             templateUrl: 'scripts/student/student.html',

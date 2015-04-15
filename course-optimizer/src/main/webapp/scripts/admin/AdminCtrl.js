@@ -11,10 +11,19 @@ angular.module('courseOpt').controller('AdminCtrl', function ($rootScope, $scope
 	    });
 	}
 
-    $scope.openModal = function(size){
+    var getCourseOfferings = function(){
+        $http.get('/offerings').success(function(response){
+            $scope.offerings = response;
+
+        }).error(function(response){
+
+        });
+    }
+
+    $scope.openModal = function(size, template){
 
     	var modalInstance = $modal.open({
-    		templateUrl : 'scripts/modal/addStudentModal.html',
+    		templateUrl : template,
     		controller: 'ModalCtrl',
     		size: size
     	});
@@ -34,12 +43,27 @@ angular.module('courseOpt').controller('AdminCtrl', function ($rootScope, $scope
     	});
     }
 
-    getStudents();
+    var getTAs = function(){
+    	 $http.get("/tas").success(function(response){
+    	 	$scope.tas = response;
+    	 }).error(function(error){
+    	 	console.log("error fetching TAs");
+    	 });
+    }
+
 
     if($state.current.name=='studentDetails'){
-    	
     	var currentStudent = $stateParams.id;
     	getStudentDetails(currentStudent);
+    }
+    else if($state.current.name=='studentsList'){
+    	getStudents();
+    }
+    else if($state.current.name=='taList'){
+    	getTAs();
+    }
+    else{
+        getCourseOfferings();
     }
 
 

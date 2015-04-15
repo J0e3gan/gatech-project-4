@@ -1,7 +1,7 @@
 <div class="container">
 	<h2>Available Teaching Assistants</h2>
 	<span class="pull-right" style="padding-bottom:20px;">
-		<button class="btn pull-right" ng-click="openModal('lg')"><i class="fa fa-user-plus"> Add TA</i></button>
+		<button class="btn pull-right" ng-click="openModal('lg', 'scripts/modal/addTAModal.html')"><i class="fa fa-user-plus"> Add TA</i></button>
 	</span>
 	<table class="table">
 		<thead style="width:100%;display:block">
@@ -9,17 +9,13 @@
 				<th style="width:113px;"></th>
 				<th style="width:283px;">First Name</th>
 				<th style="width:283px;">Last Name</th>
-				<th style="width:226px;">Student ID</th>
-				<th style="width:226px;">Student Standing</th>
 			</tr>
 		</thead>
 		<tbody style="display:block;height:800px;overflow-y:auto;width:100%">
-			<tr ng-repeat="student in students" style="width:100%">
+			<tr ng-repeat="ta in tas" style="width:100%">
 				<td style="width:113px;">{{$index+1}}</td>
-				<td style="width:283px;">{{student.firstName}}</td>
-				<td style="width:283px;">{{student.lastName}}</td>
-				<td style="width:226px;">{{student.studentId}}</td>
-				<td style="width:226px;">{{student.seniority}}</td>
+				<td style="width:283px;">{{ta.firstName}}</td>
+				<td style="width:283px;">{{ta.lastName}}</td>
 			</tr>
 		</tbody>
 	</table>

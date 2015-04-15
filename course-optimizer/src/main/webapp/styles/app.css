@@ -265,3 +265,81 @@ li.selected{
 .inline{
     display:inline-block;
 }
+.accordion {
+  margin-bottom: 19px;
+}
+.accordion-group {
+  margin-bottom: 2px;
+  border: 1px solid #e5e5e5;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.accordion-heading {
+  border-bottom: 0;
+}
+.accordion-heading .accordion-toggle {
+  display: block;
+  padding: 8px 15px;
+}
+.accordion-toggle {
+  cursor: pointer;
+}
+.accordion-inner {
+  padding: 9px 15px;
+  border-top: 1px solid #e5e5e5;
+}
+.accordion-group {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  margin-bottom: 0;
+  margin-top: -1px;
+}
+.accordion-group:first-child {
+  -webkit-border-radius: 4px 4px 0 0;
+  -moz-border-radius: 4px 4px 0 0;
+  border-radius: 4px 4px 0 0;
+  margin-top: 0;
+}
+.accordion-group:last-child {
+  -webkit-border-radius: 0 0 4px 4px;
+  -moz-border-radius: 0 0 4px 4px;
+  border-radius: 0 0 4px 4px;
+}
+.accordion-toggle {
+  color: inherit;
+  -webkit-transition: all linear 0.1s;
+  -moz-transition: all linear 0.1s;
+  -o-transition: all linear 0.1s;
+  transition: all linear 0.1s;
+}
+.accordion-toggle [class^="icon-"],
+.accordion-toggle [class*=" icon-"] {
+  margin-right: 6px;
+  -webkit-transition: all linear 0.1s;
+  -moz-transition: all linear 0.1s;
+  -o-transition: all linear 0.1s;
+  transition: all linear 0.1s;
+}
+.accordion-toggle:hover {
+  color: #005cb9;
+  text-decoration: none;
+}
+.accordion-toggle.in [class^="icon-"],
+.accordion-toggle.in [class*=" icon-"] {
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+.accordion-inner {
+  border-top-width: 0;
+}
+.accordion.chromeless {
+  margin: 0;
+}
+.accordion.chromeless .accordion-group {
+  border: none;
+}

@@ -19,6 +19,10 @@ angular.module('courseOpt').controller('MastheadCtrl', function ($rootScope, $sc
 						link:'taList',
 						icon: 'fa-sitemap'
 					},{
+						name:'Professors',
+						link:'professors',
+						icon: 'fa-mortar-board'
+					},{
 						name:'Rules',
 						link:'rules',
 						icon: 'fa-pencil-square-o'

@@ -5,6 +5,10 @@ angular.module('courseOpt').controller('ModalCtrl', function ($rootScope, $scope
 			lastName : "",
 			studentId : "",
 		}
+        $scope.newTA={
+            firstName:"",
+            lastName:""
+        }
 		$scope.done = false;
 		$scope.err = "";
 
@@ -18,7 +22,6 @@ angular.module('courseOpt').controller('ModalCtrl', function ($rootScope, $scope
         		$scope.err="Please make sure all fields have data.";
         		return;
         	}
-
 
         	var requestBody = {
         		'username' : $scope.newStudent.studentId,
@@ -38,5 +41,9 @@ angular.module('courseOpt').controller('ModalCtrl', function ($rootScope, $scope
         	}).error(function(error){
         		$scope.err = "Error adding student";
         	});
+        }
+
+        $scope.addTA = function(){
+            //TODO: add content
         }
 });
