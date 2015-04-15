@@ -10,7 +10,7 @@ angular.module('courseOpt').controller('AuthCtrl', function ($rootScope, $scope,
     $scope.login = function () {
         console.log($scope.username + " --  " + $scope.password);
         AuthService.login($scope.username, $scope.password).then(function (response) {
-            console.log("Login successfull");
+            console.log("Login successful");
             console.log(JSON.stringify(response));
             console.log(response);
             AuthService.setUser(response);

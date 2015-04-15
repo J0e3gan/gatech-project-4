@@ -31,9 +31,9 @@ app.config(function ($stateProvider) {
             templateUrl: 'scripts/admin/studentDetails.html',
             url: 'studentDetails/:id'
         }).state('taList', {
-            controller: 'AdminCtrl',
+            controller: 'TACtrl',
             templateUrl: 'scripts/admin/taList.html',
-            url: '/taList',
+            url: '/taList'
         }).state('student', {
             controller: 'StudentCtrl',
             templateUrl: 'scripts/student/student.html',
@@ -59,7 +59,7 @@ app.config(function ($stateProvider) {
         }).state('rules', {
             controller: 'RulesCtrl',
             templateUrl: 'scripts/rules/rules.html',
-            url: '/rules',
+            url: '/rules'
         }).state('dev', {
             controller: 'DevCtrl',
             templateUrl: 'scripts/dev/dev.html',
