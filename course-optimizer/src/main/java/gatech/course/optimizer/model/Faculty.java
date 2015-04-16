@@ -16,7 +16,7 @@ public class Faculty extends User {
     private Set<Course> competencies;
 
     @OneToMany
-    private List<Semester> availabiity;
+    private List<Semester> availability;
 
     public Set<Course> getCompetencies() {
         return competencies;
@@ -26,11 +26,11 @@ public class Faculty extends User {
         this.competencies = competencies;
     }
 
-    public List<Semester> getAvailabiity() {
-        return availabiity;
+    public List<Semester> getAvailability() {
+        return availability;
     }
 
-    public void setAvailabiity(List<Semester> availabiity) {
-        this.availabiity = availabiity;
+    public void setAvailability(List<Semester> availability) {
+        this.availability = availability;
     }
 }

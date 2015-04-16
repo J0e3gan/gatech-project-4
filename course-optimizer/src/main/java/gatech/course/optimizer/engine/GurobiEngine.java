@@ -294,12 +294,12 @@ public class GurobiEngine implements EngineInterface {
             
             // Add constraint that each professor only assigned to courses in available times
             for (int i = 0; i < numberOfProfessors; i++){
-            	if (professors[i].getAvailabiity() != null){
+            	if (professors[i].getAvailability() != null){
             		GRBLinExpr expr = new GRBLinExpr();
             		for (int j = 0; j < numberOfCourses; j++){
             			for (int k = 0; k < numberOfSemesters; k++){
 	            			boolean available = false;
-            				for (Semester semester : professors[i].getAvailabiity()){
+            				for (Semester semester : professors[i].getAvailability()){
 	            				int semesterIndex = this.convertSemesterToIndex( scheduleInput.getSemesterToSchedule(), semester );
 	            				if (semesterIndex == k){
 	            					available = true;
@@ -317,12 +317,12 @@ public class GurobiEngine implements EngineInterface {
             
             // Add constraint that each ta only assigned to courses in available times
             for (int i = 0; i < numberOfTAs; i++){
-            	if (teachingAssistants[i].getAvailabiity() != null){
+            	if (teachingAssistants[i].getAvailability() != null){
             		GRBLinExpr expr = new GRBLinExpr();
             		for (int j = 0; j < numberOfCourses; j++){
             			for (int k = 0; k < numberOfSemesters; k++){
 	            			boolean available = false;
-            				for (Semester semester : teachingAssistants[i].getAvailabiity()){
+            				for (Semester semester : teachingAssistants[i].getAvailability()){
 	            				int semesterIndex = this.convertSemesterToIndex( scheduleInput.getSemesterToSchedule(), semester );
 	            				if (semesterIndex == k){
 	            					available = true;
