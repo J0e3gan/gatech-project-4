@@ -52,6 +52,10 @@ app.config(function ($stateProvider) {
             templateUrl: 'scripts/auth/auth.html',
             url: '/',
             resolve: {}
+        }).state('courseDetails', {
+            controller: 'AdminCtrl',
+            templateUrl: 'scripts/admin/courseDetails.html',
+            url:'/courseDetails/:courseId'
         }).state('courseCatalog', {
             controller: 'CourseCatalogCtrl',
             templateUrl: 'scripts/courseCatalog/courseCatalog.html',

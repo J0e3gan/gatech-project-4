@@ -76,6 +76,35 @@ angular.module('courseOpt').controller('AdminCtrl', function ($rootScope, $scope
     	 });
     }
 
+    $scope.setCourse = function(course){
+
+        $rootScope.selectedCourse = course;
+    }
+
+    var addNewOffering = function(){
+        var requestBody = {
+            'crn':'',
+            'studentCapacity':'',
+            'course':{
+                'id':'',
+                'name':'',
+                'number':'',
+                'prerequisites': ''
+            },
+            'semester':{
+                'id':'',
+                'term': '',
+                'year': ''
+            },
+            'professor':'',
+            'teacherAssistants':[],
+            'enrolledStudents':[],
+            'studentsOnWaitList':[]
+        }
+
+        $http.post('/offering/schedule', requestBody);
+    }
+
 
     if($state.current.name=='studentDetails'){
     	var currentStudent = $stateParams.id;

@@ -1,0 +1,81 @@
+<div class="container">
+	<h2 style="display:inline-block;" class="pull-left">Course Details</h2>
+	<div ui-sref="admin" class="pull-right" style="cursor:pointer;display:inline-block;margin-top:30px;">
+		<i class="fa fa-chevron-left"> Back to Course Offerings</i>
+	</div>
+	<br>
+	<h3 style="padding:40px 0px 10px 0px;"><b>{{selectedCourse.course.number}} {{selectedCourse.course.name}}</b> &nbsp<i>{{selectedCourse.semester.term | titleCase}} {{selectedCourse.semester.year}}</i></h3>
+
+	<div>
+		<h4 class="inline">CRN: </h4>
+		<span ng-if="selectedCourse.crn!=null">{{selectedCourse.crn}}</span> <!--if null then show 'Not yet specified'-->
+		<span ng-if="selectedCourse.crn==null"> Not available</span>
+	</div>
+	<div>
+		<h4 class="inline">Professor: </h4>
+		<span ng-if="selectedCourse.professor!=null">{{selectedCourse.professor}}</span> <!--if null then show 'Not yet specified'-->
+		<span ng-if="selectedCourse.professor==null"> Not yet assigned</span>
+	</div>
+	<div>
+		<h4 class="inline">TAs: </h4>
+		<span ng-if="selectedCourse.teacherAssistants!=0" ng-repeat="ta in selectedCourse.teacherAssistants" style="padding-right:20px;">{{ta}}</span> <!--if null then show 'Not yet specified'-->
+		<span ng-if="selectedCourse.teacherAssistants.length==0"> Not yet assigned</span>
+	</div>
+	<div>
+		<h4 class="inline">Demand: </h4>
+		<span ng-if="selectedCourse.demand!=0 && selectedCourse.demand!=null">{{selectedCourse.demand}}</span> 
+		<span ng-if="selectedCourse.demand==0 || selectedCourse.demand==null"> No current demand</span>
+	</div>
+	<div>
+		<h4 class="inline">Capacity: </h4>
+		<span ng-if="selectedCourse.studentCapacity!=null">{{selectedCourse.studentCapacity}}</span> 
+		<span ng-if="selectedCourse.studentCapacity==null"> Not yet specified</span>
+	</div>
+
+	<div id="enrolledStudentsTable">
+		<h4 ng-class="{'inline': selectedCourse.enrolledStudents.length==0}">Students Enrolled: </h4>
+		<span ng-if="selectedCourse.enrolledStudents.length==0"> No students enrolled</span>
+		<table ng-if="selectedCourse.enrolledStudents.length!=0" class="table">
+			<thead style="width:100%;display:block">
+				<th style="width:113px;"></th>
+	    		<th style="width:283px;">Student ID</th>
+	    		<th style="width:283px;">First Name</th>
+	    		<th style="width:226px;">Last Name</th>
+	    		<th style="width:226px;">Seniority</th>
+	    	</thead>
+	    	<tbody style="display:block;height:300px;overflow-y:auto;width:100%">
+	    		<tr ng-repeat="student in selectedCourse.enrolledStudents">
+	    			<td style="width:113px;">{{$index+1}}</td>
+	    			<td style="width:283px;">{{student.studentId}}</td>
+	    			<td style="width:283px;">{{student.firstName}}</td>
+	    			<td style="width:226px;">{{student.lastName}}</td>
+	    			<td style="width:226px;">{{student.seniority}}</td>
+	    		</tr>
+	    	</tbody>
+		</table>
+	</div>	
+
+	<div id="waitListTable">
+		<h4 ng-class="{'inline': selectedCourse.studentsOnWaitList.length==0}">Students on Wait List: </h4>
+		<span ng-if="selectedCourse.studentsOnWaitList.length==0"> No students wait listed</span>
+		<table ng-if="selectedCourse.studentsOnWaitList.length!=0" class="table">
+			<thead style="width:100%;display:block">
+				<th style="width:113px;"></th>
+	    		<th style="width:283px;">Student ID</th>
+	    		<th style="width:283px;">First Name</th>
+	    		<th style="width:226px;">Last Name</th>
+	    		<th style="width:226px;">Seniority</th>
+	    	</thead>
+	    	<tbody style="display:block;height:300px;overflow-y:auto;width:100%">
+	    		<tr ng-repeat="student in selectedCourse.studentsOnWaitList">
+	    			<td style="width:113px;">{{$index+1}}</td>
+	    			<td style="width:283px;">{{student.studentId}}</td>
+	    			<td style="width:283px;">{{student.firstName}}</td>
+	    			<td style="width:226px;">{{student.lastName}}</td>
+	    			<td style="width:226px;">{{student.seniority}}</td>
+	    		</tr>
+	    	</tbody>
+		</table>
+	</div>
+
+</div>

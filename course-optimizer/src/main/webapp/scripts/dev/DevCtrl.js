@@ -258,8 +258,8 @@ angular.module('courseOpt').controller('DevCtrl', function ($rootScope, $scope, 
     $scope.services.push(getAllTAs);
     $scope.services.push(getAllStudents);
     $scope.services.push(getStudentDetails);
-    $scope.services.push(getAllConstriants);
-    $scope.services.push(createConstraint);
+    // $scope.services.push(getAllConstriants);
+    // $scope.services.push(createConstraint);
     $scope.services.push(getCourseOfferings);
     $scope.services.push(enrollStudent);
     $scope.services.push(scheduleCourse);

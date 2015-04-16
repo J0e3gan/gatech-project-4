@@ -1,6 +1,6 @@
 <div class="container">
 	<h2 style="padding-bottom:20px;">Course Offerings</h2>
-	<accordion>
+	<accordion  close-others="false">
 		<accordion-group heading="{{term[0].semester.term | titleCase}} {{term[0].semester.year}} Courses" ng-repeat="term in offerings" style="font-size:18px;font-weight:bold;">
       			<!-- <pre>{{year|json}}</pre> -->
       		<table class="table" style="font-size:14px;">
@@ -15,7 +15,7 @@
       					<td>{{course.course.number}}</td>
       					<td>{{course.course.name}}</td>
       					<td>{{course.studentCapacity}}</td>
-      					<td style="cursor:pointer;"><i class="fa fa-file-text-o"/></td>
+      					<td style="cursor:pointer;" ui-sref="courseDetails({courseId:course.course.number})" ng-click="setCourse(course);"><i class="fa fa-file-text-o"/></td>
       				</tr>
       			</tbody>
       		</table>
