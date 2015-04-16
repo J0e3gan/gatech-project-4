@@ -16,4 +16,16 @@
 	<div>
 		<button class="btn">Apply</button>
 	</div>
+	<div style="padding-top:30px;">
+		<h3>Current Desired Courses: </h3>
+		<span ng-show="user.desiredCourses.length==0"> No courses specified</span>
+		<table class="table" ng-show="user.desiredCourses.length!=0">
+			<tbody>
+				<tr ng-repeat="course in user.desiredCourses">
+					<td>{{course.number}}</td>
+					<td>{{course.name}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </div>

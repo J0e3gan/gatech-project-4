@@ -51,6 +51,7 @@ angular.module('courseOpt').controller('MastheadCtrl', function ($rootScope, $sc
 	}
 
 	$scope.logout = function(){
+
 		AuthService.logout();
 	}
 

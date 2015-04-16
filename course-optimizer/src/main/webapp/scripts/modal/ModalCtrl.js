@@ -12,12 +12,14 @@ angular.module('courseOpt').controller('ModalCtrl', function ($rootScope, $scope
 		$scope.done = false;
 		$scope.err = "";
 
+        var modalType = "";
+
 	    $scope.cancel = function() {
-            $modalInstance.dismiss('cancel');
+            $modalInstance.dismiss(modalType);
         };
 
         $scope.addStudent = function(){
-
+            modalType = 'student';
         	if($scope.newStudent.firstName=="" || $scope.newStudent.lastName=="" || $scope.newStudent.studentId==""){
         		$scope.err="Please make sure all fields have data.";
         		return;
@@ -44,12 +46,26 @@ angular.module('courseOpt').controller('ModalCtrl', function ($rootScope, $scope
         }
 
         $scope.addTA = function(){
-            //TODO: add content
+            modalType = 'ta';
 
             if($scope.newTA.firstName=="" || $scope.newTA.lastName==""){
                 $scope.err = "Please make sure all fields have data";
                 return;
             }
+
+            var requestBody = {
+                'firstName' : $scope.newTA.firstName,
+                'lastName' : $scope.newTA.lastName
+            }
+
+            $http.post('/ta/create', requestBody).success(function(response){
+                $scope.done = true;
+                $scope.err="";
+                $scope.message = "TA added successfully!"
+
+            }).error(function(error){
+                $scope.err = "Error adding TA";
+            });
 
         }
 });

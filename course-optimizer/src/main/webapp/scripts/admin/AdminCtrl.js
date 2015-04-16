@@ -54,9 +54,15 @@ angular.module('courseOpt').controller('AdminCtrl', function ($rootScope, $scope
     	});
 
     	modalInstance.result.then(function () {
-        }, function () {
+        }, function (modalType) {
             console.log("modal closed");
-            getStudents();
+            if(modalType=='student'){
+                getStudents();
+            }
+            else if (modalType=='ta'){
+                getTAs();
+            }
+                
         });
     }
 
@@ -91,7 +97,7 @@ angular.module('courseOpt').controller('AdminCtrl', function ($rootScope, $scope
             console.log("Error deleting TA");
         });
     }
-    
+
     $scope.deleteProf = function(profId){
         $http.delete('/professor/delete/'+profId).success(function(response){
             getProfessors(); //re-populate

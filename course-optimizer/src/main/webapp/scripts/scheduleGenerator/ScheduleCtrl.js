@@ -1,4 +1,6 @@
-angular.module('courseOpt').controller('ScheduleCtrl', function ($rootScope, $scope, $http) {
+angular.module('courseOpt').controller('ScheduleCtrl', function ($rootScope, $scope, $http, AuthService) {
+
+	$scope.user = AuthService.getUser();
 
 	$http.get('/courses').success(function(response){
 		$scope.courses = response;
