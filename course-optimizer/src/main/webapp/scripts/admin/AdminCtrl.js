@@ -76,6 +76,14 @@ angular.module('courseOpt').controller('AdminCtrl', function ($rootScope, $scope
     	 });
     }
 
+    $scope.deleteTA = function(taId){
+        $http.delete('/ta/delete/'+taId).success(function(response){
+            getTAs(); //repopulate
+        }).error(function(error){
+            console.log("Error deleting TA");
+        });
+    }
+
     $scope.setCourse = function(course){
 
         $rootScope.selectedCourse = course;

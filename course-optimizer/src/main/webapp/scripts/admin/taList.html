@@ -1,21 +1,23 @@
 <div class="container">
 	<h2>Available Teaching Assistants</h2>
-	<div style="padding-bottom:20px;width:75%">
+	<div style="padding-bottom:20px;width:90%">
 		<button class="btn pull-right" ng-click="openModal('lg', 'scripts/modal/addTAModal.html')"><i class="fa fa-user-plus"> Add TA</i></button>
 	</div>
 	<table class="table">
-		<thead style="width:75%;display:block">
+		<thead style="width:90%;display:block">
 			<tr>
 				<th style="width:155px;"></th>
 				<th style="width:350px;">First Name</th>
 				<th style="width:350px;">Last Name</th>
+				<th style="width:155px;"></th>
 			</tr>
 		</thead>
-		<tbody style="display:block;height:800px;overflow-y:auto;width:75%">
+		<tbody style="display:block;height:800px;overflow-y:auto;width:90%">
 			<tr ng-repeat="ta in tas" style="width:100%">
 				<td style="width:155px;">{{$index+1}}</td>
 				<td style="width:350px;">{{ta.firstName}}</td>
 				<td style="width:350px;">{{ta.lastName}}</td>
+				<td style="width:155px;cursor:pointer" ng-click="deleteTA(ta.id)"><i class="fa fa-trash-o"></i> Delete</td>
 			</tr>
 		</tbody>
 	</table>
