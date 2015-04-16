@@ -11,8 +11,10 @@ import gatech.course.optimizer.model.Specialization;
 import gurobi.GRB;
 import gurobi.GRBEnv;
 import gurobi.GRBException;
+import gurobi.GRBExpr;
 import gurobi.GRBLinExpr;
 import gurobi.GRBModel;
+import gurobi.GRBQuadExpr;
 import gurobi.GRBVar;
 
 import java.util.Set;
@@ -36,12 +38,15 @@ public class GurobiEngine implements EngineInterface {
             //int numberOfCourses = university.getCourses().size(); // j
             int numberOfCourses = scheduleInput.getCoursesThatCanBeOffered().size(); // j
             //int numberOfSemesters = university.getSemesters().size(); // k
-            int numberOfSemesters = 1;
+            int numberOfSemesters = 3;
             
             int numberOfProfessors = scheduleInput.getProfessors().size();
             int numberOfTAs = scheduleInput.getTeacherAssistants().size();
 
             int minEnrollmentToBeOffered = 1;
+            int maxCoursesPerProfessorPerSemester = 1;
+            int maxCoursesPerTAPerSemester = 1;
+            int maxCourseCapacity = scheduleInput.getMaxCourseCapacity();
             
             // Add variables
             double upperBound = numberOfStudents * numberOfCourses * numberOfStudents;
@@ -141,7 +146,7 @@ public class GurobiEngine implements EngineInterface {
             	GRBLinExpr expr = new GRBLinExpr();
             	int courseIndex = course.getId().intValue() - 1;
             	for (int i = 0; i < numberOfStudents; i++){
-            		expr.addTerm(1, modelVariables[i][courseIndex][getSemesterIndex(course.getSemester())]);
+            		expr.addTerm(1, modelVariables[i][courseIndex][convertSemesterToIndex(scheduleInput.getSemesterToSchedule(), course.getSemester())]);
             	}
             	model.addConstr( expr, GRB.GREATER_EQUAL, minEnrollmentToBeOffered, "requiredCourseOffering" + (course.getId().intValue()));
             }
@@ -208,15 +213,131 @@ public class GurobiEngine implements EngineInterface {
             }
             
             // Add constraint that each course offered has 1 professor assigned to it
+            for (int k = 0; k < numberOfSemesters; k++){
+            	for (int j = 0; j < numberOfCourses; j++){
+	            	GRBLinExpr expr = new GRBLinExpr();
+            		for (int i = 0; i < numberOfProfessors; i++){
+	            		expr.addTerm( maxCourseCapacity, professorVariables[i][j][k] );
+	            	}
+            		
+            		for (int i = 0; i < numberOfStudents; i++){
+            			expr.addTerm( -1, modelVariables[i][j][k] );
+            		}
+            		model.addConstr( expr, GRB.LESS_EQUAL, maxCourseCapacity - 1, "course_" + (j+1) + "_NeedsOneProfessorIfOffered" );
+	            }
+            }
             
             // Add constraint that each course offered has 1 TA assigned to it
+            for (int k = 0; k < numberOfSemesters; k++){
+            	for (int j = 0; j < numberOfCourses; j++){
+	            	GRBLinExpr expr = new GRBLinExpr();
+	            	for (int i = 0; i < numberOfTAs; i++){
+	            		expr.addTerm( maxCourseCapacity, taVariables[i][j][k] );
+	            	}
+            		
+            		for (int i = 0; i < numberOfStudents; i++){
+            			expr.addTerm( -1, modelVariables[i][j][k] );
+            		}
+            		model.addConstr( expr, GRB.LESS_EQUAL, maxCourseCapacity - 1, "course_" + (j+1) + "_NeedsOneTAIfOffered" );
+	            }
+            }
             
             // Add constraint that each faculty only assigned to 1 course a semester
+            for (int k = 0; k < numberOfSemesters; k++){
+            	for (int i = 0; i < numberOfProfessors; i++){
+            		GRBLinExpr professorExpr = new GRBLinExpr();
+	            	for (int j = 0; j < numberOfCourses; j++){
+	            		professorExpr.addTerm( 1, professorVariables[i][j][k] );
+	            	}
+	            	model.addConstr( professorExpr, GRB.LESS_EQUAL, maxCoursesPerProfessorPerSemester, "professor" +  (i+1) + "_MaxCoursesForSemester" + (k+1));
+            	}
+            	for (int i = 0; i < numberOfTAs; i++){
+            		GRBLinExpr taExpr = new GRBLinExpr();
+            		for (int j = 0; j < numberOfCourses; j++){
+            			taExpr.addTerm(1, taVariables[i][j][k]);
+            		}
+            		model.addConstr( taExpr, GRB.LESS_EQUAL, maxCoursesPerTAPerSemester, "ta" + (i+1) + "_MaxCoursesForSemester" + (k+1) );
+            	}
+            }
             
-            // Add constraint that each faculty only assigned to relevant courses
+            // Add constraint that each professor only assigned to relevant courses
+            for (int i = 0; i < numberOfProfessors; i++){
+        		if (professors[i].getCompetencies() != null){
+	            	for (int k = 0; k < numberOfSemesters; k++){
+	            		GRBLinExpr expr = new GRBLinExpr();
+	            		for (Course course : scheduleInput.getCoursesThatCanBeOffered()){
+	            			// The constraint will be that all non-competency course are not assigned:
+	            			if (! professors[i].getCompetencies().contains( course )){
+	            				expr.addTerm( 1, professorVariables[i][course.getId().intValue() - 1][k] );
+	            			}
+	            		}
+	            		model.addConstr( expr, GRB.EQUAL, 0, "professor" + (i + 1) + "_CompetenciesForSemester" + (k+1) );		
+	            	}
+        		}
+            }
             
-            // Add constraint that each faculty only assigned to courses in available times
-
+            // Add constraint that each TA only assigned to relevant courses
+            for (int i = 0; i < numberOfTAs; i++){
+        		if (teachingAssistants[i].getCompetencies() != null){
+	            	for (int k = 0; k < numberOfSemesters; k++){
+	            		GRBLinExpr expr = new GRBLinExpr();
+	            		for (Course course : scheduleInput.getCoursesThatCanBeOffered()){
+	            			// The constraint will be that all non-competency course are not assigned:
+	            			if (! teachingAssistants[i].getCompetencies().contains( course )){
+	            				expr.addTerm( 1, taVariables[i][course.getId().intValue() - 1][k] );
+	            			}
+	            		}
+	            		model.addConstr( expr, GRB.EQUAL, 0, "ta" + (i + 1) + "_CompetenciesForSemester" + (k+1) );		
+	            	}
+        		}
+            }
+            
+            // Add constraint that each professor only assigned to courses in available times
+            for (int i = 0; i < numberOfProfessors; i++){
+            	if (professors[i].getAvailabiity() != null){
+            		GRBLinExpr expr = new GRBLinExpr();
+            		for (int j = 0; j < numberOfCourses; j++){
+            			for (int k = 0; k < numberOfSemesters; k++){
+	            			boolean available = false;
+            				for (Semester semester : professors[i].getAvailabiity()){
+	            				int semesterIndex = this.convertSemesterToIndex( scheduleInput.getSemesterToSchedule(), semester );
+	            				if (semesterIndex == k){
+	            					available = true;
+	            					break;
+	            				}
+	            			}
+            				if (!available){
+            					expr.addTerm( 1, professorVariables[i][j][k] );
+            				}
+            			}
+            		}
+            		model.addConstr( expr, GRB.EQUAL, 0, "professor" + (i+1) + "_NotAvailable");
+            	}
+            }
+            
+            // Add constraint that each ta only assigned to courses in available times
+            for (int i = 0; i < numberOfTAs; i++){
+            	if (teachingAssistants[i].getAvailabiity() != null){
+            		GRBLinExpr expr = new GRBLinExpr();
+            		for (int j = 0; j < numberOfCourses; j++){
+            			for (int k = 0; k < numberOfSemesters; k++){
+	            			boolean available = false;
+            				for (Semester semester : teachingAssistants[i].getAvailabiity()){
+	            				int semesterIndex = this.convertSemesterToIndex( scheduleInput.getSemesterToSchedule(), semester );
+	            				if (semesterIndex == k){
+	            					available = true;
+	            					break;
+	            				}
+	            			}
+            				if (!available){
+            					expr.addTerm( 1, taVariables[i][j][k] );
+            				}
+            			}
+            		}
+            		model.addConstr( expr, GRB.EQUAL, 0, "ta" + (i+1) + "_NotAvailable");
+            	}
+            }
+            
             // Add objective
             // TODO : Tie to priorities of each student.
             GRBLinExpr expr = new GRBLinExpr();
@@ -281,7 +402,38 @@ public class GurobiEngine implements EngineInterface {
         return "y" + (i + 1) + "_" + (j + 1) + "_" + (k + 1);
     }
     
-    private int getSemesterIndex(Semester semester){
-    	return 0;
+    private int convertSemesterToIndex(Semester referenceSemester, Semester semesterToConvert){
+    	int referenceYear = referenceSemester.getYear();
+    	int referenceTerm = 0;
+    	switch (referenceSemester.getTerm()){
+    		case SPRING:
+    			referenceTerm = 0;
+    			break;
+    		case SUMMER:
+    			referenceTerm = 1;
+    			break;
+    		case FALL:
+    			referenceTerm = 2;
+    			break;
+    	}
+    	
+    	int targetYear = semesterToConvert.getYear();
+    	int targetTerm = 0;
+    	switch (semesterToConvert.getTerm()){
+    		case SPRING:
+    			targetTerm = 0;
+    			break;
+    		case SUMMER:
+    			targetTerm = 1;
+    			break;
+    		case FALL:
+    			targetTerm = 2;
+    			break;
+    	}    	
+    	// 2014, 2 ==> 2015,0 ... 1 * 3 + (0 - 2) = 1
+    	// 2015, 0 ==> 2015,2 ... 0 * 3 + (2 - 0) = 2
+    	// 2014, 2 ==> 2016,0 ... 2 * 3 + (0 - 2) = 4
+    	// 2014, 0 ==> 2015,0 ... 1 * 3 + (0 - 0) = 3
+    	return ((targetYear - referenceYear) * 3) + (targetTerm - referenceTerm);
     }
 }

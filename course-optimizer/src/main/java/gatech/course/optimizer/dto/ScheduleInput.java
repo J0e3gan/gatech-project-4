@@ -3,6 +3,7 @@ package gatech.course.optimizer.dto;
 import gatech.course.optimizer.model.Course;
 import gatech.course.optimizer.model.CourseOffering;
 import gatech.course.optimizer.model.Faculty;
+import gatech.course.optimizer.model.Semester;
 import gatech.course.optimizer.model.Specialization;
 
 import java.util.Set;
@@ -18,8 +19,10 @@ public class ScheduleInput {
     private Set<Faculty> professors;
     private Set<Faculty> teacherAssistants;
     private Set<Specialization> availableSpecializations;
+    private Semester semesterToSchedule;
     
     private int allowedClassesPerSemester;
+    private int maxCourseCapacity;
 
     public int getAllowedClassesPerSemester() {
         return allowedClassesPerSemester;
@@ -75,5 +78,21 @@ public class ScheduleInput {
     
     public void setAvailableSpecializations(Set<Specialization> specializations){
     	this.availableSpecializations = specializations;
+    }
+    
+    public void setSemesterToSchedule(Semester semester){
+    	this.semesterToSchedule = semester;
+    }
+    
+    public Semester getSemesterToSchedule(){
+    	return this.semesterToSchedule;
+    }
+    
+    public int getMaxCourseCapacity(){
+    	return this.maxCourseCapacity;
+    }
+    
+    public void setMaxCourseCapacity(int capacity){
+    	this.maxCourseCapacity = capacity;
     }
 }

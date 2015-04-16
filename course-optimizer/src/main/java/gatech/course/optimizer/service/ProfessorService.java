@@ -2,10 +2,12 @@ package gatech.course.optimizer.service;
 
 import gatech.course.optimizer.model.Professor;
 import gatech.course.optimizer.repo.ProfessorRepo;
+import gatech.course.optimizer.utils.JSONObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -29,6 +31,14 @@ public class ProfessorService {
     List<Professor> getAllProfessors() {
         logger.info("Getting all professors");
         return professorRepo.getAllProfessors();
+    }
+
+    @RequestMapping(value = "/professor/create", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    Professor createProfessor(@RequestBody Professor professor) {
+        logger.info("Creating professor: " + JSONObjectMapper.jsonify(professor));
+        return professorRepo.save(professor);
     }
 
     @RequestMapping(value = "/professor/delete/{professorId}", method = RequestMethod.DELETE)
