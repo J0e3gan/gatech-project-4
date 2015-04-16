@@ -56,11 +56,39 @@ angular.module('courseOpt').service('DevService', function ($http, $q) {
         return deferred.promise;
     };
 
+    this.deleteProfessor = function (professorId) {
+
+        var deferred = $q.defer();
+
+        $http.delete("/professor/delete/" + professorId).success(function (response) {
+            deferred.resolve(response);
+        })
+            .error(function (response) {
+                deferred.reject(response);
+            });
+
+        return deferred.promise;
+    };
+
     this.getAllTAs = function () {
 
         var deferred = $q.defer();
 
         $http.get("/tas").success(function (response) {
+            deferred.resolve(response);
+        })
+            .error(function (response) {
+                deferred.reject(response);
+            });
+
+        return deferred.promise;
+    };
+
+    this.deleteTA = function (taId) {
+
+        var deferred = $q.defer();
+
+        $http.delete("/ta/delete/" + taId).success(function (response) {
             deferred.resolve(response);
         })
             .error(function (response) {
@@ -109,6 +137,20 @@ angular.module('courseOpt').service('DevService', function ($http, $q) {
 
     this.getAllCourseOfferings = function() {
         return $http.get("/offerings");
+    };
+
+    this.deleteCourseOffering = function (offeringId) {
+
+        var deferred = $q.defer();
+
+        $http.delete("/offering/delete/" + offeringId).success(function (response) {
+            deferred.resolve(response);
+        })
+            .error(function (response) {
+                deferred.reject(response);
+            });
+
+        return deferred.promise;
     };
 
     this.enrollStudent = function(student) {

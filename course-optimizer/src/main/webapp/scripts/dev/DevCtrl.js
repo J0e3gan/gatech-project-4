@@ -79,6 +79,27 @@ angular.module('courseOpt').controller('DevCtrl', function ($rootScope, $scope, 
         });
     };
 
+    var deleteProfessor = {};
+    deleteProfessor.title = 'Delete Professor';
+    deleteProfessor.method = 'DELETE';
+    deleteProfessor.endpoint = '/professor/delete/{professorId}';
+    var param = {
+        "name" : "professorId",
+        "value" : null
+    };
+    deleteProfessor.params = [];
+    deleteProfessor.params.push(param);
+    deleteProfessor.result = null;
+    deleteProfessor.loading = false;
+    deleteProfessor.execute = function() {
+        deleteProfessor.loading = true;
+        deleteProfessor.result = null;
+        DevService.deleteProfessor(deleteProfessor.params[0].value).then(function(response){
+            deleteProfessor.loading = false;
+            deleteProfessor.result = response;
+        });
+    };
+
     var getAllTAs = {}
     getAllTAs.title = 'Get All TAs';
     getAllTAs.method = 'GET';
@@ -92,6 +113,27 @@ angular.module('courseOpt').controller('DevCtrl', function ($rootScope, $scope, 
         DevService.getAllTAs().then(function(response){
             getAllTAs.loading = false;
             getAllTAs.result = response;
+        });
+    };
+
+    var deleteTA = {};
+    deleteTA.title = 'Delete TA';
+    deleteTA.method = 'DELETE';
+    deleteTA.endpoint = '/ta/delete/{taId}';
+    var param = {
+        "name" : "taId",
+        "value" : null
+    };
+    deleteTA.params = [];
+    deleteTA.params.push(param);
+    deleteTA.result = null;
+    deleteTA.loading = false;
+    deleteTA.execute = function() {
+        deleteTA.loading = true;
+        deleteTA.result = null;
+        DevService.deleteTA(deleteTA.params[0].value).then(function(response){
+            deleteTA.loading = false;
+            deleteTA.result = response;
         });
     };
 
@@ -187,6 +229,27 @@ angular.module('courseOpt').controller('DevCtrl', function ($rootScope, $scope, 
         });
     };
 
+    var deleteCourseOffering = {};
+    deleteCourseOffering.title = 'Delete a Scheduled Course';
+    deleteCourseOffering.method = 'DELETE';
+    deleteCourseOffering.endpoint = '/offering/delete/{offeringId}';
+    var param = {
+        "name" : "offeringId",
+        "value" : null
+    };
+    deleteCourseOffering.params = [];
+    deleteCourseOffering.params.push(param);
+    deleteCourseOffering.result = null;
+    deleteCourseOffering.loading = false;
+    deleteCourseOffering.execute = function() {
+        deleteCourseOffering.loading = true;
+        deleteCourseOffering.result = null;
+        DevService.deleteCourseOffering(deleteCourseOffering.params[0].value).then(function(response){
+            deleteCourseOffering.loading = false;
+            deleteCourseOffering.result = response;
+        });
+    };
+
 
     var student = {
         "username": "99999999",
@@ -255,12 +318,15 @@ angular.module('courseOpt').controller('DevCtrl', function ($rootScope, $scope, 
     $scope.services.push(getCourse);
     $scope.services.push(getCourseByNumber);
     $scope.services.push(getAllProfessors);
+    $scope.services.push(deleteProfessor);
     $scope.services.push(getAllTAs);
+    $scope.services.push(deleteTA);
     $scope.services.push(getAllStudents);
     $scope.services.push(getStudentDetails);
     $scope.services.push(getAllConstriants);
     $scope.services.push(createConstraint);
     $scope.services.push(getCourseOfferings);
+    $scope.services.push(deleteCourseOffering);
     $scope.services.push(enrollStudent);
     $scope.services.push(scheduleCourse);
 

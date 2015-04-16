@@ -36,4 +36,18 @@ public class CourseOfferingService {
         logger.info("Scheduling course: "+ JSONObjectMapper.jsonify(courseOffering));
         return courseOfferingRepo.save(courseOffering);
     }
+
+    @RequestMapping(value = "/offering/delete/{offeringId}", method = RequestMethod.DELETE)
+    public
+    @ResponseBody
+    void deleteOffering(@PathVariable("offeringId") Long id) {
+        logger.info("Deleting scheduled course for id='{}'", id);
+        CourseOffering offering = courseOfferingRepo.findOne(id);
+        if (offering != null) {
+            courseOfferingRepo.delete(offering);
+            logger.info("Deleted scheduled course for id='{}'", id);
+        } else {
+            logger.info("Scheduled course for id='{}' not found.", id);
+        }
+    }
 }
