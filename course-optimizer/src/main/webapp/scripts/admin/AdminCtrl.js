@@ -76,11 +76,27 @@ angular.module('courseOpt').controller('AdminCtrl', function ($rootScope, $scope
     	 });
     }
 
+    var getProfessors = function(){
+        $http.get('/professors').success(function(response){
+            $scope.professors = response;
+        }).error(function(error){
+            console.log("error fetching profs");
+        })
+    }
+
     $scope.deleteTA = function(taId){
         $http.delete('/ta/delete/'+taId).success(function(response){
-            getTAs(); //repopulate
+            getTAs(); //re-populate
         }).error(function(error){
             console.log("Error deleting TA");
+        });
+    }
+    
+    $scope.deleteProf = function(profId){
+        $http.delete('/professor/delete/'+profId).success(function(response){
+            getProfessors(); //re-populate
+        }).error(function(error){
+            console.log("Error deleting prof");
         });
     }
 
@@ -123,6 +139,9 @@ angular.module('courseOpt').controller('AdminCtrl', function ($rootScope, $scope
     }
     else if($state.current.name=='taList'){
     	getTAs();
+    }
+    else if($state.current.name=='professors'){
+        getProfessors();
     }
     else{
         getCourseOfferings();
