@@ -1,5 +1,8 @@
 <div class="container">
-	<h2 style="padding-bottom:20px;">Course Offerings</h2>
+	<h2>Course Offerings</h2>
+	<div style="padding-bottom:20px;margin-bottom:30px;">
+		<button class="btn pull-right" ng-click="openModal('lg', '')"><i class="fa fa-user-plus"> Add Course Offering</i></button>
+	</div>
 	<accordion  close-others="false">
 		<accordion-group heading="{{term[0].semester.term | titleCase}} {{term[0].semester.year}} Courses" ng-repeat="term in offerings" style="font-size:18px;font-weight:bold;">
       			<!-- <pre>{{year|json}}</pre> -->
