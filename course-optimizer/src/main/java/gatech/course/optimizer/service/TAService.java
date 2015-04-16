@@ -45,14 +45,14 @@ public class TAService {
     public
     @ResponseBody
     void deleteTA(@PathVariable("taId") Long id) {
-        logger.info("Deleting TA for id='{}'", id);
+        logger.info("Deleting TA with id='{}'", id);
 
         TA ta = taRepo.findOne(id);
         if (ta != null) {
             taRepo.delete(ta);
-            logger.info("Deleted TA for id='{}'", id);
+            logger.info("Deleted TA with id='{}'", id);
         } else {
-            logger.info("TA for id='{}' not found.", id);
+            logger.info("TA with id='{}' not found.", id);
         }
     }
 }

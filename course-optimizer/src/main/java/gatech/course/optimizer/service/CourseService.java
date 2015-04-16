@@ -37,7 +37,7 @@ public class CourseService {
     public
     @ResponseBody
     Course getCourse(@PathVariable("courseId") Long courseId) {
-        logger.info("Getting course for id='{}'", courseId);
+        logger.info("Getting course with id='{}'", courseId);
         return courseRepo.getCourse(courseId);
     }
 
@@ -45,7 +45,7 @@ public class CourseService {
     public
     @ResponseBody
     Course getCourseByNumber(@PathVariable("courseNumber") String courseNumber) {
-        logger.info("Getting course for number='{}'", courseNumber);
+        logger.info("Getting course with number='{}'", courseNumber);
         return courseRepo.getCourseByNumber(courseNumber);
     }
 

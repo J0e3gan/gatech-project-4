@@ -5,7 +5,7 @@ angular.module('courseOpt').controller('DevCtrl', function ($rootScope, $scope, 
 
     $scope.services = [];
 
-    var getAllCourses = {}
+    var getAllCourses = {};
     getAllCourses.title = 'Get All Courses';
     getAllCourses.method = 'GET';
     getAllCourses.endpoint = '/courses';
@@ -25,12 +25,12 @@ angular.module('courseOpt').controller('DevCtrl', function ($rootScope, $scope, 
     getCourse.title = 'Get Course';
     getCourse.method = 'GET';
     getCourse.endpoint = '/course/{courseId}';
-    var param = {
+    var courseIdParam = {
         "name" : "courseId",
         "value" : null
     };
     getCourse.params = [];
-    getCourse.params.push(param);
+    getCourse.params.push(courseIdParam);
     getCourse.result = null;
     getCourse.loading = false;
     getCourse.execute = function() {
@@ -46,12 +46,12 @@ angular.module('courseOpt').controller('DevCtrl', function ($rootScope, $scope, 
     getCourseByNumber.title = 'Get Course By Number';
     getCourseByNumber.method = 'GET';
     getCourseByNumber.endpoint = '/course/number/{courseNumber}';
-    var param = {
+    var courseNumberParam = {
         "name" : "courseNumber",
         "value" : null
     };
     getCourseByNumber.params = [];
-    getCourseByNumber.params.push(param);
+    getCourseByNumber.params.push(courseNumberParam);
     getCourseByNumber.result = null;
     getCourseByNumber.loading = false;
     getCourseByNumber.execute = function() {
@@ -63,7 +63,7 @@ angular.module('courseOpt').controller('DevCtrl', function ($rootScope, $scope, 
         });
     };
 
-    var getAllProfessors = {}
+    var getAllProfessors = {};
     getAllProfessors.title = 'Get All Professors';
     getAllProfessors.method = 'GET';
     getAllProfessors.endpoint = '/professors';
@@ -104,12 +104,12 @@ angular.module('courseOpt').controller('DevCtrl', function ($rootScope, $scope, 
     deleteProfessor.title = 'Delete Professor';
     deleteProfessor.method = 'DELETE';
     deleteProfessor.endpoint = '/professor/delete/{professorId}';
-    var param = {
+    var professorIdParam = {
         "name": "professorId",
         "value": null
     };
     deleteProfessor.params = [];
-    deleteProfessor.params.push(param);
+    deleteProfessor.params.push(professorIdParam);
     deleteProfessor.result = null;
     deleteProfessor.loading = false;
     deleteProfessor.execute = function () {
@@ -121,7 +121,7 @@ angular.module('courseOpt').controller('DevCtrl', function ($rootScope, $scope, 
         });
     };
 
-    var getAllTAs = {}
+    var getAllTAs = {};
     getAllTAs.title = 'Get All TAs';
     getAllTAs.method = 'GET';
     getAllTAs.endpoint = '/tas';
@@ -162,12 +162,12 @@ angular.module('courseOpt').controller('DevCtrl', function ($rootScope, $scope, 
     deleteTA.title = 'Delete TA';
     deleteTA.method = 'DELETE';
     deleteTA.endpoint = '/ta/delete/{taId}';
-    var param = {
+    var taIdParam = {
         "name": "taId",
         "value": null
     };
     deleteTA.params = [];
-    deleteTA.params.push(param);
+    deleteTA.params.push(taIdParam);
     deleteTA.result = null;
     deleteTA.loading = false;
     deleteTA.execute = function () {
@@ -179,7 +179,7 @@ angular.module('courseOpt').controller('DevCtrl', function ($rootScope, $scope, 
         });
     };
 
-    var getAllStudents = {}
+    var getAllStudents = {};
     getAllStudents.title = 'Get All Students';
     getAllStudents.method = 'GET';
     getAllStudents.endpoint = '/students';
@@ -200,12 +200,12 @@ angular.module('courseOpt').controller('DevCtrl', function ($rootScope, $scope, 
     getStudentDetails.title = 'Get Student Details';
     getStudentDetails.method = 'GET';
     getStudentDetails.endpoint = '/student/{studentId}';
-    var param = {
+    var studentIdParam = {
         "name" : "studentId",
         "value" : null
     };
     getStudentDetails.params = [];
-    getStudentDetails.params.push(param);
+    getStudentDetails.params.push(studentIdParam);
     getStudentDetails.result = null;
     getStudentDetails.loading = false;
     getStudentDetails.execute = function() {
@@ -217,18 +217,18 @@ angular.module('courseOpt').controller('DevCtrl', function ($rootScope, $scope, 
         });
     };
 
-    var getAllConstriants = {};
-    getAllConstriants.title = "Get All Constraints";
-    getAllConstriants.method = 'GET';
-    getAllConstriants.endpoint = '/constraints';
-    getAllConstriants.loading = false;
-    getAllConstriants.result = null;
-    getAllConstriants.execute = function() {
-        getAllConstriants.loading = true;
-        getAllConstriants.result = null;
+    var getAllConstraints = {};
+    getAllConstraints.title = "Get All Constraints";
+    getAllConstraints.method = 'GET';
+    getAllConstraints.endpoint = '/constraints';
+    getAllConstraints.loading = false;
+    getAllConstraints.result = null;
+    getAllConstraints.execute = function() {
+        getAllConstraints.loading = true;
+        getAllConstraints.result = null;
         DevService.getConstraints().then(function(response){
-            getAllConstriants.loading = false;
-            getAllConstriants.result = response.data;
+            getAllConstraints.loading = false;
+            getAllConstraints.result = response.data;
         });
     };
 
@@ -275,12 +275,12 @@ angular.module('courseOpt').controller('DevCtrl', function ($rootScope, $scope, 
     deleteCourseOffering.title = 'Delete a Scheduled Course';
     deleteCourseOffering.method = 'DELETE';
     deleteCourseOffering.endpoint = '/offering/delete/{offeringId}';
-    var param = {
+    var offeringIdParam = {
         "name" : "offeringId",
         "value" : null
     };
     deleteCourseOffering.params = [];
-    deleteCourseOffering.params.push(param);
+    deleteCourseOffering.params.push(offeringIdParam);
     deleteCourseOffering.result = null;
     deleteCourseOffering.loading = false;
     deleteCourseOffering.execute = function() {
@@ -301,7 +301,7 @@ angular.module('courseOpt').controller('DevCtrl', function ($rootScope, $scope, 
         "desiredCourses": [],
         "seniority": 0,
         "studentId": "99999999"
-    }
+    };
 
     var enrollStudent = {};
     enrollStudent.title = "Enroll Student";
@@ -356,6 +356,7 @@ angular.module('courseOpt').controller('DevCtrl', function ($rootScope, $scope, 
         });
     };
 
+
     $scope.services.push(getAllCourses);
     $scope.services.push(getCourse);
     $scope.services.push(getCourseByNumber);
@@ -368,10 +369,10 @@ angular.module('courseOpt').controller('DevCtrl', function ($rootScope, $scope, 
     $scope.services.push(getAllStudents);
     $scope.services.push(getStudentDetails);
     $scope.services.push(enrollStudent);
-    // $scope.services.push(getAllConstriants);
-    // $scope.services.push(createConstraint);
     $scope.services.push(getCourseOfferings);
     $scope.services.push(scheduleCourse);
     $scope.services.push(deleteCourseOffering);
+    //$scope.services.push(getAllConstraints);
+    //$scope.services.push(createConstraint);
 
 });

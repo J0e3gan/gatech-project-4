@@ -20,7 +20,6 @@ import java.util.List;
  */
 @RestController
 public class StudentService {
-
     @Autowired
     private StudentRepo studentRepo;
 
@@ -36,6 +35,7 @@ public class StudentService {
     public
     @ResponseBody
     List<Student> getAllStudents() {
+        logger.info("Getting all students");
         return studentRepo.getAllStudents();
     }
 
@@ -44,43 +44,44 @@ public class StudentService {
     @ResponseBody
     StudentDTO getStudentDetails(@PathVariable("studentId") String studentId) {
         logger.info("Getting student details for studentId='{}'", studentId);
+
         Student student = studentRepo.findByStudentId(studentId);
-        StudentDTO studentDTO = new StudentDTO(student);
+        if (student != null) {
+            StudentDTO studentDTO = new StudentDTO(student);
 
-        List<TakenCourseDTO> takenCourses = new ArrayList<TakenCourseDTO>();
-        List<CourseOffering> courseOfferings = courseOfferingRepo.findCoursesByStudent(student);
-        for (CourseOffering courseOffering : courseOfferings) {
-            String grade = studentRecordRepo.getGradeForStudent(courseOffering.getId(), student.getId());
-            TakenCourseDTO takenCourseDTO = new TakenCourseDTO(courseOffering, grade);
-            takenCourses.add(takenCourseDTO);
+            List<TakenCourseDTO> takenCourses = new ArrayList<TakenCourseDTO>();
+            List<CourseOffering> courseOfferings = courseOfferingRepo.findCoursesByStudent(student);
+            for (CourseOffering courseOffering : courseOfferings) {
+                String grade = studentRecordRepo.getGradeForStudent(courseOffering.getId(), student.getId());
+                TakenCourseDTO takenCourseDTO = new TakenCourseDTO(courseOffering, grade);
+                takenCourses.add(takenCourseDTO);
+            }
+            studentDTO.setTakenCourses(takenCourses);
+
+            return studentDTO;
+        } else {
+            logger.info("Student details for studentId='{}' not found.", studentId);
+            return null;
         }
-        studentDTO.setTakenCourses(takenCourses);
-
-        return studentDTO;
     }
 
     @RequestMapping(value = "/student/enroll", method = RequestMethod.POST)
     public
     @ResponseBody
     Student createStudent(@RequestBody Student student) {
-
         logger.info("Creating new student");
         return studentRepo.save(student);
     }
-
 
     /*
     @RequestMapping(value = "/student", method = RequestMethod.POST)
     public
     @ResponseBody
     StudentDTO updateStudent(@RequestBody StudentDTO studentDTO) {
-
-        logger.info("Creating new student");
+        logger.info("Updating student");
         studentRepo.save(studentDTO.toStudent());
         studentDTO.ge
         return null;
     }
     */
-
-
 }

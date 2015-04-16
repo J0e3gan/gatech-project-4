@@ -41,13 +41,13 @@ public class CourseOfferingService {
     public
     @ResponseBody
     void deleteOffering(@PathVariable("offeringId") Long id) {
-        logger.info("Deleting scheduled course for id='{}'", id);
+        logger.info("Deleting scheduled course with id='{}'", id);
         CourseOffering offering = courseOfferingRepo.findOne(id);
         if (offering != null) {
             courseOfferingRepo.delete(offering);
-            logger.info("Deleted scheduled course for id='{}'", id);
+            logger.info("Deleted scheduled course with id='{}'", id);
         } else {
-            logger.info("Scheduled course for id='{}' not found.", id);
+            logger.info("Scheduled course with id='{}' not found.", id);
         }
     }
 }

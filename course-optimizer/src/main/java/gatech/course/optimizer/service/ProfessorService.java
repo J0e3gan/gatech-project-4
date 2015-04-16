@@ -52,14 +52,14 @@ public class ProfessorService {
     public
     @ResponseBody
     void deleteProfessor(@PathVariable("professorId") Long id) {
-        logger.info("Deleting professor for id='{}'", id);
+        logger.info("Deleting professor with id='{}'", id);
 
         Professor prof = professorRepo.findOne(id);
         if (prof != null) {
             professorRepo.delete(prof);
-            logger.info("Deleted professor for id='{}'", id);
+            logger.info("Deleted professor with id='{}'", id);
         } else {
-            logger.info("Professor for id='{}' not found.", id);
+            logger.info("Professor with id='{}' not found.", id);
         }
     }
 }
