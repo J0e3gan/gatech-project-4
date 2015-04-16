@@ -1,8 +1,10 @@
 package gatech.course.optimizer.service;
 
+import gatech.course.optimizer.dto.ProfessorDTO;
 import gatech.course.optimizer.model.Professor;
 import gatech.course.optimizer.repo.ProfessorRepo;
 import gatech.course.optimizer.utils.JSONObjectMapper;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +38,14 @@ public class ProfessorService {
     @RequestMapping(value = "/professor/create", method = RequestMethod.POST)
     public
     @ResponseBody
-    Professor createProfessor(@RequestBody Professor professor) {
-        logger.info("Creating professor: " + JSONObjectMapper.jsonify(professor));
-        return professorRepo.save(professor);
+    ProfessorDTO createProfessor(@RequestBody ProfessorDTO professorDTO) {
+        logger.info("Creating professor: " + JSONObjectMapper.jsonify(professorDTO));
+
+        ModelMapper modelMapper = new ModelMapper();
+        Professor prof = modelMapper.map(professorDTO, Professor.class);
+        Professor savedProf = professorRepo.save(prof);
+
+        return modelMapper.map(savedProf, ProfessorDTO.class);
     }
 
     @RequestMapping(value = "/professor/delete/{professorId}", method = RequestMethod.DELETE)
@@ -46,6 +53,7 @@ public class ProfessorService {
     @ResponseBody
     void deleteProfessor(@PathVariable("professorId") Long id) {
         logger.info("Deleting professor for id='{}'", id);
+
         Professor prof = professorRepo.findOne(id);
         if (prof != null) {
             professorRepo.delete(prof);
