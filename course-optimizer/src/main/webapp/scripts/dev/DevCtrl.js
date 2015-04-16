@@ -70,12 +70,33 @@ angular.module('courseOpt').controller('DevCtrl', function ($rootScope, $scope, 
     getAllProfessors.params = [];
     getAllProfessors.result = null;
     getAllProfessors.loading = false;
-    getAllProfessors.execute = function() {
+    getAllProfessors.execute = function () {
         getAllProfessors.loading = true;
         getAllProfessors.result = null;
-        DevService.getAllProfessors().then(function(response){
+        DevService.getAllProfessors().then(function (response) {
             getAllProfessors.loading = false;
             getAllProfessors.result = response;
+        });
+    };
+
+    var someProf = {
+        "firstName": "Some",
+        "lastName": "Prof"
+    };
+
+    var createProfessor = {};
+    createProfessor.title = "Create Professor";
+    createProfessor.method = 'POST';
+    createProfessor.endpoint = '/professor/create';
+    createProfessor.loading = false;
+    createProfessor.result = null;
+    createProfessor.body = JSON.stringify(someProf);
+    createProfessor.execute = function () {
+        createProfessor.loading = true;
+        createProfessor.result = null;
+        DevService.createProfessor(JSON.parse(createProfessor.body)).then(function (response) {
+            createProfessor.loading = false;
+            createProfessor.result = response.data;
         });
     };
 
@@ -84,17 +105,17 @@ angular.module('courseOpt').controller('DevCtrl', function ($rootScope, $scope, 
     deleteProfessor.method = 'DELETE';
     deleteProfessor.endpoint = '/professor/delete/{professorId}';
     var param = {
-        "name" : "professorId",
-        "value" : null
+        "name": "professorId",
+        "value": null
     };
     deleteProfessor.params = [];
     deleteProfessor.params.push(param);
     deleteProfessor.result = null;
     deleteProfessor.loading = false;
-    deleteProfessor.execute = function() {
+    deleteProfessor.execute = function () {
         deleteProfessor.loading = true;
         deleteProfessor.result = null;
-        DevService.deleteProfessor(deleteProfessor.params[0].value).then(function(response){
+        DevService.deleteProfessor(deleteProfessor.params[0].value).then(function (response) {
             deleteProfessor.loading = false;
             deleteProfessor.result = response;
         });
@@ -107,12 +128,33 @@ angular.module('courseOpt').controller('DevCtrl', function ($rootScope, $scope, 
     getAllTAs.params = [];
     getAllTAs.result = null;
     getAllTAs.loading = false;
-    getAllTAs.execute = function() {
+    getAllTAs.execute = function () {
         getAllTAs.loading = true;
         getAllTAs.result = null;
-        DevService.getAllTAs().then(function(response){
+        DevService.getAllTAs().then(function (response) {
             getAllTAs.loading = false;
             getAllTAs.result = response;
+        });
+    };
+
+    var someTA = {
+        "firstName": "Some",
+        "lastName": "TA"
+    };
+
+    var createTA = {};
+    createTA.title = "Create TA";
+    createTA.method = 'POST';
+    createTA.endpoint = '/ta/create';
+    createTA.loading = false;
+    createTA.result = null;
+    createTA.body = JSON.stringify(someTA);
+    createTA.execute = function () {
+        createTA.loading = true;
+        createTA.result = null;
+        DevService.createTA(JSON.parse(createTA.body)).then(function (response) {
+            createTA.loading = false;
+            createTA.result = response.data;
         });
     };
 
@@ -121,17 +163,17 @@ angular.module('courseOpt').controller('DevCtrl', function ($rootScope, $scope, 
     deleteTA.method = 'DELETE';
     deleteTA.endpoint = '/ta/delete/{taId}';
     var param = {
-        "name" : "taId",
-        "value" : null
+        "name": "taId",
+        "value": null
     };
     deleteTA.params = [];
     deleteTA.params.push(param);
     deleteTA.result = null;
     deleteTA.loading = false;
-    deleteTA.execute = function() {
+    deleteTA.execute = function () {
         deleteTA.loading = true;
         deleteTA.result = null;
-        DevService.deleteTA(deleteTA.params[0].value).then(function(response){
+        DevService.deleteTA(deleteTA.params[0].value).then(function (response) {
             deleteTA.loading = false;
             deleteTA.result = response;
         });
@@ -318,16 +360,18 @@ angular.module('courseOpt').controller('DevCtrl', function ($rootScope, $scope, 
     $scope.services.push(getCourse);
     $scope.services.push(getCourseByNumber);
     $scope.services.push(getAllProfessors);
+    $scope.services.push(createProfessor);
     $scope.services.push(deleteProfessor);
     $scope.services.push(getAllTAs);
+    $scope.services.push(createTA);
     $scope.services.push(deleteTA);
     $scope.services.push(getAllStudents);
     $scope.services.push(getStudentDetails);
+    $scope.services.push(enrollStudent);
     // $scope.services.push(getAllConstriants);
     // $scope.services.push(createConstraint);
     $scope.services.push(getCourseOfferings);
-    $scope.services.push(deleteCourseOffering);
-    $scope.services.push(enrollStudent);
     $scope.services.push(scheduleCourse);
+    $scope.services.push(deleteCourseOffering);
 
 });

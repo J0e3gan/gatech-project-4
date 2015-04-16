@@ -56,6 +56,10 @@ angular.module('courseOpt').service('DevService', function ($http, $q) {
         return deferred.promise;
     };
 
+    this.createProfessor = function (professor) {
+        return $http.post("/professor/create", professor);
+    };
+
     this.deleteProfessor = function (professorId) {
 
         var deferred = $q.defer();
@@ -82,6 +86,10 @@ angular.module('courseOpt').service('DevService', function ($http, $q) {
             });
 
         return deferred.promise;
+    };
+
+    this.createTA = function (ta) {
+        return $http.post("/ta/create", ta);
     };
 
     this.deleteTA = function (taId) {
@@ -126,21 +134,23 @@ angular.module('courseOpt').service('DevService', function ($http, $q) {
         return deferred.promise;
     };
 
-
-    this.getConstraints = function() {
+    this.getConstraints = function () {
         return $http.get("/constraints");
     };
 
-    this.createConstraint = function(constraint) {
-        return $http.post("/constraint/create",constraint);
+    this.createConstraint = function (constraint) {
+        return $http.post("/constraint/create", constraint);
     };
 
-    this.getAllCourseOfferings = function() {
+    this.getAllCourseOfferings = function () {
         return $http.get("/offerings");
     };
 
-    this.deleteCourseOffering = function (offeringId) {
+    this.scheduleCourse = function (courseOffering) {
+        return $http.post("/offering/schedule", courseOffering);
+    }
 
+    this.deleteCourseOffering = function (offeringId) {
         var deferred = $q.defer();
 
         $http.delete("/offering/delete/" + offeringId).success(function (response) {
@@ -153,14 +163,9 @@ angular.module('courseOpt').service('DevService', function ($http, $q) {
         return deferred.promise;
     };
 
-    this.enrollStudent = function(student) {
-        return $http.post("/student/enroll",student);
+    this.enrollStudent = function (student) {
+        return $http.post("/student/enroll", student);
     };
-
-    this.scheduleCourse = function(courseOffering) {
-        return $http.post("/offering/schedule",courseOffering);
-    }
-
 
 
 });

@@ -33,14 +33,13 @@ public class TAService {
         return taRepo.getAllTAs();
     }
 
-//    TODO: Wire createTA up and smoke test it.
-//    @RequestMapping(value = "/ta/create", method = RequestMethod.POST)
-//    public
-//    @ResponseBody
-//    TA createTA(@RequestBody TA ta) {
-//        logger.info("Creating TA: " + JSONObjectMapper.jsonify(ta));
-//        return taRepo.save(ta);
-//    }
+    @RequestMapping(value = "/ta/create", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    TA createTA(@RequestBody TA ta) {
+        logger.info("Creating TA: " + JSONObjectMapper.jsonify(ta));
+        return taRepo.save(ta);
+    }
 
     @RequestMapping(value = "/ta/delete/{taId}", method = RequestMethod.DELETE)
     public
