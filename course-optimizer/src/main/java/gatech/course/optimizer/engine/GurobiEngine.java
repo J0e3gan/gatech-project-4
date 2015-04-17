@@ -2,6 +2,7 @@ package gatech.course.optimizer.engine;
 
 import gatech.course.optimizer.dto.ScheduleInput;
 import gatech.course.optimizer.dto.StudentDTO;
+import gatech.course.optimizer.dto.TakenCourseDTO;
 import gatech.course.optimizer.model.Course;
 import gatech.course.optimizer.model.CourseOffering;
 import gatech.course.optimizer.model.Faculty;
@@ -9,7 +10,6 @@ import gatech.course.optimizer.model.ScheduleSolution;
 import gatech.course.optimizer.model.Semester;
 import gatech.course.optimizer.model.Semester.SemesterTerm;
 import gatech.course.optimizer.model.Specialization;
-import gatech.course.optimizer.model.Student;
 import gurobi.GRB;
 import gurobi.GRB.DoubleAttr;
 import gurobi.GRBEnv;
@@ -18,7 +18,9 @@ import gurobi.GRBLinExpr;
 import gurobi.GRBModel;
 import gurobi.GRBVar;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -36,35 +38,48 @@ public class GurobiEngine implements EngineInterface {
             GRBEnv env = new GRBEnv("schedule_optimization.log");
             GRBModel model = new GRBModel(env);
 
+            Faculty[] facultyTemp = new Faculty[0];
+            
+            // Setup the inputs
             int numberOfStudents = scheduleInput.getStudents().size(); // i
-            
+            StudentDTO[] students = new StudentDTO[numberOfStudents];
+            scheduleInput.getStudents().toArray( students );
             int numberOfCourses = scheduleInput.getCoursesThatCanBeOffered().size(); // j
-            
-            int numberOfSemesters = 3;
-            
             int numberOfProfessors = scheduleInput.getProfessors().size();
+            Faculty[] professors = scheduleInput.getProfessors().toArray( facultyTemp );
             int numberOfTAs = scheduleInput.getTeacherAssistants().size();
+            Faculty[] teachingAssistants = scheduleInput.getTeacherAssistants().toArray( facultyTemp );
+            int maxCourseCapacity = scheduleInput.getMaxCourseCapacity();
 
+            // Hardcoded constraints
+            int numberOfSemesters = 3;
             int minEnrollmentToBeOffered = 1;
             int maxCoursesPerProfessorPerSemester = 1;
             int maxCoursesPerTAPerSemester = 1;
-            int maxCourseCapacity = scheduleInput.getMaxCourseCapacity();
             
             // Add variables
             double upperBound = numberOfStudents * numberOfCourses * numberOfStudents;
             GRBVar x = model.addVar(0.0, upperBound, 0.0, GRB.INTEGER, "X");
 
-            GRBVar[][][] modelVariables = new GRBVar[numberOfStudents][numberOfCourses][numberOfSemesters];
+            // History variables for [student][course]
+            GRBVar[][] studentHistoryVariables = new GRBVar[numberOfStudents][numberOfCourses];
+            for (int i = 0; i < numberOfStudents; i++){
+            	for (int j = 0; j < numberOfCourses; j++){
+            		studentHistoryVariables[i][j] = model.addVar(0, 1, 0, GRB.BINARY, "sh_" + (i+1) + "_" + (j+1));
+            	}
+            }
+            
+            // Variables for [student][course][semester]
+            GRBVar[][][] studentVariables = new GRBVar[numberOfStudents][numberOfCourses][numberOfSemesters];
             for (int i = 0; i < numberOfStudents; i++) {
                 for (int j = 0; j < numberOfCourses; j++) {
                     for (int k = 0; k < numberOfSemesters; k++) {
-                        modelVariables[i][j][k] = model.addVar(0, 1, 0, GRB.BINARY, getVariableName(i, j, k));
+                        studentVariables[i][j][k] = model.addVar(0, 1, 0, GRB.BINARY, getVariableName(i, j, k));
                     }
                 }
             }
             
-            Faculty[] facultyTemp = new Faculty[0];
-            Faculty[] professors = scheduleInput.getProfessors().toArray( facultyTemp );
+            // Variables for [professor][course][semester]
             GRBVar[][][] professorVariables = new GRBVar[numberOfProfessors][numberOfCourses][numberOfSemesters];
             for (int i = 0; i < numberOfProfessors; i++){
             	for (int j = 0; j < numberOfCourses; j++) {
@@ -74,7 +89,6 @@ public class GurobiEngine implements EngineInterface {
                 }
             }
 
-            Faculty[] teachingAssistants = scheduleInput.getTeacherAssistants().toArray( facultyTemp );
             GRBVar[][][] taVariables = new GRBVar[numberOfTAs][numberOfCourses][numberOfSemesters];
             for (int i = 0; i < numberOfTAs; i++){
             	for (int j = 0; j < numberOfCourses; j++) {
@@ -85,6 +99,25 @@ public class GurobiEngine implements EngineInterface {
             }
             
             model.update();
+            
+            // Add constraints to set student history courses
+            for (int i = 0; i < numberOfStudents; i++){
+            	GRBLinExpr notTaken = new GRBLinExpr();
+            	GRBLinExpr taken = new GRBLinExpr();
+            	int takenCount = 0;
+            	for (int j = 0; j < numberOfCourses; j++){
+            		TakenCourseDTO takenCourse = this.getTakenCourseDTOById( j+1, students[i].getTakenCourses() );
+            		if (takenCourse == null){
+            			// This course was not taken
+            			notTaken.addTerm(1, studentHistoryVariables[i][j]);
+            		} else {
+            			taken.addTerm(1, studentHistoryVariables[i][j]);
+            			takenCount++;
+            		}
+            	}
+            	model.addConstr( notTaken, GRB.EQUAL, 0, "coursesNotAlreadyTakenForStudent" + (i+1) );
+            	model.addConstr( taken, GRB.EQUAL, takenCount, "coursesAlreadyTakenForStudent" + (i+1) );
+            }
 
             // Add the capacity limit constraint
             for (int k = 0; k < numberOfSemesters; k++) {
@@ -92,7 +125,7 @@ public class GurobiEngine implements EngineInterface {
                     GRBLinExpr expr = new GRBLinExpr();
                     expr.addTerm(-1, x);
                     for (int i = 0; i < numberOfStudents; i++) {
-                        expr.addTerm(1, modelVariables[i][j][k]);
+                        expr.addTerm(1, studentVariables[i][j][k]);
                     }
                     model.addConstr(expr, GRB.LESS_EQUAL, 0, "capacityLimitForCourse" + (j + 1) + "inSemester" + (k + 1));
                 }
@@ -104,7 +137,7 @@ public class GurobiEngine implements EngineInterface {
                 for (int k = 0; k < numberOfSemesters; k++) {
                     GRBLinExpr expr = new GRBLinExpr();
                     for (int j = 0; j < numberOfCourses; j++) {
-                        expr.addTerm(1, modelVariables[i][j][k]);
+                        expr.addTerm(1, studentVariables[i][j][k]);
                     }
                     model.addConstr(expr, GRB.LESS_EQUAL, nMax, "maxCoursesForStudent" + (i + 1) + "inSemester" + (k + 1));
                 }
@@ -126,13 +159,13 @@ public class GurobiEngine implements EngineInterface {
                         GRBLinExpr firstSemesterNoCoursesWithPrerequisites = new GRBLinExpr();
                         for (int i = 0; i < numberOfStudents; i++) {
                             // Course with prerequisites cannot be taken in first semester
-                            firstSemesterNoCoursesWithPrerequisites.addTerm(1.0, modelVariables[i][courseId - 1][0]);
+                            firstSemesterNoCoursesWithPrerequisites.addTerm(1.0, studentVariables[i][courseId - 1][0]);
                             for (int k = 1; k < numberOfSemesters; k++) {  //
                                 GRBLinExpr leftExpr = new GRBLinExpr();
                                 GRBLinExpr rightExpr = new GRBLinExpr();
                                 for (int m = 0; m <= k; m++) {
-                                    leftExpr.addTerm(1, modelVariables[i][courseId - 1][m]);
-                                    rightExpr.addTerm(1, modelVariables[i][prerequisiteId - 1][m]);
+                                    leftExpr.addTerm(1, studentVariables[i][courseId - 1][m]);
+                                    rightExpr.addTerm(1, studentVariables[i][prerequisiteId - 1][m]);
                                 }
                                 model.addConstr(leftExpr, GRB.LESS_EQUAL, rightExpr, "forStudent" + (i + 1) +
                                         "semester" + (k + 1) + "course" + prerequisiteId + "mustBeTakenBefore" + courseId);
@@ -148,14 +181,14 @@ public class GurobiEngine implements EngineInterface {
             	GRBLinExpr expr = new GRBLinExpr();
             	int courseIndex = course.getId().intValue() - 1;
             	for (int i = 0; i < numberOfStudents; i++){
-            		expr.addTerm(1, modelVariables[i][courseIndex][convertSemesterToIndex(scheduleInput.getSemesterToSchedule(), course.getSemester())]);
+            		expr.addTerm(1, studentVariables[i][courseIndex][convertSemesterToIndex(scheduleInput.getSemesterToSchedule(), course.getSemester())]);
             	}
             	model.addConstr( expr, GRB.GREATER_EQUAL, minEnrollmentToBeOffered, "requiredCourseOffering" + (course.getId().intValue()));
             }
 
             // Add constraint that students must complete a specialization
-            for (StudentDTO student : scheduleInput.getStudents()){
-            	int studentIndex = student.getId().intValue() - 1;
+            for (int studentIndex = 0; studentIndex < numberOfStudents; studentIndex++) {
+            	StudentDTO student = students[studentIndex];
             	Specialization specialization = student.getChosenSpecialization();
             	if (specialization != null){
 	            	// Add constraint that the student must take the required courses
@@ -165,7 +198,7 @@ public class GurobiEngine implements EngineInterface {
 		            		int courseIndex = requiredCourse.getId().intValue() - 1;
 	            			GRBLinExpr expr = new GRBLinExpr();
 		            		for (int k = 0; k < numberOfSemesters; k++){
-		            			expr.addTerm( 1, modelVariables[studentIndex][courseIndex][k]);
+		            			expr.addTerm( 1, studentVariables[studentIndex][courseIndex][k]);
 		            		}
 		            		model.addConstr( expr, GRB.EQUAL, 1, "requiredSpecializationCourse" + (requiredCourse.getId().intValue()) + "forStudent" + student.getId().intValue() );
             			}
@@ -178,7 +211,7 @@ public class GurobiEngine implements EngineInterface {
             			for (Course coreCourse : coreCourses){
             				int courseIndex = coreCourse.getId().intValue() - 1;
             				for (int k = 0; k < numberOfSemesters; k++){
-            					expr.addTerm(1, modelVariables[studentIndex][courseIndex][k]);
+            					expr.addTerm(1, studentVariables[studentIndex][courseIndex][k]);
             				}
             			}
             			// This is an okay constraint because of the other constraint that says 
@@ -193,7 +226,7 @@ public class GurobiEngine implements EngineInterface {
             			for (Course electiveCourse : electiveCourses){
             				int courseIndex = electiveCourse.getId().intValue() - 1;
             				for (int k = 0; k < numberOfSemesters; k++){
-            					expr.addTerm(1, modelVariables[studentIndex][courseIndex][k]);
+            					expr.addTerm(1, studentVariables[studentIndex][courseIndex][k]);
             				}
             			}
             			// This is an okay constraint because of the other constraint that says 
@@ -208,7 +241,7 @@ public class GurobiEngine implements EngineInterface {
             	for (int j = 0; j < numberOfCourses; j++){
             		GRBLinExpr expr = new GRBLinExpr();
             		for (int k = 0; k < numberOfSemesters; k++){
-            			expr.addTerm( 1, modelVariables[i][j][k] );
+            			expr.addTerm( 1, studentVariables[i][j][k] );
             		}
             		model.addConstr( expr, GRB.LESS_EQUAL, 1, "courseRepetitionLimitForStudent" + (i+1) + "Course" + (j+1) );
             	}
@@ -223,7 +256,7 @@ public class GurobiEngine implements EngineInterface {
 	            	}
             		
             		for (int i = 0; i < numberOfStudents; i++){
-            			expr.addTerm( -1, modelVariables[i][j][k] );
+            			expr.addTerm( -1, studentVariables[i][j][k] );
             		}
             		model.addConstr( expr, GRB.LESS_EQUAL, maxCourseCapacity - 1, "course_" + (j+1) + "_NeedsOneProfessorIfOfferedAtMost" );
             		model.addConstr( expr, GRB.GREATER_EQUAL, 0, "course_" + (j+1) + "_NeedsOneProfessorIfOfferedAtLeast" );
@@ -239,7 +272,7 @@ public class GurobiEngine implements EngineInterface {
 	            	}
             		
             		for (int i = 0; i < numberOfStudents; i++){
-            			expr.addTerm( -1, modelVariables[i][j][k] );
+            			expr.addTerm( -1, studentVariables[i][j][k] );
             		}
             		model.addConstr( expr, GRB.LESS_EQUAL, maxCourseCapacity - 1, "course_" + (j+1) + "_NeedsOneTAIfOfferedAtMost" );
             		model.addConstr( expr, GRB.GREATER_EQUAL, 0, "course_" + (j+1) + "_NeedsOneTAIfOfferedAtLeast" );
@@ -356,11 +389,11 @@ public class GurobiEngine implements EngineInterface {
 	            for (int j = 0; j < numberOfCourses; j++){
 	            	CourseOffering offering = null;
 	            	for (int i = 0; i < numberOfStudents; i++){
-	            		if (modelVariables[i][j][k].get(DoubleAttr.X) == 1) {
+	            		if (studentVariables[i][j][k].get(DoubleAttr.X) == 1) {
 	            			if (offering == null){
 	            				offering = new CourseOffering("1000", this.getCourseById( j+1, scheduleInput.getCoursesThatCanBeOffered() ), this.getSemesterByIndex(k, scheduleInput.getSemesterToSchedule()));
 	            			}
-	            			offering.enrollStudent( this.getStudentById( i+1, scheduleInput.getStudents() ) );
+	            			offering.enrollStudent( students[i].toStudent() );
 	            		}
 	            	}
 	            	if (offering != null){
@@ -395,41 +428,10 @@ public class GurobiEngine implements EngineInterface {
             return null;
         }
     }
-
-
-    /*
-    private OptimizationResult formulateResult(University university, GRBVar[][][] modelVariables, GRBVar x) throws GRBException {
-        OptimizationResult result = new OptimizationResult();
-        Map<Integer, Map<Integer, List<Integer>>> studentSchedules = new HashMap<Integer, Map<Integer, List<Integer>>>();
-        for (Student student : university.getStudents()) {
-            studentSchedules.put(student.getId(), new HashMap<Integer, List<Integer>>());
-            for (Semester semester : university.getSemesters()) {
-                studentSchedules.get(student.getId()).put(semester.getId(), new ArrayList<Integer>());
-                for (Course course : university.getCourses()) {
-                    GRBVar variable = modelVariables[student.getId() - 1][course.getId() - 1][semester.getId() - 1];
-                    double value = variable.get(GRB.DoubleAttr.X);
-                    if (value == 1.0d) {
-                        studentSchedules.get(student.getId()).get(semester.getId()).add(course.getId());
-                    }
-                }
-            }
-        }
-        result.setStudentSchedules(studentSchedules);
-        return result;
-    }
-
-
-    private String writeModelFile(GRBModel model) throws GRBException {
-        Date now = new Date();
-        SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd'T'HH.mm.ss");
-        String dateString = dateformat.format(now);
-        String fileName = "course-optimization-model-" + dateString + ".lp";
-        model.write(fileName);
-        return fileName;
-    }
-    */
     
     private Course getCourseById(int id, Set<Course> courses){
+    	if (courses == null)
+    		return null;
     	for (Course course : courses){
     		if (course.getId().intValue() == id){
     			return course;
@@ -438,10 +440,12 @@ public class GurobiEngine implements EngineInterface {
     	return null;
     }
     
-    private Student getStudentById(int id, Set<StudentDTO> students){
-    	for (StudentDTO student : students){
-    		if (student.getId().intValue() == id){
-    			return student.toStudent();
+    private TakenCourseDTO getTakenCourseDTOById(int id, List<TakenCourseDTO> courses){
+    	if (courses == null)
+    		return null;
+    	for (TakenCourseDTO course : courses){
+    		if (course.getCourse().getId().intValue() == id){
+    			return course;
     		}
     	}
     	return null;

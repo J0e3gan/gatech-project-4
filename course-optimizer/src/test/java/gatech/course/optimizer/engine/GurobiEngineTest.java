@@ -86,12 +86,12 @@ public class GurobiEngineTest {
 		
 		// Students
 		final StudentDTO student1 = new StudentDTO();
-		student1.setId( 1L );
+		student1.setId( 10L );
 		student1.setLastName( "Student 1" );
 		student1.setChosenSpecialization( specialization1 );
 		
 		final StudentDTO student2 = new StudentDTO();
-		student2.setId( 2L );
+		student2.setId( 20L );
 		student2.setLastName( "Student 2" );
 		
 		ScheduleInput testInput = new ScheduleInput();
@@ -124,12 +124,12 @@ public class GurobiEngineTest {
 		    Semester: FALL 2014: Course CS6300 taught by Professor 1 with TA TA 2 
 				Students:
 					null Student 1
-			Semester: SPRING 2015: Course CS6290 taught by Professor 2 with TA TA 2 
-				Students:
-					null Student 1
 			Semester: FALL 2014: Course CS6290 taught by Professor 2 with TA TA 1 
 				Students:
 					null Student 2
+			Semester: SPRING 2015: Course CS6290 taught by Professor 2 with TA TA 2 
+				Students:
+					null Student 1
 			Semester: SUMMER 2015: Course CS6310 taught by Professor 1 with TA TA 2 
 				Students:
 					null Student 1
