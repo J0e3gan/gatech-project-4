@@ -7,16 +7,18 @@ import gatech.course.optimizer.model.CourseOffering;
 import gatech.course.optimizer.model.Faculty;
 import gatech.course.optimizer.model.ScheduleSolution;
 import gatech.course.optimizer.model.Semester;
+import gatech.course.optimizer.model.Semester.SemesterTerm;
 import gatech.course.optimizer.model.Specialization;
+import gatech.course.optimizer.model.Student;
 import gurobi.GRB;
+import gurobi.GRB.DoubleAttr;
 import gurobi.GRBEnv;
 import gurobi.GRBException;
-import gurobi.GRBExpr;
 import gurobi.GRBLinExpr;
 import gurobi.GRBModel;
-import gurobi.GRBQuadExpr;
 import gurobi.GRBVar;
 
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -35,9 +37,9 @@ public class GurobiEngine implements EngineInterface {
             GRBModel model = new GRBModel(env);
 
             int numberOfStudents = scheduleInput.getStudents().size(); // i
-            //int numberOfCourses = university.getCourses().size(); // j
+            
             int numberOfCourses = scheduleInput.getCoursesThatCanBeOffered().size(); // j
-            //int numberOfSemesters = university.getSemesters().size(); // k
+            
             int numberOfSemesters = 3;
             
             int numberOfProfessors = scheduleInput.getProfessors().size();
@@ -174,7 +176,7 @@ public class GurobiEngine implements EngineInterface {
             		if (coreCourses != null && specialization.getNumberOfCoreCoursesRequired() > 0){
             			GRBLinExpr expr = new GRBLinExpr();
             			for (Course coreCourse : coreCourses){
-            				int courseIndex = coreCourse.getId().intValue();
+            				int courseIndex = coreCourse.getId().intValue() - 1;
             				for (int k = 0; k < numberOfSemesters; k++){
             					expr.addTerm(1, modelVariables[studentIndex][courseIndex][k]);
             				}
@@ -189,7 +191,7 @@ public class GurobiEngine implements EngineInterface {
             		if (electiveCourses != null && specialization.getNumberOfElectiveCoursesRequired() > 0){
             			GRBLinExpr expr = new GRBLinExpr();
             			for (Course electiveCourse : electiveCourses){
-            				int courseIndex = electiveCourse.getId().intValue();
+            				int courseIndex = electiveCourse.getId().intValue() - 1;
             				for (int k = 0; k < numberOfSemesters; k++){
             					expr.addTerm(1, modelVariables[studentIndex][courseIndex][k]);
             				}
@@ -223,7 +225,8 @@ public class GurobiEngine implements EngineInterface {
             		for (int i = 0; i < numberOfStudents; i++){
             			expr.addTerm( -1, modelVariables[i][j][k] );
             		}
-            		model.addConstr( expr, GRB.LESS_EQUAL, maxCourseCapacity - 1, "course_" + (j+1) + "_NeedsOneProfessorIfOffered" );
+            		model.addConstr( expr, GRB.LESS_EQUAL, maxCourseCapacity - 1, "course_" + (j+1) + "_NeedsOneProfessorIfOfferedAtMost" );
+            		model.addConstr( expr, GRB.GREATER_EQUAL, 0, "course_" + (j+1) + "_NeedsOneProfessorIfOfferedAtLeast" );
 	            }
             }
             
@@ -238,7 +241,8 @@ public class GurobiEngine implements EngineInterface {
             		for (int i = 0; i < numberOfStudents; i++){
             			expr.addTerm( -1, modelVariables[i][j][k] );
             		}
-            		model.addConstr( expr, GRB.LESS_EQUAL, maxCourseCapacity - 1, "course_" + (j+1) + "_NeedsOneTAIfOffered" );
+            		model.addConstr( expr, GRB.LESS_EQUAL, maxCourseCapacity - 1, "course_" + (j+1) + "_NeedsOneTAIfOfferedAtMost" );
+            		model.addConstr( expr, GRB.GREATER_EQUAL, 0, "course_" + (j+1) + "_NeedsOneTAIfOfferedAtLeast" );
 	            }
             }
             
@@ -345,19 +349,46 @@ public class GurobiEngine implements EngineInterface {
             model.setObjective(expr, GRB.MINIMIZE);
             model.optimize();
 
-            /*
-            System.out.println("The results for X (objective) is " + model.get(GRB.DoubleAttr.ObjVal));
-            String modelFile = writeModelFile(model);
-            OptimizationResult result = formulateResult(university, modelVariables, x);
-            result.setModelFile(modelFile);
-            result.setObjectiveValue(model.get(GRB.DoubleAttr.ObjVal));
-            */
+            ScheduleSolution solution = new ScheduleSolution();
+            
+            Set<CourseOffering> offerings = new HashSet<CourseOffering>();
+            for (int k = 0; k < numberOfSemesters; k++){
+	            for (int j = 0; j < numberOfCourses; j++){
+	            	CourseOffering offering = null;
+	            	for (int i = 0; i < numberOfStudents; i++){
+	            		if (modelVariables[i][j][k].get(DoubleAttr.X) == 1) {
+	            			if (offering == null){
+	            				offering = new CourseOffering("1000", this.getCourseById( j+1, scheduleInput.getCoursesThatCanBeOffered() ), this.getSemesterByIndex(k, scheduleInput.getSemesterToSchedule()));
+	            			}
+	            			offering.enrollStudent( this.getStudentById( i+1, scheduleInput.getStudents() ) );
+	            		}
+	            	}
+	            	if (offering != null){
+		            	for (int i = 0; i < numberOfProfessors; i++){
+		            		if (professorVariables[i][j][k].get(DoubleAttr.X) == 1){
+		            			offering.setProfessor( professors[i] );
+		            			break;
+		            		}
+		            	}
+		            	Set<Faculty> tas = new HashSet<Faculty>();
+		            	for (int i = 0; i < numberOfTAs; i++){
+		            		if (taVariables[i][j][k].get(DoubleAttr.X) == 1){
+		            			tas.add( teachingAssistants[i] );
+		            		}
+			            }
+		            	offering.setTeacherAssistants( tas );
+		            	offerings.add( offering );
+	            	}
+	            }
+            }
 
+            solution.setSchedule( offerings );
+            
             model.dispose();
             env.dispose();
 
             //return result;
-            return new ScheduleSolution();
+            return solution;
 
         } catch (GRBException e) {
             System.out.println("Error code: " + e.getErrorCode() + ". " + e.getMessage());
@@ -397,6 +428,24 @@ public class GurobiEngine implements EngineInterface {
         return fileName;
     }
     */
+    
+    private Course getCourseById(int id, Set<Course> courses){
+    	for (Course course : courses){
+    		if (course.getId().intValue() == id){
+    			return course;
+    		}
+    	}
+    	return null;
+    }
+    
+    private Student getStudentById(int id, Set<StudentDTO> students){
+    	for (StudentDTO student : students){
+    		if (student.getId().intValue() == id){
+    			return student.toStudent();
+    		}
+    	}
+    	return null;
+    }
 
     private String getVariableName(int i, int j, int k) {
         return "y" + (i + 1) + "_" + (j + 1) + "_" + (k + 1);
@@ -404,22 +453,21 @@ public class GurobiEngine implements EngineInterface {
     
     private int convertSemesterToIndex(Semester referenceSemester, Semester semesterToConvert){
     	int referenceYear = referenceSemester.getYear();
-    	int referenceTerm = 0;
-    	switch (referenceSemester.getTerm()){
-    		case SPRING:
-    			referenceTerm = 0;
-    			break;
-    		case SUMMER:
-    			referenceTerm = 1;
-    			break;
-    		case FALL:
-    			referenceTerm = 2;
-    			break;
-    	}
+    	int referenceTerm = termToNumber(referenceSemester.getTerm());
     	
     	int targetYear = semesterToConvert.getYear();
+    	int targetTerm = termToNumber(semesterToConvert.getTerm());
+    	
+    	// 2014, 2 ==> 2015,0 ... 1 * 3 + (0 - 2) = 1
+    	// 2015, 0 ==> 2015,2 ... 0 * 3 + (2 - 0) = 2
+    	// 2014, 2 ==> 2016,0 ... 2 * 3 + (0 - 2) = 4
+    	// 2014, 0 ==> 2015,0 ... 1 * 3 + (0 - 0) = 3
+    	return ((targetYear - referenceYear) * 3) + (targetTerm - referenceTerm);
+    }
+    
+    private int termToNumber(Semester.SemesterTerm term){
     	int targetTerm = 0;
-    	switch (semesterToConvert.getTerm()){
+    	switch (term){
     		case SPRING:
     			targetTerm = 0;
     			break;
@@ -429,11 +477,29 @@ public class GurobiEngine implements EngineInterface {
     		case FALL:
     			targetTerm = 2;
     			break;
-    	}    	
-    	// 2014, 2 ==> 2015,0 ... 1 * 3 + (0 - 2) = 1
-    	// 2015, 0 ==> 2015,2 ... 0 * 3 + (2 - 0) = 2
-    	// 2014, 2 ==> 2016,0 ... 2 * 3 + (0 - 2) = 4
-    	// 2014, 0 ==> 2015,0 ... 1 * 3 + (0 - 0) = 3
-    	return ((targetYear - referenceYear) * 3) + (targetTerm - referenceTerm);
+    	}   
+    	return targetTerm;
+    }
+    
+    private SemesterTerm numberToTerm(int number){
+    	switch (number){
+    		case 0:
+    			return SemesterTerm.SPRING;
+    		case 1:
+    			return SemesterTerm.SUMMER;
+    		case 2:
+    			return SemesterTerm.FALL;
+    	}
+    	return null;
+    }
+    
+    private Semester getSemesterByIndex(int index, Semester referenceSemester){
+    	int year = referenceSemester.getYear() + (index / 3);
+    	int semester = termToNumber(referenceSemester.getTerm()) + (index % 3);
+    	if (semester >= 3){
+    		year++;
+    		semester = semester - 3;
+    	}
+    	return new Semester(year + "", numberToTerm(semester) + "");
     }
 }
