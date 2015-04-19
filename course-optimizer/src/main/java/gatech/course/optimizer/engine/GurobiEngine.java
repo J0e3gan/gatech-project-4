@@ -115,7 +115,7 @@ public class GurobiEngine implements EngineInterface {
             	GRBLinExpr taken = new GRBLinExpr();
             	int takenCount = 0;
             	for (int j = 0; j < numberOfCourses; j++){
-            		TakenCourseDTO takenCourse = this.getTakenCourseDTOById( j+1, students[i].getTakenCourses() );
+            		TakenCourseDTO takenCourse = this.getTakenCourseDTOById( courses[j].getId().intValue(), students[i].getTakenCourses() );
             		if (takenCourse == null){
             			// This course was not taken
             			notTaken.addTerm(1, studentHistoryVariables[i][j]);
@@ -167,7 +167,6 @@ public class GurobiEngine implements EngineInterface {
             }
 
             // Constraints for course prerequisites
-            // TODO : Add course history
             for ( int j = 0; j < numberOfCourses; j++ ){ // Course course : scheduleInput.getCoursesThatCanBeOffered()) {
             	Course course = courses[j];
                 if (course.getPrerequisites() != null && course.getPrerequisites().size() > 0) {
@@ -178,25 +177,29 @@ public class GurobiEngine implements EngineInterface {
                         int prerequisiteId = course.getPrerequisites().iterator().next().getId().intValue();
                         System.out.println("Course: " + course.getId() + " has prerequisite: " + prerequisiteId);
                         // For a pair course and its prerequisite
-                        GRBLinExpr firstSemesterNoCoursesWithPrerequisites = new GRBLinExpr();
-                        for (int i = 0; i < numberOfStudents; i++) {
-                            // Course with prerequisites cannot be taken in first semester
-                            firstSemesterNoCoursesWithPrerequisites.addTerm(1.0, studentVariables[i][j][0]);
-                            for (int k = 1; k < numberOfSemesters; k++) {  //
-                                GRBLinExpr leftExpr = new GRBLinExpr();
-                                GRBLinExpr rightExpr = new GRBLinExpr();
-                                int prereqIndex = this.getCourseIndexById( prerequisiteId, courses );
-                                if (prereqIndex > -1){
+                        int prereqIndex = this.getCourseIndexById( prerequisiteId, courses );
+                        if (prereqIndex > -1){
+	                        for (int i = 0; i < numberOfStudents; i++) {
+	                        	GRBLinExpr firstSemesterCourse = new GRBLinExpr();
+	                        	GRBLinExpr prereqHistory = new GRBLinExpr();
+	                            // Course with prerequisites cannot be taken in first semester
+	                            firstSemesterCourse.addTerm(1.0, studentVariables[i][j][0]);
+	                            prereqHistory.addTerm( 1, studentHistoryVariables[i][prereqIndex] );
+	                            for (int k = 1; k < numberOfSemesters; k++) {  //
+	                                GRBLinExpr leftExpr = new GRBLinExpr();
+	                                GRBLinExpr rightExpr = new GRBLinExpr();
+	                                	// Historical courses could satisfy the prerequisite
+                                	rightExpr.addTerm(1, studentHistoryVariables[i][prereqIndex]);
 	                                for (int m = 0; m <= k; m++) {
 	                                    leftExpr.addTerm(1, studentVariables[i][j][m]);
 	                                    rightExpr.addTerm(1, studentVariables[i][prereqIndex][m]);
 	                                }
 	                                model.addConstr(leftExpr, GRB.LESS_EQUAL, rightExpr, "forStudent" + (i + 1) +
 	                                		"semester" + (k + 1) + "course" + prerequisiteId + "mustBeTakenBefore" + course.getId());
-                                }
-                            }
-                        }
-                        model.addConstr(firstSemesterNoCoursesWithPrerequisites, GRB.EQUAL, 0, "noStudentCanTakeCourse" + course.getId() + "inFirstSemester");
+	                            }
+	                            model.addConstr(firstSemesterCourse, GRB.LESS_EQUAL, prereqHistory, "noStudentCanTakeCourse" + course.getId() + "inFirstSemester");
+	                        }
+	                    }
                     }
                 }
             }
@@ -214,7 +217,6 @@ public class GurobiEngine implements EngineInterface {
             }
 
             // Add constraint that students must complete a specialization
-            // TODO : Add course history
             for (int studentIndex = 0; studentIndex < numberOfStudents; studentIndex++) {
             	StudentDTO student = students[studentIndex];
             	Specialization specialization = student.getChosenSpecialization();
@@ -225,6 +227,8 @@ public class GurobiEngine implements EngineInterface {
             			for (Course requiredCourse : requiredCourses){
 		            		int courseIndex = this.getCourseIndexById( requiredCourse.getId().intValue(), courses );
 	            			GRBLinExpr expr = new GRBLinExpr();
+	            			// Student history:
+		            		expr.addTerm(1, studentHistoryVariables[studentIndex][courseIndex]);
 		            		for (int k = 0; k < numberOfSemesters; k++){
 		            			expr.addTerm( 1, studentVariables[studentIndex][courseIndex][k]);
 		            		}
@@ -238,6 +242,8 @@ public class GurobiEngine implements EngineInterface {
             			GRBLinExpr expr = new GRBLinExpr();
             			for (Course coreCourse : coreCourses){
             				int courseIndex = this.getCourseIndexById( coreCourse.getId().intValue(), courses );
+	            			// Student history:
+		            		expr.addTerm(1, studentHistoryVariables[studentIndex][courseIndex]);
             				for (int k = 0; k < numberOfSemesters; k++){
             					expr.addTerm(1, studentVariables[studentIndex][courseIndex][k]);
             				}
@@ -253,6 +259,8 @@ public class GurobiEngine implements EngineInterface {
             			GRBLinExpr expr = new GRBLinExpr();
             			for (Course electiveCourse : electiveCourses){
             				int courseIndex = this.getCourseIndexById( electiveCourse.getId().intValue(), courses );
+	            			// Student history:
+		            		expr.addTerm(1, studentHistoryVariables[studentIndex][courseIndex]);
             				for (int k = 0; k < numberOfSemesters; k++){
             					expr.addTerm(1, studentVariables[studentIndex][courseIndex][k]);
             				}
@@ -276,6 +284,8 @@ public class GurobiEngine implements EngineInterface {
             		model.addConstr( expr, GRB.LESS_EQUAL, 1, "courseRepetitionLimitForStudent" + (i+1) + "Course" + (j+1) );
             	}
             }
+            
+         // *************** Faculty Constraints ***************
             
             // Add constraint that each course offered has 1 professor assigned to it
             for (int k = 0; k < numberOfSemesters; k++){

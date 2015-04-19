@@ -60,7 +60,7 @@ public class GurobiEngineTest {
 		final Course cs6310 = new Course();
 		cs6310.setId( 3L );
 		cs6310.setName( "CS6310" );
-		cs6310.setPrerequisites( new HashSet<Course>(){ {this.add( cs6290 ); } } );
+		cs6310.setPrerequisites( new HashSet<Course>(){ {this.add( cs6290 ); this.add( cs6300 );} } );
 		
 		final CourseOffering offering = new CourseOffering("101010", cs6290, startSemester);
 		offering.setId( 1L );
@@ -101,7 +101,8 @@ public class GurobiEngineTest {
 		final StudentDTO student2 = new StudentDTO();
 		student2.setId( 20L );
 		student2.setLastName( "Student 2" );
-		student2.setTakenCourses( new ArrayList<TakenCourseDTO>() { { this.add( new TakenCourseDTO(new CourseOffering("202020", cs6010, new Semester("2013", "FALL") ), "A" ) ); } } );
+		student2.setTakenCourses( new ArrayList<TakenCourseDTO>() { { this.add( new TakenCourseDTO(new CourseOffering("202020", cs6290, new Semester("2013", "FALL") ), "A" ) );
+																	  this.add( new TakenCourseDTO(new CourseOffering("202020", cs6300, new Semester("2013", "FALL") ), "A" ) ); } } );
 		
 		ScheduleInput testInput = new ScheduleInput();
 		testInput.setAllowedClassesPerSemester( 1 );
