@@ -5,6 +5,7 @@ package gatech.course.optimizer.engine;
 
 import gatech.course.optimizer.dto.ScheduleInput;
 import gatech.course.optimizer.dto.StudentDTO;
+import gatech.course.optimizer.dto.TakenCourseDTO;
 import gatech.course.optimizer.model.Course;
 import gatech.course.optimizer.model.CourseOffering;
 import gatech.course.optimizer.model.Faculty;
@@ -13,6 +14,7 @@ import gatech.course.optimizer.model.Semester;
 import gatech.course.optimizer.model.Specialization;
 import gatech.course.optimizer.model.Student;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import org.junit.Before;
@@ -42,6 +44,10 @@ public class GurobiEngineTest {
 		Semester startSemester = new Semester("2014", "FALL");
 		
 		// Courses
+		final Course cs6010 = new Course();
+		cs6010.setId( 4L );
+		cs6010.setName( "CS6010" );
+		
 		final Course cs6290 = new Course();
 		cs6290.setId( 1L );
 		cs6290.setName( "CS6290" );
@@ -49,19 +55,21 @@ public class GurobiEngineTest {
 		final Course cs6300 = new Course();
 		cs6300.setId( 2L);
 		cs6300.setName( "CS6300" );
+		cs6300.setPrerequisites( new HashSet<Course>(){ {this.add( cs6290 ); } } );
 		
 		final Course cs6310 = new Course();
 		cs6310.setId( 3L );
 		cs6310.setName( "CS6310" );
 		cs6310.setPrerequisites( new HashSet<Course>(){ {this.add( cs6290 ); } } );
 		
-		final CourseOffering offering = new CourseOffering("101010", cs6300, startSemester);
+		final CourseOffering offering = new CourseOffering("101010", cs6290, startSemester);
 		offering.setId( 1L );
 		
 		// Faculty
 		final Faculty prof1 = new Faculty();
 		prof1.setId( 1L );
 		prof1.setLastName( "Professor 1" );
+		prof1.setCompetencies( new HashSet<Course>(){ { this.add( cs6310 ); this.add( cs6300 ); } } );
 		
 		final Faculty prof2 = new Faculty();
 		prof2.setId( 2L );
@@ -93,11 +101,12 @@ public class GurobiEngineTest {
 		final StudentDTO student2 = new StudentDTO();
 		student2.setId( 20L );
 		student2.setLastName( "Student 2" );
+		student2.setTakenCourses( new ArrayList<TakenCourseDTO>() { { this.add( new TakenCourseDTO(new CourseOffering("202020", cs6010, new Semester("2013", "FALL") ), "A" ) ); } } );
 		
 		ScheduleInput testInput = new ScheduleInput();
 		testInput.setAllowedClassesPerSemester( 1 );
 		testInput.setAvailableSpecializations( new HashSet<Specialization>() { { this.add(specialization1); } } );
-		testInput.setCoursesThatCanBeOffered( new HashSet<Course>(){ { this.add(cs6290); this.add( cs6300 ); this.add( cs6310 ); } } );
+		testInput.setCoursesThatCanBeOffered( new HashSet<Course>(){ { this.add( cs6010 ); this.add(cs6290); this.add( cs6300 ); this.add( cs6310 ); } } );
 		testInput.setProfessors( new HashSet<Faculty>() { { this.add(prof1); this.add( prof2 ); } } );
 		testInput.setRequiredOfferings( new HashSet<CourseOffering>(){ { this.add(offering); } } );
 		testInput.setSemesterToSchedule( startSemester );
