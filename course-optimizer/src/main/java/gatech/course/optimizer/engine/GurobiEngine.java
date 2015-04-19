@@ -56,14 +56,14 @@ public class GurobiEngine implements EngineInterface {
             
             int maxCourseCapacity = scheduleInput.getMaxCourseCapacity();
 
-            // Hardcoded constraints
+            // *************** Hardcoded constraints ***************
             int numberOfSemesters = 3;
             int minEnrollmentToBeOffered = 1;
             int maxCoursesPerProfessorPerSemester = 1;
             int maxCoursesPerTAPerSemester = 1;
             int numberOfCoursesToGraduate = 3;
             
-            // Add variables
+            // *************** Add variables ***************
             double upperBound = numberOfStudents * numberOfCourses * numberOfStudents;
             GRBVar x = model.addVar(0.0, upperBound, 0.0, GRB.INTEGER, "X");
 
@@ -106,6 +106,8 @@ public class GurobiEngine implements EngineInterface {
             }
             
             model.update();
+            
+            // *************** Constraints ***************
             
             // Add constraints to set student history courses
             for (int i = 0; i < numberOfStudents; i++){

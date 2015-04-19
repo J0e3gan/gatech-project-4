@@ -130,17 +130,16 @@ public class GurobiEngineTest {
 		}
 		
 		/* ============================== PASSING SCHEDULE: ================================
-		    Semester: FALL 2014: Course CS6300 taught by Professor 1 with TA TA 2 
+		    Semester: SPRING 2015: Course CS6310 taught by Professor 1 with TA TA 1 
 				Students:
 					null Student 1
-			Semester: FALL 2014: Course CS6290 taught by Professor 2 with TA TA 1 
+			Semester: FALL 2014: Course CS6290 taught by Professor 2 with TA TA 2 
 				Students:
 					null Student 2
-			Semester: SPRING 2015: Course CS6290 taught by Professor 2 with TA TA 2 
-				Students:
 					null Student 1
-			Semester: SUMMER 2015: Course CS6310 taught by Professor 1 with TA TA 2 
+			Semester: SUMMER 2015: Course CS6300 taught by Professor 1 with TA TA 1 
 				Students:
+					null Student 2
 					null Student 1
 		 */
 	}
