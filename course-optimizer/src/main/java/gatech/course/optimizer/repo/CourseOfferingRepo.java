@@ -1,6 +1,5 @@
 package gatech.course.optimizer.repo;
 
-import gatech.course.optimizer.model.Course;
 import gatech.course.optimizer.model.CourseOffering;
 import gatech.course.optimizer.model.Student;
 import org.springframework.data.jpa.repository.Query;

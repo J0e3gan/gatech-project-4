@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by 204069126 on 2/6/15.
@@ -13,18 +14,10 @@ import java.util.List;
 public class Student extends User {
 
     @OneToMany(fetch = FetchType.EAGER)
-    private List<Course> desiredCourses;
+    private List<DesiredCourse> desiredCourses;
 
     private int seniority;
     private String studentId;
-
-    /*
-    @OneToMany(fetch = FetchType.EAGER)
-    private List<Course> takenCourses;
-
-    @OneToMany(fetch= FetchType.EAGER)
-    private List<CourseOffering> recommendedCourses;
-    */
 
     public Student() {
     }
@@ -35,7 +28,6 @@ public class Student extends User {
         setPassword(password);
         setFirstName(firstName);
         setLastName(lastName);
-        //takenCourses = new ArrayList<Course>();
     }
 
     public String getStudentId() {
@@ -46,11 +38,11 @@ public class Student extends User {
         this.studentId = studentId;
     }
 
-    public List<Course> getDesiredCourses() {
+    public List<DesiredCourse> getDesiredCourses() {
         return desiredCourses;
     }
 
-    public void setDesiredCourses(List<Course> desiredCourses) {
+    public void setDesiredCourses(List<DesiredCourse> desiredCourses) {
         this.desiredCourses = desiredCourses;
     }
 
@@ -61,26 +53,4 @@ public class Student extends User {
     public void setSeniority(int seniority) {
         this.seniority = seniority;
     }
-
-    /*
-    public void addTakenCourse(Course course) {
-        this.takenCourses.add(course);
-    }
-
-    public List<Course> getTakenCourses() {
-        return takenCourses;
-    }
-
-    public void setTakenCourses(List<Course> takenCourses) {
-        this.takenCourses = takenCourses;
-    }
-
-    public List<CourseOffering> getRecommendedCourses() {
-        return recommendedCourses;
-    }
-
-    public void setRecommendedCourses(List<CourseOffering> recommendedCourses) {
-        this.recommendedCourses = recommendedCourses;
-    }
-    */
 }

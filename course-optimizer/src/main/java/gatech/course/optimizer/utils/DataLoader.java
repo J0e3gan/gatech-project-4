@@ -10,10 +10,7 @@ import org.springframework.stereotype.Component;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Created by 204069126 on 2/6/15.
@@ -44,6 +41,12 @@ public class DataLoader {
     @Autowired
     private StudentRecordRepo studentRecordRepo;
 
+    @Autowired
+    private DesiredCourseRepo desiredCourseRepo;
+
+    private final int POINTS_FOR_A = 10;
+    private final int POINTS_FOR_B = 7;
+    private final int POINTS_FOR_C = 5;
 
     static Map<Integer, String> firstNames = new HashMap<Integer, String>();
 
@@ -77,7 +80,6 @@ public class DataLoader {
         lastNames.put(8, "Freeman");
         lastNames.put(9, "Springsteam");
         lastNames.put(10, "Caine");
-
     }
 
 
@@ -107,14 +109,14 @@ public class DataLoader {
             String courseName = parts[2];
             //String creditHours = parts[3];
             String description = "";
-            for(int i=4;i<parts.length;i++){
-                description = description+parts[i];
+            for (int i = 4; i < parts.length; i++) {
+                description = description + parts[i];
             }
             if (!courseMap.containsKey(courseNumber)) {
                 Course course = new Course(courseShortName, courseName);
                 course.setDescription(description);
                 Course savedCourse = courseRepo.save(course);
-                courseMap.put(courseNumber, savedCourse );
+                courseMap.put(courseNumber, savedCourse);
             }
         }
 
@@ -217,7 +219,50 @@ public class DataLoader {
         for (String crn : courseOfferingMap.keySet()) {
             courseOfferingRepo.save(courseOfferingMap.get(crn));
         }
+
+
+        // Compute Student Seniority
+        for (String studentId : studentMap.keySet()) {
+            Student student = studentMap.get(studentId);
+            List<CourseOffering> takenCourses = courseOfferingRepo.findCoursesByStudent(student);
+            int studentSeniority = 0;
+            for (CourseOffering courseOffering : takenCourses) {
+                String grade = studentRecordRepo.getGradeForStudent(courseOffering.getId(), student.getId());
+                if ("A".equalsIgnoreCase(grade)) {
+                    studentSeniority = studentSeniority + POINTS_FOR_A;
+                } else if ("B".equalsIgnoreCase(grade)) {
+                    studentSeniority = studentSeniority + POINTS_FOR_B;
+                } else {
+                    studentSeniority = studentSeniority + POINTS_FOR_C;
+                }
+            }
+
+            student.setSeniority(studentSeniority);
+
+            // Select 2 random courses as desired courses
+            List<DesiredCourse> desiredCourses = new ArrayList<DesiredCourse>();
+            int desiredCount = 1;
+            for(String courseKey : courseMap.keySet()){
+                if(!courseAlreadyTaken(courseKey,takenCourses) && desiredCount < 3 ) {
+                    DesiredCourse desiredCourse = new DesiredCourse(student.getId(),courseMap.get(courseKey), desiredCount);
+                    desiredCourse =  desiredCourseRepo.save(desiredCourse);
+                    desiredCourses.add(desiredCourse);
+                    desiredCount++;
+                }
+            }
+            student.setDesiredCourses(desiredCourses);
+            studentRepo.save(student);
+        }
         scanner.close();
+    }
+
+    private boolean courseAlreadyTaken(String courseNumber, List<CourseOffering> takenCourses) {
+        for(CourseOffering courseOffering : takenCourses){
+            if(courseOffering.getCourse().getNumber().equals(courseNumber)){
+                return true;
+            }
+        }
+        return false;
     }
 
     private String makeUpGrade() {
@@ -288,7 +333,8 @@ public class DataLoader {
 
         @Override
         public String toString() {
-            return String.format("studentId='%s' year='%s' semester='%s' shortName='%s' CRN='%s' name='%s' grade='%s'", studentId, year, semester, courseShortName, courseRefNumber, courseName, courseGrade);
+            return String.format("studentId='%s' year='%s' semester='%s' shortName='%s' CRN='%s' name='%s' grade='%s'",
+                    studentId, year, semester, courseShortName, courseRefNumber, courseName, courseGrade);
         }
     }
 }
