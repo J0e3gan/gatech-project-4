@@ -41,12 +41,12 @@ public class GurobiEngineTest {
 	public void testCreateScheduleSolution() {
 		
 		// Semesters
-		Semester startSemester = new Semester("2014", "FALL");
-		
-		// Courses
-		final Course cs6010 = new Course();
-		cs6010.setId( 4L );
-		cs6010.setName( "CS6010" );
+        Semester startSemester = new Semester("2014", "FALL");
+
+        // Courses
+        final Course cs6010 = new Course();
+        cs6010.setId( 4L );
+        cs6010.setName( "CS6010" );
 		
 		final Course cs6290 = new Course();
 		cs6290.setId( 1L );

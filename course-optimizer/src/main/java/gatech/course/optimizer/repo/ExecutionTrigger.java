@@ -21,7 +21,6 @@ import java.util.Set;
 @Component
 public class ExecutionTrigger {
 
-
     @Autowired
     public EngineInterface engineInterface;
 
@@ -36,7 +35,6 @@ public class ExecutionTrigger {
 
     @Autowired StudentDetailsRepo studentDetailsRepo;
 
-
     public static Logger logger = LoggerFactory.getLogger(ExecutionTrigger.class);
 
     public ScheduleInput prepareScheduleInput(Set<CourseOffering> requiredOfferings, Semester semester) {
@@ -44,7 +42,7 @@ public class ExecutionTrigger {
         logger.info("Gathering information for the execution engine");
         ScheduleInput scheduleInput = new ScheduleInput();
         scheduleInput.setMaxCourseCapacity(200);
-        scheduleInput.setAllowedClassesPerSemester(2);
+        scheduleInput.setAllowedClassesPerSemester(20);
         scheduleInput.setCoursesThatCanBeOffered(courseRepo.getCourseSet());
 
         List<Student> studentList = studentRepo.getAllStudents();
@@ -57,8 +55,24 @@ public class ExecutionTrigger {
         scheduleInput.setStudents(studentDTOSet);
         scheduleInput.setRequiredOfferings(requiredOfferings);
         scheduleInput.setSemesterToSchedule(semester);
-        scheduleInput.setTeacherAssistants(facultyRepo.getTASet());
-        scheduleInput.setProfessors(facultyRepo.getProfessorsSet());
+
+
+        Set<Faculty> tasWithNullCompetencies = new HashSet<Faculty>();
+        for(Faculty faculty : facultyRepo.getTASet()) {
+            faculty.setCompetencies(null);
+            faculty.setAvailability(null);
+            tasWithNullCompetencies.add(faculty);
+        }
+        scheduleInput.setTeacherAssistants(tasWithNullCompetencies);
+
+
+        Set<Faculty> professorsWithNullCompetencies = new HashSet<Faculty>();
+        for(Faculty faculty : facultyRepo.getProfessorsSet()){
+            faculty.setCompetencies(null);
+            faculty.setAvailability(null);
+            professorsWithNullCompetencies.add(faculty);
+        }
+        scheduleInput.setProfessors(professorsWithNullCompetencies);
 
         logger.info("Schedule Input Info :");
         logger.info("Number of professors : "+scheduleInput.getProfessors().size());
@@ -71,10 +85,8 @@ public class ExecutionTrigger {
         logger.info("Required offerings size : " + scheduleInput.getRequiredOfferings().size());
         logger.info("Number of courses required to graduate : " + scheduleInput.getNumberOfCoursesRequiredToGraduate());
 
-
-
         //logger.info("Schedule Input : \n"+JSONObjectMapper.jsonify(scheduleInput));
-        //scheduleInput.setAvailableSpecializations();but
+
 
 
         /*
@@ -97,7 +109,7 @@ public class ExecutionTrigger {
     @Transactional
     public void createScheduleSolution(){
         logger.info("Creating schedule solution");
-        Semester semester = new Semester("2014", "FALL");
+        Semester semester = new Semester("2015", "FALL");
         ScheduleInput scheduleInput = prepareScheduleInput(new HashSet<CourseOffering>(),semester);
         ScheduleSolution scheduleSolution =  engineInterface.createScheduleSolution(scheduleInput);
         logger.info("Done running course optimization engine, solution : \n"+ JSONObjectMapper.jsonify(scheduleSolution));
