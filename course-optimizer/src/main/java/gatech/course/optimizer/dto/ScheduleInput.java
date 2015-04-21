@@ -23,6 +23,7 @@ public class ScheduleInput {
     
     private int allowedClassesPerSemester;
     private int maxCourseCapacity;
+    private int coursesRequiredToGraduate = 12; // default to 12 courses (36 credits)
 
     public int getAllowedClassesPerSemester() {
         return allowedClassesPerSemester;
@@ -94,5 +95,13 @@ public class ScheduleInput {
     
     public void setMaxCourseCapacity(int capacity){
     	this.maxCourseCapacity = capacity;
+    }
+    
+    public int getNumberOfCoursesRequiredToGraduate(){
+    	return this.coursesRequiredToGraduate;
+    }
+    
+    public void setNumberOfCoursesRequiredToGraduate(int numberOfCourses){
+    	this.coursesRequiredToGraduate = numberOfCourses;
     }
 }

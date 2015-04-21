@@ -56,13 +56,13 @@ public class GurobiEngine implements EngineInterface {
             Faculty[] teachingAssistants = scheduleInput.getTeacherAssistants().toArray( facultyTemp );
             
             int maxCourseCapacity = scheduleInput.getMaxCourseCapacity();
+            int numberOfCoursesToGraduate = scheduleInput.getNumberOfCoursesRequiredToGraduate();
 
             // *************** Hardcoded constraints ***************
             int numberOfSemesters = 12;
             int minEnrollmentToBeOffered = 1;
             int maxCoursesPerProfessorPerSemester = 1;
             int maxCoursesPerTAPerSemester = 1;
-            int numberOfCoursesToGraduate = 12;
             
             // *************** Add variables ***************
             double upperBound = numberOfStudents * numberOfCourses * numberOfStudents;
@@ -419,9 +419,10 @@ public class GurobiEngine implements EngineInterface {
 
             // *************** Objective Function ***************
             /* Objective tries to maximize the number of desired courses taken, weighted by seniority
-             * No longer tries to minimize the class size
+             * Still tries to minimize the class size, just not weighted heavily
              */
             GRBLinExpr objective = new GRBLinExpr();
+            objective.addTerm(-1, x);
             for (int i = 0; i < numberOfStudents; i++){
             	if (students[i].getDesiredCourses() != null){
 	            	for (DesiredCourse course : students[i].getDesiredCourses()){

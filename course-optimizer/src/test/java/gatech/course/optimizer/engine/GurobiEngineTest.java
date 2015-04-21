@@ -114,6 +114,7 @@ public class GurobiEngineTest {
 		testInput.setStudents( new HashSet<StudentDTO>() { { this.add(student1); this.add(student2); } } );
 		testInput.setTeacherAssistants( new HashSet<Faculty>() { { this.add(ta1); this.add( ta2 ); } } );
 		testInput.setMaxCourseCapacity( 200 );
+		testInput.setNumberOfCoursesRequiredToGraduate( 3 );
 		
 		GurobiEngine engine = new GurobiEngine();
 		ScheduleSolution solution = engine.createScheduleSolution( testInput );
