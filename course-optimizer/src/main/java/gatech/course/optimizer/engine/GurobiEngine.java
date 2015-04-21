@@ -428,7 +428,8 @@ public class GurobiEngine implements EngineInterface {
 	            		int courseIndex = this.getCourseIndexById(course.getCourse().getId().intValue(), courses);
 	            		if (courseIndex > -1){
 		            		for (int k = 0; k < numberOfSemesters; k++){
-		            			objective.addTerm(students[i].getSeniority(), studentVariables[i][courseIndex][k]);
+		            			double coefficient = students[i].getSeniority() + (1.0 / course.getPriority() * 10); 
+		            			objective.addTerm(coefficient, studentVariables[i][courseIndex][k]);
 		            		}
 	            		}
 	            	}
