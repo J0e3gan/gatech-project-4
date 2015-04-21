@@ -1,7 +1,7 @@
 package gatech.course.optimizer.model;
 
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import java.util.List;
 import java.util.Set;
 
@@ -12,10 +12,10 @@ import java.util.Set;
 public class Faculty extends User {
 
 
-    @OneToMany
+    @ManyToMany
     private Set<Course> competencies;
 
-    @OneToMany
+    @ManyToMany
     private List<Semester> availability;
 
     public Set<Course> getCompetencies() {

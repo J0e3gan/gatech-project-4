@@ -5,6 +5,7 @@ import gatech.course.optimizer.dto.StudentDTO;
 import gatech.course.optimizer.dto.TakenCourseDTO;
 import gatech.course.optimizer.model.Course;
 import gatech.course.optimizer.model.CourseOffering;
+import gatech.course.optimizer.model.DesiredCourse;
 import gatech.course.optimizer.model.Faculty;
 import gatech.course.optimizer.model.ScheduleSolution;
 import gatech.course.optimizer.model.Semester;
@@ -57,11 +58,11 @@ public class GurobiEngine implements EngineInterface {
             int maxCourseCapacity = scheduleInput.getMaxCourseCapacity();
 
             // *************** Hardcoded constraints ***************
-            int numberOfSemesters = 3;
+            int numberOfSemesters = 12;
             int minEnrollmentToBeOffered = 1;
             int maxCoursesPerProfessorPerSemester = 1;
             int maxCoursesPerTAPerSemester = 1;
-            int numberOfCoursesToGraduate = 3;
+            int numberOfCoursesToGraduate = 12;
             
             // *************** Add variables ***************
             double upperBound = numberOfStudents * numberOfCourses * numberOfStudents;
@@ -285,7 +286,7 @@ public class GurobiEngine implements EngineInterface {
             	}
             }
             
-         // *************** Faculty Constraints ***************
+            // *************** Faculty Constraints ***************
             
             // Add constraint that each course offered has 1 professor assigned to it
             for (int k = 0; k < numberOfSemesters; k++){
@@ -415,13 +416,29 @@ public class GurobiEngine implements EngineInterface {
             	}
             }
             
-            // Add objective
-            // TODO : Tie to priorities of each student.
-            GRBLinExpr expr = new GRBLinExpr();
-            expr.addTerm(1, x);
-            model.setObjective(expr, GRB.MINIMIZE);
+
+            // *************** Objective Function ***************
+            /* Objective tries to maximize the number of desired courses taken, weighted by seniority
+             * No longer tries to minimize the class size
+             */
+            GRBLinExpr objective = new GRBLinExpr();
+            for (int i = 0; i < numberOfStudents; i++){
+            	if (students[i].getDesiredCourses() != null){
+	            	for (DesiredCourse course : students[i].getDesiredCourses()){
+	            		int courseIndex = this.getCourseIndexById(course.getCourse().getId().intValue(), courses);
+	            		if (courseIndex > -1){
+		            		for (int k = 0; k < numberOfSemesters; k++){
+		            			double coefficient = students[i].getSeniority() + (1.0 / course.getPriority() * 10); 
+		            			objective.addTerm(coefficient, studentVariables[i][courseIndex][k]);
+		            		}
+	            		}
+	            	}
+            	}
+            }
+            model.setObjective(objective, GRB.MAXIMIZE);
             model.optimize();
 
+            // *************** Parse Solution ***************
             int status = model.get(GRB.IntAttr.Status);
             if (status == GRB.Status.INFEASIBLE){
             	System.out.println("Model is infeasible");
