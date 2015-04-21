@@ -59,9 +59,25 @@ public class ExecutionTrigger {
         scheduleInput.setSemesterToSchedule(semester);
 
         scheduleInput.setTeacherAssistants(facultyRepo.getTASet());
+        logger.error("SDJKSKDLSKDLSD TAs" + facultyRepo.getTASet().size());
+        logger.error("SDJKSKDLSKDLSD PROFESSORs" + facultyRepo.getProfessorsSet().size());
         scheduleInput.setProfessors(facultyRepo.getProfessorsSet());
-        logger.info("Schedule Input : \n"+JSONObjectMapper.jsonify(scheduleInput));
+        //logger.info("Schedule Input : \n"+JSONObjectMapper.jsonify(scheduleInput));
         //scheduleInput.setAvailableSpecializations();but
+
+
+        /*
+        testInput.setAllowedClassesPerSemester( 1 );
+		testInput.setAvailableSpecializations( new HashSet<Specialization>() { { this.add(specialization1); } } );
+		testInput.setCoursesThatCanBeOffered( new HashSet<Course>(){ { this.add( cs6010 ); this.add(cs6290); this.add( cs6300 ); this.add( cs6310 ); } } );
+		testInput.setProfessors( new HashSet<Faculty>() { { this.add(prof1); this.add( prof2 ); } } );
+		testInput.setRequiredOfferings( new HashSet<CourseOffering>(){ { this.add(offering); } } );
+		testInput.setSemesterToSchedule( startSemester );
+		testInput.setStudents( new HashSet<StudentDTO>() { { this.add(student1); this.add(student2); } } );
+		testInput.setTeacherAssistants( new HashSet<Faculty>() { { this.add(ta1); this.add( ta2 ); } } );
+		testInput.setMaxCourseCapacity( 200 );
+		testInput.setNumberOfCoursesRequiredToGraduate( 3 );
+         */
 
         return scheduleInput;
 
