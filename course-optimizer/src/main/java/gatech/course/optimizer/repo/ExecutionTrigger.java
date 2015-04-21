@@ -43,6 +43,7 @@ public class ExecutionTrigger {
 
         logger.info("Gathering information for the execution engine");
         ScheduleInput scheduleInput = new ScheduleInput();
+        scheduleInput.setMaxCourseCapacity(200);
         scheduleInput.setAllowedClassesPerSemester(2);
         scheduleInput.setCoursesThatCanBeOffered(courseRepo.getCourseSet());
 
@@ -60,7 +61,7 @@ public class ExecutionTrigger {
         scheduleInput.setTeacherAssistants(facultyRepo.getTASet());
         scheduleInput.setProfessors(facultyRepo.getProfessorsSet());
         logger.info("Schedule Input : \n"+JSONObjectMapper.jsonify(scheduleInput));
-        //scheduleInput.setAvailableSpecializations();
+        //scheduleInput.setAvailableSpecializations();but
 
         return scheduleInput;
 
