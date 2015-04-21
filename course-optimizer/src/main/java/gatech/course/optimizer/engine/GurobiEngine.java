@@ -18,6 +18,7 @@ import gurobi.GRBException;
 import gurobi.GRBLinExpr;
 import gurobi.GRBModel;
 import gurobi.GRBVar;
+import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.List;
@@ -27,6 +28,7 @@ import java.util.Set;
 /**
  * Created by 204069126 on 2/6/15.
  */
+@Component
 public class GurobiEngine implements EngineInterface {
 
 

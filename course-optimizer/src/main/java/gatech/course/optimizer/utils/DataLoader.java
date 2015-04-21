@@ -46,6 +46,9 @@ public class DataLoader {
     @Autowired
     private DesiredCourseRepo desiredCourseRepo;
 
+    @Autowired
+    private ExecutionTrigger executionTrigger;
+
     private final int POINTS_FOR_A = 10;
     private final int POINTS_FOR_B = 7;
     private final int POINTS_FOR_C = 5;
@@ -306,6 +309,10 @@ public class DataLoader {
             studentRepo.save(student);
         }
         scanner.close();
+
+
+        // Create first solution before any user changes
+        //executionTrigger.createScheduleSolution();
     }
 
     private boolean courseAlreadyTaken(Course course, List<CourseOffering> takenCourses) {
