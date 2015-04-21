@@ -127,6 +127,12 @@ public class DataLoader {
 
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
+
+            // Skip the first line (with column headers).
+            if (line.startsWith("First Name")) {
+                continue;
+            }
+
             String[] parts = line.split(",");
             String profFirstName = parts[0];
             String profLastName = parts[1];
@@ -147,6 +153,12 @@ public class DataLoader {
 
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
+
+            // Skip the first line (with column headers).
+            if (line.startsWith("First Name")) {
+                continue;
+            }
+
             String[] parts = line.split(",");
             String taFirstName = parts[0];
             String taLastName = parts[1];
