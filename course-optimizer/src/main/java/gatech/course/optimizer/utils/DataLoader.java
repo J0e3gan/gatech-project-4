@@ -10,7 +10,9 @@ import org.springframework.stereotype.Component;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.System;
 import java.util.*;
+import java.util.Iterator;
 
 /**
  * Created by 204069126 on 2/6/15.
@@ -139,8 +141,37 @@ public class DataLoader {
 
             // Ensure no duplicates are loaded.
             String profKey = profFirstName + " " + profLastName;
+            //System.out.println("** DEBUG:  Loading competencies for " + profKey + "..."); // FORNOW
             if (!professorMap.containsKey(profKey)) {
                 Professor prof = new Professor(profFirstName, profLastName);
+
+                Set<Course> competencies = new HashSet<Course>();
+                // Elements 3 through n are the course numbers (e.g. "CS 6310") for the professor's competencies.
+                for (int i = 2; i < parts.length; i++) {
+                    String courseNumber = parts[i].replace("\"", "");
+                    //System.out.println("** DEBUG:  courseNumber == \"" + courseNumber + "\""); // FORNOW
+                    Course competency = courseRepo.getCourseByNumber(courseNumber);
+                    if (competency != null && !competencies.contains(competency)) {
+                        competencies.add(competency);
+                    }
+                }
+                prof.setCompetencies(competencies);
+
+                /*
+                // FORNOW
+                System.out.print("** DEBUG:  Competencies to save for " + profKey + " are");
+                Iterator<Course> competenciesIter = competencies.iterator();
+                int i = 0;
+                while (competenciesIter.hasNext()) {
+                    if (i != 0) {
+                        System.out.print(" and");
+                    }
+                    System.out.print(" " + competenciesIter.next().getNumber());
+                    i++;
+                }
+                System.out.println(".");
+                */
+
                 Professor savedProf = professorRepo.save(prof);
                 professorMap.put(profKey, savedProf);
             }
