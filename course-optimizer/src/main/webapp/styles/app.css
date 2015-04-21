@@ -225,7 +225,7 @@ li.selected{
   border-radius: 4px;
   display: block;
   bottom:auto;
-  height: 300px;
+  //height: 300px;
   width:500px;
   overflow:hidden;
 }

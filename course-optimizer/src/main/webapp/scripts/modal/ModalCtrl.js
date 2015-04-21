@@ -9,6 +9,20 @@ angular.module('courseOpt').controller('ModalCtrl', function ($rootScope, $scope
             firstName:"",
             lastName:""
         }
+        $scope.newProf={
+            firstName:"",
+            lastName:"",
+            competencies:[]
+        }
+
+        $http.get('/courses').success(function(response){
+            $scope.courses = response;
+            $scope.courses.sort(compare);
+        }).error(function(error){
+            console.log("Error retrieving courses. " + error);
+        });
+
+        $scope.numCompetencies = 0;
 		$scope.done = false;
 		$scope.err = "";
 
@@ -68,4 +82,56 @@ angular.module('courseOpt').controller('ModalCtrl', function ($rootScope, $scope
             });
 
         }
+
+        $scope.addProf = function(){
+            modalType = 'prof';
+
+            if($scope.newProf.firstName=="" || $scope.newProf.lastName==""){
+                $scope.err = "Please make sure all fields have data";
+                return;
+            }
+
+            var tempComps = [];
+            for(var i=0; i<$scope.newProf.competencies.length; i++){
+                tempComps.push({id: $scope.newProf.competencies[i]});
+            }
+
+            var requestBody = {
+                'firstName' : $scope.newProf.firstName,
+                'lastName' : $scope.newProf.lastName,
+                'competencies':tempComps
+            }
+
+            $http.post('/professor/create', requestBody).success(function(response){
+                $scope.done = true;
+                $scope.err="";
+                $scope.message = "Professor added successfully!"
+
+            }).error(function(error){
+                $scope.err = "Error adding Professor";
+            });
+
+        }
+
+        $scope.$watch('numCompetencies', function(){
+            $scope.getNumber($scope.numCompetencies);
+        });
+
+        $scope.getNumber = function(num) {
+            var arr = [];
+            arr.length = num;
+            //return arr;
+            $scope.emptyArr =  arr;  
+        }
+
+        function compare(a,b) {
+          if (a.number < b.number)
+             return -1;
+          if (a.number > b.number)
+            return 1;
+          return 0;
+        }
+
+
+        
 });
