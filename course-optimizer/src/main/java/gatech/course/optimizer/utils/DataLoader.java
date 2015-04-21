@@ -243,7 +243,7 @@ public class DataLoader {
             List<DesiredCourse> desiredCourses = new ArrayList<DesiredCourse>();
             int desiredCount = 1;
             for(String courseKey : courseMap.keySet()){
-                if(!courseAlreadyTaken(courseKey,takenCourses) && desiredCount < 3 ) {
+                if(!courseAlreadyTaken(courseMap.get(courseKey),takenCourses) && desiredCount < 3 ) {
                     DesiredCourse desiredCourse = new DesiredCourse(student.getId(),courseMap.get(courseKey), desiredCount);
                     desiredCourse =  desiredCourseRepo.save(desiredCourse);
                     desiredCourses.add(desiredCourse);
@@ -256,9 +256,9 @@ public class DataLoader {
         scanner.close();
     }
 
-    private boolean courseAlreadyTaken(String courseNumber, List<CourseOffering> takenCourses) {
+    private boolean courseAlreadyTaken(Course course, List<CourseOffering> takenCourses) {
         for(CourseOffering courseOffering : takenCourses){
-            if(courseOffering.getCourse().getNumber().equals(courseNumber)){
+            if(courseOffering.getCourse().getNumber().equals(course.getNumber())){
                 return true;
             }
         }
