@@ -44,6 +44,7 @@ public class ExecutionTrigger {
         logger.info("Gathering information for the execution engine");
         ScheduleInput scheduleInput = new ScheduleInput();
         scheduleInput.setAllowedClassesPerSemester(2);
+        scheduleInput.setCoursesThatCanBeOffered(courseRepo.getCourseSet());
 
         List<Student> studentList = studentRepo.getAllStudents();
         Set<StudentDTO> studentDTOSet = new HashSet<StudentDTO>();
@@ -69,10 +70,10 @@ public class ExecutionTrigger {
     public void createScheduleSolution(){
         logger.info("Creating schedule solution");
         Semester semester = new Semester("2014", "FALL");
-        ScheduleInput scheduleInput = prepareScheduleInput(null,semester);
+        ScheduleInput scheduleInput = prepareScheduleInput(new HashSet<CourseOffering>(),semester);
         ScheduleSolution scheduleSolution =  engineInterface.createScheduleSolution(scheduleInput);
         logger.info("Done running course optimization engine, solution : \n"+ JSONObjectMapper.jsonify(scheduleSolution));
-        // TODO: persist
+        // TODO: persist the solution
     }
 
     

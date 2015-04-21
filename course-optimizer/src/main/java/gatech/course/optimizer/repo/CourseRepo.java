@@ -6,6 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by 204069126 on 4/9/15.
@@ -21,4 +22,6 @@ public interface CourseRepo extends CrudRepository<Course, Long> {
     @Query("select c from course c where c.number = :courseNumber")
     public Course getCourseByNumber(@Param("courseNumber") String courseNumber);
 
+    @Query("select c from course c order by c.number asc")
+    Set<Course> getCourseSet();
 }
