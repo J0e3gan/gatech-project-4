@@ -13,16 +13,16 @@ import java.util.Set;
 public interface FacultyRepo extends CrudRepository<Faculty, Long> {
 
     //   ADMIN,STUDENT,PROFESSOR,TA
-    @Query("select f from faculty f where f.role = 3 order by f.lastName, f.firstName")
+    @Query("select f from faculty f where f.role = 2 order by f.lastName, f.firstName")
     public List<Faculty> getAllProfessors();
 
-    @Query("select f from faculty f where f.role = 3 order by f.lastName, f.firstName")
+    @Query("select f from faculty f where f.role = 2 order by f.lastName, f.firstName")
     public Set<Faculty> getProfessorsSet();
 
-    @Query("select f from faculty f where f.role = 4 order by f.lastName, f.firstName")
+    @Query("select f from faculty f where f.role = 3 order by f.lastName, f.firstName")
     public List<Faculty> getAllTAs();
 
-    @Query("select f from faculty f where f.role = 4 order by f.lastName, f.firstName")
+    @Query("select f from faculty f where f.role = 3 order by f.lastName, f.firstName")
     public Set<Faculty> getTASet();
 
 }

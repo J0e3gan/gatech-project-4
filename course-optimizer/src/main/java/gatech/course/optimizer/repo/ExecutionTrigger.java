@@ -21,7 +21,6 @@ import java.util.Set;
 @Component
 public class ExecutionTrigger {
 
-
     @Autowired
     public EngineInterface engineInterface;
 
@@ -36,14 +35,15 @@ public class ExecutionTrigger {
 
     @Autowired StudentDetailsRepo studentDetailsRepo;
 
-
     public static Logger logger = LoggerFactory.getLogger(ExecutionTrigger.class);
 
     public ScheduleInput prepareScheduleInput(Set<CourseOffering> requiredOfferings, Semester semester) {
 
         logger.info("Gathering information for the execution engine");
         ScheduleInput scheduleInput = new ScheduleInput();
-        scheduleInput.setAllowedClassesPerSemester(2);
+        scheduleInput.setMaxCourseCapacity(200);
+        scheduleInput.setAllowedClassesPerSemester(20);
+        scheduleInput.setCoursesThatCanBeOffered(courseRepo.getCourseSet());
 
         List<Student> studentList = studentRepo.getAllStudents();
         Set<StudentDTO> studentDTOSet = new HashSet<StudentDTO>();
@@ -56,10 +56,51 @@ public class ExecutionTrigger {
         scheduleInput.setRequiredOfferings(requiredOfferings);
         scheduleInput.setSemesterToSchedule(semester);
 
-        scheduleInput.setTeacherAssistants(facultyRepo.getTASet());
-        scheduleInput.setProfessors(facultyRepo.getProfessorsSet());
-        logger.info("Schedule Input : \n"+JSONObjectMapper.jsonify(scheduleInput));
-        //scheduleInput.setAvailableSpecializations();
+
+        Set<Faculty> tasWithNullCompetencies = new HashSet<Faculty>();
+        for(Faculty faculty : facultyRepo.getTASet()) {
+            faculty.setCompetencies(null);
+            faculty.setAvailability(null);
+            tasWithNullCompetencies.add(faculty);
+        }
+        scheduleInput.setTeacherAssistants(tasWithNullCompetencies);
+
+
+        Set<Faculty> professorsWithNullCompetencies = new HashSet<Faculty>();
+        for(Faculty faculty : facultyRepo.getProfessorsSet()){
+            faculty.setCompetencies(null);
+            faculty.setAvailability(null);
+            professorsWithNullCompetencies.add(faculty);
+        }
+        scheduleInput.setProfessors(professorsWithNullCompetencies);
+
+        logger.info("Schedule Input Info :");
+        logger.info("Number of professors : "+scheduleInput.getProfessors().size());
+        logger.info("Number of TAs : " + scheduleInput.getTeacherAssistants().size());
+        logger.info("Number of students : " + scheduleInput.getStudents().size());
+        logger.info("Number of courses that can be offered : "+scheduleInput.getCoursesThatCanBeOffered().size());
+        logger.info("Allowed classes per semester : "+scheduleInput.getAllowedClassesPerSemester());
+        logger.info("Max course capacity : "+scheduleInput.getMaxCourseCapacity());
+        logger.info("Semester to schedule : "+ JSONObjectMapper.jsonify(scheduleInput.getSemesterToSchedule()));
+        logger.info("Required offerings size : " + scheduleInput.getRequiredOfferings().size());
+        logger.info("Number of courses required to graduate : " + scheduleInput.getNumberOfCoursesRequiredToGraduate());
+
+        //logger.info("Schedule Input : \n"+JSONObjectMapper.jsonify(scheduleInput));
+
+
+
+        /*
+        testInput.setAllowedClassesPerSemester( 1 );
+		testInput.setAvailableSpecializations( new HashSet<Specialization>() { { this.add(specialization1); } } );
+		testInput.setCoursesThatCanBeOffered( new HashSet<Course>(){ { this.add( cs6010 ); this.add(cs6290); this.add( cs6300 ); this.add( cs6310 ); } } );
+		testInput.setProfessors( new HashSet<Faculty>() { { this.add(prof1); this.add( prof2 ); } } );
+		testInput.setRequiredOfferings( new HashSet<CourseOffering>(){ { this.add(offering); } } );
+		testInput.setSemesterToSchedule( startSemester );
+		testInput.setStudents( new HashSet<StudentDTO>() { { this.add(student1); this.add(student2); } } );
+		testInput.setTeacherAssistants( new HashSet<Faculty>() { { this.add(ta1); this.add( ta2 ); } } );
+		testInput.setMaxCourseCapacity( 200 );
+		testInput.setNumberOfCoursesRequiredToGraduate( 3 );
+         */
 
         return scheduleInput;
 
@@ -68,11 +109,11 @@ public class ExecutionTrigger {
     @Transactional
     public void createScheduleSolution(){
         logger.info("Creating schedule solution");
-        Semester semester = new Semester("2014", "FALL");
-        ScheduleInput scheduleInput = prepareScheduleInput(null,semester);
+        Semester semester = new Semester("2015", "FALL");
+        ScheduleInput scheduleInput = prepareScheduleInput(new HashSet<CourseOffering>(),semester);
         ScheduleSolution scheduleSolution =  engineInterface.createScheduleSolution(scheduleInput);
         logger.info("Done running course optimization engine, solution : \n"+ JSONObjectMapper.jsonify(scheduleSolution));
-        // TODO: persist
+        // TODO: persist the solution
     }
 
     

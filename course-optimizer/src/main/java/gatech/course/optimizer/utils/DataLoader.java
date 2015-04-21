@@ -312,7 +312,7 @@ public class DataLoader {
 
 
         // Create first solution before any user changes
-        //executionTrigger.createScheduleSolution();
+        executionTrigger.createScheduleSolution();
     }
 
     private boolean courseAlreadyTaken(Course course, List<CourseOffering> takenCourses) {
