@@ -5,6 +5,7 @@ import gatech.course.optimizer.dto.TakenCourseDTO;
 import gatech.course.optimizer.model.CourseOffering;
 import gatech.course.optimizer.model.Student;
 import gatech.course.optimizer.repo.CourseOfferingRepo;
+import gatech.course.optimizer.repo.StudentDetailsRepo;
 import gatech.course.optimizer.repo.StudentRecordRepo;
 import gatech.course.optimizer.repo.StudentRepo;
 import org.slf4j.Logger;
@@ -29,6 +30,9 @@ public class StudentService {
     @Autowired
     private StudentRecordRepo studentRecordRepo;
 
+    @Autowired
+    public StudentDetailsRepo studentDetailsRepo;
+
     public static Logger logger = LoggerFactory.getLogger(StudentService.class);
 
     @RequestMapping(value = "/students", method = RequestMethod.GET)
@@ -45,24 +49,7 @@ public class StudentService {
     StudentDTO getStudentDetails(@PathVariable("studentId") String studentId) {
         logger.info("Getting student details for studentId='{}'", studentId);
 
-        Student student = studentRepo.findByStudentId(studentId);
-        if (student != null) {
-            StudentDTO studentDTO = new StudentDTO(student);
-
-            List<TakenCourseDTO> takenCourses = new ArrayList<TakenCourseDTO>();
-            List<CourseOffering> courseOfferings = courseOfferingRepo.findCoursesByStudent(student);
-            for (CourseOffering courseOffering : courseOfferings) {
-                String grade = studentRecordRepo.getGradeForStudent(courseOffering.getId(), student.getId());
-                TakenCourseDTO takenCourseDTO = new TakenCourseDTO(courseOffering, grade);
-                takenCourses.add(takenCourseDTO);
-            }
-            studentDTO.setTakenCourses(takenCourses);
-
-            return studentDTO;
-        } else {
-            logger.info("Student details for studentId='{}' not found.", studentId);
-            return null;
-        }
+        return studentDetailsRepo.getStudentDetails(studentId);
     }
 
     @RequestMapping(value = "/student/enroll", method = RequestMethod.POST)

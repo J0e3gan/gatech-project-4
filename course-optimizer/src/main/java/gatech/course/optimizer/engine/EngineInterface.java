@@ -8,10 +8,9 @@ import gatech.course.optimizer.model.ScheduleSolution;
  */
 public interface EngineInterface {
 
-	/**
-	 * 
-	 * @param scheduleInput
-	 * @return null is model is infeasible based on input
-	 */
+    /**
+     * @param scheduleInput
+     * @return null is model is infeasible based on input
+     */
     public ScheduleSolution createScheduleSolution(ScheduleInput scheduleInput);
 }
