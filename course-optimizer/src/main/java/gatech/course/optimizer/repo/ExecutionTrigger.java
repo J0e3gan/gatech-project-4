@@ -57,11 +57,22 @@ public class ExecutionTrigger {
         scheduleInput.setStudents(studentDTOSet);
         scheduleInput.setRequiredOfferings(requiredOfferings);
         scheduleInput.setSemesterToSchedule(semester);
-
         scheduleInput.setTeacherAssistants(facultyRepo.getTASet());
-        logger.error("SDJKSKDLSKDLSD TAs" + facultyRepo.getTASet().size());
-        logger.error("SDJKSKDLSKDLSD PROFESSORs" + facultyRepo.getProfessorsSet().size());
         scheduleInput.setProfessors(facultyRepo.getProfessorsSet());
+
+        logger.info("Schedule Input Info :");
+        logger.info("Number of professors : "+scheduleInput.getProfessors().size());
+        logger.info("Number of TAs : " + scheduleInput.getTeacherAssistants().size());
+        logger.info("Number of students : " + scheduleInput.getStudents().size());
+        logger.info("Number of courses that can be offered : "+scheduleInput.getCoursesThatCanBeOffered().size());
+        logger.info("Allowed classes per semester : "+scheduleInput.getAllowedClassesPerSemester());
+        logger.info("Max course capacity : "+scheduleInput.getMaxCourseCapacity());
+        logger.info("Semester to schedule : "+ JSONObjectMapper.jsonify(scheduleInput.getSemesterToSchedule()));
+        logger.info("Required offerings size : " + scheduleInput.getRequiredOfferings().size());
+        logger.info("Number of courses required to graduate : " + scheduleInput.getNumberOfCoursesRequiredToGraduate());
+
+
+
         //logger.info("Schedule Input : \n"+JSONObjectMapper.jsonify(scheduleInput));
         //scheduleInput.setAvailableSpecializations();but
 
