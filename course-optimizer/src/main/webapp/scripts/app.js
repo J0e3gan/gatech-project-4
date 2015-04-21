@@ -85,5 +85,10 @@ app.run(function ($rootScope, $state) {
                     "term":"SPRING",
                     "year":2015
                 }
+    $rootScope.nextSemester = {
+            "id":5,
+            "term":"SUMMER",
+            "year":2015
+    }
 
 });

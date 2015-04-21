@@ -22,6 +22,19 @@ angular.module('courseOpt').controller('ModalCtrl', function ($rootScope, $scope
             console.log("Error retrieving courses. " + error);
         });
 
+        $http.get('/professors').success(function(response){
+            $scope.professors = response;
+        }).error(function(error){
+            console.log("error fetching profs");
+        });
+
+        $scope.selected = {
+            course:"",
+            professor:"",
+            capacity:0,
+            crn:""
+        }
+
         $scope.numCompetencies = 0;
 		$scope.done = false;
 		$scope.err = "";
@@ -111,6 +124,33 @@ angular.module('courseOpt').controller('ModalCtrl', function ($rootScope, $scope
                 $scope.err = "Error adding Professor";
             });
 
+        }
+
+        $scope.addOffering = function(){
+            if($scope.selected.course==""){
+                $scope.err = "Please select a course to offer."
+                return;
+            }
+
+            var requestBody = {
+                "crn": "",
+                "studentCapacity":$scope.selected.capacity,
+                "course":{id : $scope.selected.course },
+                "semester":$rootScope.nextSemester,
+                "professor":{id: $scope.selected.professor},
+                "teacherAssistants":[],
+                "enrolledStudents":[],
+                "studentsOnWaitList":[]
+            }
+
+            $http.post('/offering/schedule', requestBody).success(function(response){
+                $scope.done = true;
+                $scope.err="";
+                $scope.message = "Offering added successfully!"
+
+            }).error(function(error){
+                $scope.err = "Error adding course offering";
+            });
         }
 
         $scope.$watch('numCompetencies', function(){
