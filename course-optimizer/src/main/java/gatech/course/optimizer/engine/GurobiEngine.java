@@ -226,7 +226,7 @@ public class GurobiEngine implements EngineInterface {
             	if (specialization != null){
 	            	// Add constraint that the student must take the required courses
             		Set<Course> requiredCourses = specialization.getRequiredCourses();
-            		if (requiredCourses != null){
+            		if (requiredCourses != null && requiredCourses.size() > 0){
             			for (Course requiredCourse : requiredCourses){
 		            		int courseIndex = this.getCourseIndexById( requiredCourse.getId().intValue(), courses );
 	            			GRBLinExpr expr = new GRBLinExpr();
@@ -342,7 +342,7 @@ public class GurobiEngine implements EngineInterface {
             
             // Add constraint that each professor only assigned to relevant courses
             for (int i = 0; i < numberOfProfessors; i++){
-        		if (professors[i].getCompetencies() != null){
+        		if (professors[i].getCompetencies() != null && professors[i].getCompetencies().size() > 0){
 	            	for (int k = 0; k < numberOfSemesters; k++){
 	            		GRBLinExpr expr = new GRBLinExpr();
 	            		for (int j = 0; j < numberOfCourses; j++){
@@ -358,7 +358,7 @@ public class GurobiEngine implements EngineInterface {
             
             // Add constraint that each TA only assigned to relevant courses
             for (int i = 0; i < numberOfTAs; i++){
-        		if (teachingAssistants[i].getCompetencies() != null){
+        		if (teachingAssistants[i].getCompetencies() != null && teachingAssistants[i].getCompetencies().size() > 0){
 	            	for (int k = 0; k < numberOfSemesters; k++){
 	            		GRBLinExpr expr = new GRBLinExpr();
 	            		for (int j = 0; j < numberOfCourses; j++){
@@ -374,7 +374,7 @@ public class GurobiEngine implements EngineInterface {
             
             // Add constraint that each professor only assigned to courses in available times
             for (int i = 0; i < numberOfProfessors; i++){
-            	if (professors[i].getAvailability() != null){
+            	if (professors[i].getAvailability() != null && professors[i].getAvailability().size() > 0){
             		GRBLinExpr expr = new GRBLinExpr();
             		for (int j = 0; j < numberOfCourses; j++){
             			for (int k = 0; k < numberOfSemesters; k++){
@@ -397,7 +397,7 @@ public class GurobiEngine implements EngineInterface {
             
             // Add constraint that each ta only assigned to courses in available times
             for (int i = 0; i < numberOfTAs; i++){
-            	if (teachingAssistants[i].getAvailability() != null){
+            	if (teachingAssistants[i].getAvailability() != null && teachingAssistants[i].getAvailability().size() > 0){
             		GRBLinExpr expr = new GRBLinExpr();
             		for (int j = 0; j < numberOfCourses; j++){
             			for (int k = 0; k < numberOfSemesters; k++){
@@ -426,7 +426,7 @@ public class GurobiEngine implements EngineInterface {
             GRBLinExpr objective = new GRBLinExpr();
             objective.addTerm(-1, x);
             for (int i = 0; i < numberOfStudents; i++){
-            	if (students[i].getDesiredCourses() != null){
+            	if (students[i].getDesiredCourses() != null && students[i].getDesiredCourses().size() > 0){
 	            	for (DesiredCourse course : students[i].getDesiredCourses()){
 	            		int courseIndex = this.getCourseIndexById(course.getCourse().getId().intValue(), courses);
 	            		if (courseIndex > -1){
