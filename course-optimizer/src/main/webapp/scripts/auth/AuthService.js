@@ -1,6 +1,7 @@
 angular.module('courseOpt').service('AuthService', function ($http, $q) {
 
-    var loggedInUser = null;
+    //var loggedInUser = null;
+    var loggedInUser = {"id":2,"username":"Pawel","password":"Pawel","firstName":"Pawel","lastName":"Drozdz","role":"ADMIN"};
 
     this.login = function (username, password) {
 
@@ -33,6 +34,7 @@ angular.module('courseOpt').service('AuthService', function ($http, $q) {
     this.getUser = function () {
         console.log("Getting logged in user");
         if (loggedInUser) {
+            console.log(loggedInUser);
             return loggedInUser;
         } else {
             console.log("Reject")

@@ -207,7 +207,7 @@ public class DataLoader {
 
             courseOfferingMap.get(infoLine.courseRefNumber).enrollStudent(studentMap.get(infoLine.studentId));
 
-            // Save student grades for differnt course offerings
+            // Save student grades for different course offerings
             Long courseOfferingId = courseOfferingMap.get(infoLine.courseRefNumber).getId();
             Long studentId = studentMap.get(infoLine.studentId).getId();
             String grade = (infoLine.courseGrade.length() == 0) ? makeUpGrade() : infoLine.courseGrade;
@@ -242,7 +242,16 @@ public class DataLoader {
             // Select 2 random courses as desired courses
             List<DesiredCourse> desiredCourses = new ArrayList<DesiredCourse>();
             int desiredCount = 1;
+            int randomSkip = getRandomNumber() / 2;
+            int numOfSkips = 0;
             for(String courseKey : courseMap.keySet()){
+
+                // Introducing some randomness
+                if(numOfSkips < randomSkip){
+                    numOfSkips++;
+                    continue;
+                }
+
                 if(!courseAlreadyTaken(courseMap.get(courseKey),takenCourses) && desiredCount < 3 ) {
                     DesiredCourse desiredCourse = new DesiredCourse(student.getId(),courseMap.get(courseKey), desiredCount);
                     desiredCourse =  desiredCourseRepo.save(desiredCourse);

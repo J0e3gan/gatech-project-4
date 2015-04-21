@@ -15,10 +15,9 @@
 		<h4 class="inline">Seniority: </h4>{{studentDetails.seniority}}
 	</div>
 	<div id="desiredCoursesTable">
-        {{studentDetails.desiredCourses}}
 		<h4 ng-class="{'inline': studentDetails.desiredCourses.length==0}">Desired Courses: </h4>
 		<span ng-if="studentDetails.desiredCourses.length==0"> No courses selected</span> <!--if empty, show, 'No coures selected'-->
-		<table ng-if="studentDetails.desiredCourses.length!=0">
+		<table ng-if="studentDetails.desiredCourses.length!=0" class="table">
 			<thead>
 	    		<th>Course Number</th>
 	    		<th>Course Name</th>
