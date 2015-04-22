@@ -1,4 +1,4 @@
-angular.module('courseOpt').controller('ScheduleCtrl', function ($rootScope, $scope, $http, AuthService) {
+angular.module('courseOpt').controller('ScheduleCtrl', function ($rootScope, $scope, $http, AuthService, StudentService) {
 
 	$scope.user = AuthService.getUser();
 
@@ -9,9 +9,25 @@ angular.module('courseOpt').controller('ScheduleCtrl', function ($rootScope, $sc
 		console.log("Error retrieving courses. " + error);
 	});
 
+	var getDetails = function(){
+		StudentService.getDetails($scope.user.studentId).success(function (response) {
+	        $scope.studentDetails = response; 
+	    }).error(function (response) {
+	            $scope.error = "Not able to retrieve student details."
+	            console.log("Error getting user details. " + response);
+	    });;
+	}
+	getDetails();
+
+
 	$scope.numDesiredCourses = 0;
 	$scope.desiredCourses = [];
 	$scope.courseRank = [];
+
+	$scope.setCourse = function(course){
+
+        $rootScope.selectedCourse = course;
+    }
 
 	$scope.updateStudent = function(){
 		var id = $scope.user.studentId;
@@ -19,25 +35,22 @@ angular.module('courseOpt').controller('ScheduleCtrl', function ($rootScope, $sc
 		var tempCourses = [];
             for(var i=0; i<$scope.desiredCourses.length; i++){
                 tempCourses.push({
-                	course:{id: $scope.desiredCourses[i]},
+                	courseId: $scope.desiredCourses[i],
                 	priority:$scope.courseRank[i]
             	});
         }
 
 
         var requestBody = {
-        	'username' : $scope.user.username,
-        	'password' : 'password',
-        	'firstName': $scope.user.firstName,
-        	'lastName' : $scope.user.lastName,
         	'desiredCourses': tempCourses,
         	'studentId': $scope.user.studentId
         }
 
-        $http.post('/student/enroll', requestBody).success(function(response){
+        $http.post('/student/update', requestBody).success(function(response){
         	$scope.done = true;
         	$scope.err="";
         	$scope.message = "Student updated successfully!"
+        	getDetails();
 
         }).error(function(error){
         	$scope.err = "Error adding student";
