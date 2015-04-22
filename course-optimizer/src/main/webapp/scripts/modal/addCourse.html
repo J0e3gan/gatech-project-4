@@ -1,19 +1,27 @@
 <div>
 	<div class="modal-header">
-    	<h2 class="modal-title" style="font-weight:normal;">Add New Course</h2>
+    	<h2 class="modal-title" style="font-weight:normal;">Add New Offering</h2>
 	</div>
 	<div class="modal-body">
-		<div>
-			<div class="spacing">CRN: <input type="text" ng-model="newStudent.firstName"></input></div>
-			<div class="spacing">Last Name:  <input ng-model="newStudent.lastName"></input></div>
-			<div class="spacing">Student ID: <input ng-model="newStudent.studentId"></input><br></div>
+		<div style="margin-bottom:20px;">
+			<div class="spacing"><b>New {{nextSemester.term | titleCase}} {{nextSemester.year}} Offering</b></div>
+			Course: <select ng-model="selected.course">
+				<option value="">---</option>
+				<option data-ng-repeat="course in courses" value="{{course.id}}">{{course.number}} {{course.name}}</option>
+			</select>
+			<div class="spacing">Student Capacity (optional):  <input ng-model="selected.capacity"></input></div>
+			Professor (optional): <select ng-model="selected.professor">
+				<option value="">---</option>
+				<option data-ng-repeat="prof in professors" value="{{prof.id}}">{{prof.firstName}} {{prof.lastName}}</option>
+			</select>
+			
 		</div>
 		
 		<div ng-show="err!=''" style="color:red;display:inline-block;"><b>{{err}}</b></div>
 		<div ng-show="message!=''" style="color:green; display:inline-block;"><b>{{message}}</b></div>
 
 		<div class="pull-right" style="margin:30px 0px;display:block;">
-			<button class="btn" ng-click="addStudent()" ng-if="!done">Add Student</button>
+			<button class="btn" ng-click="addOffering()" ng-if="!done">Add Offering</button>
 			<button class="btn" ng-click="cancel()">Close</button>
 		</div>
 	</div>

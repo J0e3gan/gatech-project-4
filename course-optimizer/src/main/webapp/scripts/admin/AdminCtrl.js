@@ -62,6 +62,9 @@ angular.module('courseOpt').controller('AdminCtrl', function ($rootScope, $scope
             else if (modalType=='ta'){
                 getTAs();
             }
+            else if (modalType=='prof'){
+                getProfessors();
+            }
                 
         });
     }
