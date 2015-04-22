@@ -12,6 +12,7 @@ angular.module('courseOpt').controller('ScheduleCtrl', function ($rootScope, $sc
 	var getDetails = function(){
 		StudentService.getDetails($scope.user.studentId).success(function (response) {
 	        $scope.studentDetails = response; 
+	        $scope.numDesiredCourses = $scope.studentDetails.desiredCourses.length;
 	    }).error(function (response) {
 	            $scope.error = "Not able to retrieve student details."
 	            console.log("Error getting user details. " + response);
@@ -20,7 +21,7 @@ angular.module('courseOpt').controller('ScheduleCtrl', function ($rootScope, $sc
 	getDetails();
 
 
-	$scope.numDesiredCourses = 0;
+	
 	$scope.desiredCourses = [];
 	$scope.courseRank = [];
 
@@ -70,9 +71,11 @@ angular.module('courseOpt').controller('ScheduleCtrl', function ($rootScope, $sc
 	});
 
 	var getNumber = function(num) {
-		var arr = [];
-		arr.length = num;
-	    return arr;   
+		if(num){
+			var arr = [];
+			arr.length = num;
+		    return arr;   
+		}
 	}
 
 
