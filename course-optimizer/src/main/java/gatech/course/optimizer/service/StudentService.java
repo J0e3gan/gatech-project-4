@@ -81,9 +81,14 @@ public class StudentService {
             List<DesiredCourse> desiredCourses = student.getDesiredCourses();
 
             // Delete desired courses removed from list
-            for (int i = desiredCourses.size() - 1; i <= 0; i--) {
+            for (int i = desiredCourses.size() - 1; i >= 0; i--) {
                 if (isRemovedFromList(studentUpdateRequest.getDesiredCourses(), desiredCourses.get(i))) {
-                    desiredCourseRepo.delete(desiredCourses.get(i));
+                    DesiredCourse toDelete = desiredCourses.get(i);
+                    logger.info("Deleting course " + toDelete.getCourse().getId());
+                    desiredCourses.remove(i);
+                    student.setDesiredCourses(desiredCourses);
+                    studentRepo.save(student);
+                    desiredCourseRepo.delete(toDelete);
                 }
             }
 
