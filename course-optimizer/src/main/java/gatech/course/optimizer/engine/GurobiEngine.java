@@ -24,6 +24,7 @@ import java.util.Set;
 public class GurobiEngine implements EngineInterface {
 
     public static Logger logger = LoggerFactory.getLogger(GurobiEngine.class);
+    public int baseCRN = 999;
 
     @Override
     public ScheduleSolution createScheduleSolution(ScheduleInput scheduleInput) {
@@ -472,7 +473,7 @@ public class GurobiEngine implements EngineInterface {
                     for (int i = 0; i < numberOfStudents; i++) {
                         if (studentVariables[i][j][k].get(DoubleAttr.X) == 1) {
                             if (offering == null) {
-                                offering = new CourseOffering("1000", courses[j], this.getSemesterByIndex(k, scheduleInput.getSemesterToSchedule()));
+                                offering = new CourseOffering(getCRN(), courses[j], this.getSemesterByIndex(k, scheduleInput.getSemesterToSchedule()));
                             }
                             offering.enrollStudent(students[i].toStudent());
                         }
@@ -522,6 +523,11 @@ public class GurobiEngine implements EngineInterface {
             logger.error("Error code: " + e.getErrorCode() + ". " + e.getMessage());
             return null;
         }
+    }
+
+    private String getCRN() {
+        baseCRN = baseCRN + 1;
+        return String.valueOf(baseCRN);
     }
 
     private int getCourseIndexById(int id, Course[] courses) {

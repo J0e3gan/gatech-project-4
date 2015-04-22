@@ -1,11 +1,11 @@
 package gatech.course.optimizer.dto;
 
-import gatech.course.optimizer.model.Course;
 import gatech.course.optimizer.model.DesiredCourse;
 import gatech.course.optimizer.model.Specialization;
 import gatech.course.optimizer.model.Student;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by 204069126 on 4/9/15.
@@ -23,8 +23,10 @@ public class StudentDTO {
 
     private Specialization chosenSpecialization;
     private List<TakenCourseDTO> takenCourses;
+    private Map<Long,List<TakenCourseDTO>> recommendedCourses;
 
-    public StudentDTO() {}
+    public StudentDTO() {
+    }
 
     public StudentDTO(Student student) {
         this.id = student.getId();
@@ -35,8 +37,6 @@ public class StudentDTO {
         this.desiredCourses = student.getDesiredCourses();
         this.seniority = student.getSeniority();
         this.studentId = student.getStudentId();
-
-
     }
 
     public Student toStudent() {
@@ -47,6 +47,14 @@ public class StudentDTO {
         student.setDesiredCourses(this.getDesiredCourses());
         student.setSeniority(this.getSeniority());
         return student;
+    }
+
+    public Map<Long, List<TakenCourseDTO>> getRecommendedCourses() {
+        return recommendedCourses;
+    }
+
+    public void setRecommendedCourses(Map<Long, List<TakenCourseDTO>> recommendedCourses) {
+        this.recommendedCourses = recommendedCourses;
     }
 
     public Long getId() {
@@ -120,12 +128,12 @@ public class StudentDTO {
     public void setTakenCourses(List<TakenCourseDTO> takenCourses) {
         this.takenCourses = takenCourses;
     }
-    
-    public Specialization getChosenSpecialization(){
-    	return this.chosenSpecialization;
+
+    public Specialization getChosenSpecialization() {
+        return this.chosenSpecialization;
     }
-    
-    public void setChosenSpecialization(Specialization specialization){
-    	this.chosenSpecialization = specialization;
+
+    public void setChosenSpecialization(Specialization specialization) {
+        this.chosenSpecialization = specialization;
     }
 }

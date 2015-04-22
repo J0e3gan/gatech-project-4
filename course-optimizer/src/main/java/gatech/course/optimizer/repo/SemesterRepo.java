@@ -11,6 +11,6 @@ import java.util.List;
  */
 public interface SemesterRepo extends CrudRepository<Semester, Long> {
 
-    @Query("select s from semester s order by s.year, s.term")
+    @Query("select s from semester s order by s.id")
     public List<Semester> getAllSemesters();
 }

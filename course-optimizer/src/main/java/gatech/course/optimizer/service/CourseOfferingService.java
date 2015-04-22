@@ -20,13 +20,15 @@ public class CourseOfferingService {
     private CourseOfferingRepo courseOfferingRepo;
 
     public static Logger logger = LoggerFactory.getLogger(CourseOfferingService.class);
+    private static long CURRENT_SEMESTER_ID = 4L; // TODO: remove the hardcoded id usage
 
     @RequestMapping(value = "/offerings", method = RequestMethod.GET)
     public
     @ResponseBody
-    List<CourseOffering> getAllCourseOfferings() {
+    List<CourseOffering> getAllCourseOfferings() { // This is really get past course offerings now TODO: update
         logger.info("Getting all courses previous and newly scheduled");
-        return courseOfferingRepo.getAllCourseOfferings();
+        //return courseOfferingRepo.getAllCourseOfferings();
+        return courseOfferingRepo.getCourseOfferingsUpToSemester(CURRENT_SEMESTER_ID);
     }
 
     @RequestMapping(value = "/offering/schedule", method = RequestMethod.POST)

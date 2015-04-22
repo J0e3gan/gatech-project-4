@@ -57,4 +57,5 @@ public class ScheduleSolutionDTO {
     public void setOffline(boolean isOffline) {
         this.isOffline = isOffline;
     }
+
 }
