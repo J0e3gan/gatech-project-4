@@ -7,6 +7,7 @@ import gatech.course.optimizer.model.*;
 import gatech.course.optimizer.model.Semester.SemesterTerm;
 import gurobi.*;
 import gurobi.GRB.DoubleAttr;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -53,13 +54,13 @@ public class GurobiEngine implements EngineInterface {
             int numberOfCoursesToGraduate = scheduleInput.getNumberOfCoursesRequiredToGraduate();
 
             // *************** Hardcoded constraints ***************
-            int numberOfSemesters = 24; // TODO: change back to 12
+            int numberOfSemesters = 12; // TODO: change back to 12
             int minEnrollmentToBeOffered = 1;
-            int maxCoursesPerProfessorPerSemester = 10; // TODO: change back to 1 or 2
-            int maxCoursesPerTAPerSemester = 10; // TODO: change back to 1 or 2
+            int maxCoursesPerProfessorPerSemester = 2; // TODO: change back to 1 or 2
+            int maxCoursesPerTAPerSemester = 2; // TODO: change back to 1 or 2
 
             // *************** Add variables ***************
-            double upperBound = numberOfStudents * numberOfCourses * numberOfStudents * 10000; // TODO: takeout 10000
+            double upperBound = numberOfStudents * numberOfCourses * numberOfStudents; // TODO: takeout 10000
             GRBVar x = model.addVar(0.0, upperBound, 0.0, GRB.INTEGER, "X");
 
             // History variables for [student][course]
@@ -119,8 +120,8 @@ public class GurobiEngine implements EngineInterface {
                         takenCount++;
                     }
                 }
-                model.addConstr(notTaken, GRB.EQUAL, 0, "coursesNotAlreadyTakenForStudent" + (i + 1));
-                model.addConstr(taken, GRB.EQUAL, takenCount, "coursesAlreadyTakenForStudent" + (i + 1));
+                model.addConstr(notTaken, GRB.EQUAL, 0, "coursesNotAlreadyTakenForStudent" + (i));
+                model.addConstr(taken, GRB.EQUAL, takenCount, "coursesAlreadyTakenForStudent" + (i));
             }
 
             // Add the capacity limit constraint
@@ -158,7 +159,7 @@ public class GurobiEngine implements EngineInterface {
                         expr.addTerm(1, studentVariables[i][j][k]);
                     }
                 }
-                model.addConstr(expr, GRB.EQUAL, numberOfCoursesToGraduate, "courseCreditRequirementsForStudent" + students[i].getId());
+                model.addConstr(expr, GRB.GREATER_EQUAL, numberOfCoursesToGraduate, "courseCreditRequirementsForStudent" + i);
             }
 
             // Constraints for course prerequisites
@@ -442,6 +443,23 @@ public class GurobiEngine implements EngineInterface {
             if (status == GRB.Status.INFEASIBLE) {
                 System.out.println("Model is infeasible");
                 model.computeIIS();
+                // Print the names of all of the constraints in the IIS set.
+                for (GRBConstr c : model.getConstrs())
+                {
+                    if (c.get(GRB.IntAttr.IISConstr) > 0)
+                    {
+                        System.err.println(c.get(GRB.StringAttr.ConstrName));
+                    }
+                }                
+
+                // Print the names of all of the variables in the IIS set.
+                for (GRBVar v : model.getVars())
+                {
+                    if (v.get(GRB.IntAttr.IISLB) > 0 || v.get(GRB.IntAttr.IISUB) > 0)
+                    {
+                        System.err.println(v.get(GRB.StringAttr.VarName));
+                    }
+                }
                 return null;
             }
 
@@ -477,6 +495,20 @@ public class GurobiEngine implements EngineInterface {
                     }
                 }
             }
+            
+
+            // TODO : Remove:
+        	for (CourseOffering scheduledOffering : offerings){
+    			System.out.print("Semester: " + scheduledOffering.getSemester().getTerm() + " " + scheduledOffering.getSemester().getYear() + 
+    					": Course " + scheduledOffering.getCourse().getName() + " taught by " + scheduledOffering.getProfessor().getLastName() + " with TA ");
+    			for (Faculty faculty : scheduledOffering.getTeacherAssistants()){
+    				System.out.println(faculty.getLastName() + " " );
+    			}
+    			System.out.println("\tStudents:");
+    			for (Student student : scheduledOffering.getEnrolledStudents()){
+    				System.out.println("\t\t" + student.getFirstName() + " " + student.getLastName());
+    			}
+    		}
 
             solution.setSchedule(offerings);
 
