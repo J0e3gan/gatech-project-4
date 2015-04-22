@@ -7,7 +7,6 @@ import gatech.course.optimizer.model.*;
 import gatech.course.optimizer.model.Semester.SemesterTerm;
 import gurobi.*;
 import gurobi.GRB.DoubleAttr;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -445,19 +444,15 @@ public class GurobiEngine implements EngineInterface {
                 logger.error("Model is infeasible");
                 model.computeIIS();
                 // Print the names of all of the constraints in the IIS set.
-                for (GRBConstr c : model.getConstrs())
-                {
-                    if (c.get(GRB.IntAttr.IISConstr) > 0)
-                    {
+                for (GRBConstr c : model.getConstrs()) {
+                    if (c.get(GRB.IntAttr.IISConstr) > 0) {
                         logger.error(c.get(GRB.StringAttr.ConstrName));
                     }
-                }                
+                }
 
                 // Print the names of all of the variables in the IIS set.
-                for (GRBVar v : model.getVars())
-                {
-                    if (v.get(GRB.IntAttr.IISLB) > 0 || v.get(GRB.IntAttr.IISUB) > 0)
-                    {
+                for (GRBVar v : model.getVars()) {
+                    if (v.get(GRB.IntAttr.IISLB) > 0 || v.get(GRB.IntAttr.IISUB) > 0) {
                         logger.error(v.get(GRB.StringAttr.VarName));
                     }
                 }
@@ -496,20 +491,20 @@ public class GurobiEngine implements EngineInterface {
                     }
                 }
             }
-            
+
 
             // TODO : Remove:
-        	for (CourseOffering scheduledOffering : offerings){
+            for (CourseOffering scheduledOffering : offerings) {
                 logger.info("Semester: " + scheduledOffering.getSemester().getTerm() + " " + scheduledOffering.getSemester().getYear() +
-    					": Course " + scheduledOffering.getCourse().getName() + " taught by " + scheduledOffering.getProfessor().getLastName() + " with TA ");
-    			for (Faculty faculty : scheduledOffering.getTeacherAssistants()){
-                    logger.info(faculty.getLastName() + " " );
-    			}
+                        ": Course " + scheduledOffering.getCourse().getName() + " taught by " + scheduledOffering.getProfessor().getLastName() + " with TA ");
+                for (Faculty faculty : scheduledOffering.getTeacherAssistants()) {
+                    logger.info(faculty.getLastName() + " ");
+                }
                 logger.info("\tStudents:");
-    			for (Student student : scheduledOffering.getEnrolledStudents()){
+                for (Student student : scheduledOffering.getEnrolledStudents()) {
                     logger.info("\t\t" + student.getFirstName() + " " + student.getLastName());
-    			}
-    		}
+                }
+            }
 
             solution.setSchedule(offerings);
 

@@ -3,7 +3,6 @@ package gatech.course.optimizer.repo;
 import gatech.course.optimizer.model.TA;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Set;

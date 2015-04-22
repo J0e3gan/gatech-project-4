@@ -73,29 +73,39 @@ public class StudentService {
     public
     @ResponseBody
     StudentDTO updateStudent(@RequestBody StudentUpdateRequest studentUpdateRequest) {
+
+        // TODO: simplify this method
         logger.info("Updating student " + studentUpdateRequest.getStudentId());
         Student student = studentRepo.findByStudentId(studentUpdateRequest.getStudentId());
         if (student != null) {
             List<DesiredCourse> desiredCourses = student.getDesiredCourses();
-            for (DesiredCourseDTO desiredCourseDTO : studentUpdateRequest.getDesiredCourses()) {
-                int courseChangeStatus = isNewOrUpdated(desiredCourses,desiredCourseDTO);
 
-                if(courseChangeStatus == NEW){
-                    logger.info("New desired course added : "+desiredCourseDTO.getCourseId() + " - " +desiredCourseDTO.getPriority());
+            // Delete desired courses removed from list
+            for (int i = desiredCourses.size() - 1; i <= 0; i--) {
+                if (isRemovedFromList(studentUpdateRequest.getDesiredCourses(), desiredCourses.get(i))) {
+                    desiredCourseRepo.delete(desiredCourses.get(i));
+                }
+            }
+
+            for (DesiredCourseDTO desiredCourseDTO : studentUpdateRequest.getDesiredCourses()) {
+                int courseChangeStatus = isNewOrUpdated(desiredCourses, desiredCourseDTO);
+
+                if (courseChangeStatus == NEW) {
+                    logger.info("New desired course added : " + desiredCourseDTO.getCourseId() + " - " + desiredCourseDTO.getPriority());
                     Course course = courseRepo.findOne(desiredCourseDTO.getCourseId());
-                    DesiredCourse newDesiredCourse = new DesiredCourse(student.getId(),course,desiredCourseDTO.getPriority());
+                    DesiredCourse newDesiredCourse = new DesiredCourse(student.getId(), course, desiredCourseDTO.getPriority());
                     newDesiredCourse = desiredCourseRepo.save(newDesiredCourse);
                     desiredCourses.add(newDesiredCourse);
-                } else if(courseChangeStatus == UPDATED) {
-                    logger.info("Priority updated for "+desiredCourseDTO.getCourseId() + " - " +desiredCourseDTO.getPriority());
-                    for(DesiredCourse desiredCourse : desiredCourses){
-                        if(desiredCourse.getCourse().getId().longValue() == desiredCourseDTO.getCourseId().longValue()){
+                } else if (courseChangeStatus == UPDATED) {
+                    logger.info("Priority updated for " + desiredCourseDTO.getCourseId() + " - " + desiredCourseDTO.getPriority());
+                    for (DesiredCourse desiredCourse : desiredCourses) {
+                        if (desiredCourse.getCourse().getId().longValue() == desiredCourseDTO.getCourseId().longValue()) {
                             desiredCourse.setPriority(desiredCourseDTO.getPriority());
                             desiredCourseRepo.save(desiredCourse);
                         }
                     }
                 } else {
-                    logger.info("No change to desired course "+desiredCourseDTO.getCourseId() + " - " +desiredCourseDTO.getPriority());
+                    logger.info("No change to desired course " + desiredCourseDTO.getCourseId() + " - " + desiredCourseDTO.getPriority());
                 }
             }
             student.setDesiredCourses(desiredCourses);
@@ -109,7 +119,7 @@ public class StudentService {
             return studentDetailsRepo.getStudentDetails(student.getStudentId());
         }
 
-        logger.error("Student not found for id " +studentUpdateRequest.getStudentId());
+        logger.error("Student not found for id " + studentUpdateRequest.getStudentId());
         throw new RuntimeException("Student not found");
     }
 
@@ -127,6 +137,16 @@ public class StudentService {
             }
         }
         return NEW; // NEW
+    }
+
+    private boolean isRemovedFromList(List<DesiredCourseDTO> newDesiredCourses, DesiredCourse oldDesiredCourse) {
+
+        for (DesiredCourseDTO desiredCourseDTO : newDesiredCourses) {
+            if (desiredCourseDTO.getCourseId().longValue() == oldDesiredCourse.getId().longValue()) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }

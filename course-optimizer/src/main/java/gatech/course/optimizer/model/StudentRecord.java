@@ -25,7 +25,8 @@ public class StudentRecord {
     private String studentId;
 
 
-    public StudentRecord() {}
+    public StudentRecord() {
+    }
 
     public StudentRecord(Long courseOfferingDBId, Long studentDBId, String grade) {
         this.courseOfferingDBId = courseOfferingDBId;

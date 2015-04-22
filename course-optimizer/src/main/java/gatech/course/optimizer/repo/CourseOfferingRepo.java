@@ -20,5 +20,5 @@ public interface CourseOfferingRepo extends CrudRepository<CourseOffering, Long>
     public List<CourseOffering> getAllCourseOfferings();
 
     @Query("select co from course_offering co where co.semester.id <= :semesterId order by co.crn asc")
-    public List<CourseOffering> getCourseOfferingsUpToSemester(@Param("semesterId")Long semesterId);
+    public List<CourseOffering> getCourseOfferingsUpToSemester(@Param("semesterId") Long semesterId);
 }
