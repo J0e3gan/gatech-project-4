@@ -19,9 +19,11 @@ public class Student extends User {
     private String studentId;
 
     public Student() {
+        setRole(Role.STUDENT);
     }
 
     public Student(String username, String password, String firstName, String lastName, String id) {
+        this();
         this.studentId = id;
         setUsername(username);
         setPassword(password);
