@@ -171,7 +171,7 @@ public class GurobiEngine implements EngineInterface {
                     for (int l = 0; l < course.getPrerequisites().size(); l++) {
                         // j0 must be taken prior to j1
                         int prerequisiteId = course.getPrerequisites().iterator().next().getId().intValue();
-                        System.out.println("Course: " + course.getId() + " has prerequisite: " + prerequisiteId);
+                        logger.info("Course: " + course.getId() + " has prerequisite: " + prerequisiteId);
                         // For a pair course and its prerequisite
                         int prereqIndex = this.getCourseIndexById(prerequisiteId, courses);
                         if (prereqIndex > -1) {
@@ -441,14 +441,14 @@ public class GurobiEngine implements EngineInterface {
             // *************** Parse Solution ***************
             int status = model.get(GRB.IntAttr.Status);
             if (status == GRB.Status.INFEASIBLE) {
-                System.out.println("Model is infeasible");
+                logger.error("Model is infeasible");
                 model.computeIIS();
                 // Print the names of all of the constraints in the IIS set.
                 for (GRBConstr c : model.getConstrs())
                 {
                     if (c.get(GRB.IntAttr.IISConstr) > 0)
                     {
-                        System.err.println(c.get(GRB.StringAttr.ConstrName));
+                        logger.error(c.get(GRB.StringAttr.ConstrName));
                     }
                 }                
 
@@ -457,7 +457,7 @@ public class GurobiEngine implements EngineInterface {
                 {
                     if (v.get(GRB.IntAttr.IISLB) > 0 || v.get(GRB.IntAttr.IISUB) > 0)
                     {
-                        System.err.println(v.get(GRB.StringAttr.VarName));
+                        logger.error(v.get(GRB.StringAttr.VarName));
                     }
                 }
                 return null;
@@ -499,14 +499,14 @@ public class GurobiEngine implements EngineInterface {
 
             // TODO : Remove:
         	for (CourseOffering scheduledOffering : offerings){
-    			System.out.print("Semester: " + scheduledOffering.getSemester().getTerm() + " " + scheduledOffering.getSemester().getYear() + 
+                logger.info("Semester: " + scheduledOffering.getSemester().getTerm() + " " + scheduledOffering.getSemester().getYear() +
     					": Course " + scheduledOffering.getCourse().getName() + " taught by " + scheduledOffering.getProfessor().getLastName() + " with TA ");
     			for (Faculty faculty : scheduledOffering.getTeacherAssistants()){
-    				System.out.println(faculty.getLastName() + " " );
+                    logger.info(faculty.getLastName() + " " );
     			}
-    			System.out.println("\tStudents:");
+                logger.info("\tStudents:");
     			for (Student student : scheduledOffering.getEnrolledStudents()){
-    				System.out.println("\t\t" + student.getFirstName() + " " + student.getLastName());
+                    logger.info("\t\t" + student.getFirstName() + " " + student.getLastName());
     			}
     		}
 
@@ -519,7 +519,7 @@ public class GurobiEngine implements EngineInterface {
             return solution;
 
         } catch (GRBException e) {
-            System.out.println("Error code: " + e.getErrorCode() + ". " + e.getMessage());
+            logger.error("Error code: " + e.getErrorCode() + ". " + e.getMessage());
             return null;
         }
     }

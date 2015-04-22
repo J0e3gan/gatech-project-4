@@ -42,7 +42,7 @@ public class ExecutionTrigger {
         logger.info("Gathering information for the execution engine");
         ScheduleInput scheduleInput = new ScheduleInput();
         scheduleInput.setMaxCourseCapacity(200);
-        scheduleInput.setAllowedClassesPerSemester(4);
+        scheduleInput.setAllowedClassesPerSemester(3);
         scheduleInput.setCoursesThatCanBeOffered(courseRepo.getCourseSet());
 
         List<Student> studentList = studentRepo.getAllStudents();
@@ -86,24 +86,7 @@ public class ExecutionTrigger {
         logger.info("Number of courses required to graduate : " + scheduleInput.getNumberOfCoursesRequiredToGraduate());
 
         //logger.info("Schedule Input : \n"+JSONObjectMapper.jsonify(scheduleInput));
-
-
-
-        /*
-        testInput.setAllowedClassesPerSemester( 1 );
-		testInput.setAvailableSpecializations( new HashSet<Specialization>() { { this.add(specialization1); } } );
-		testInput.setCoursesThatCanBeOffered( new HashSet<Course>(){ { this.add( cs6010 ); this.add(cs6290); this.add( cs6300 ); this.add( cs6310 ); } } );
-		testInput.setProfessors( new HashSet<Faculty>() { { this.add(prof1); this.add( prof2 ); } } );
-		testInput.setRequiredOfferings( new HashSet<CourseOffering>(){ { this.add(offering); } } );
-		testInput.setSemesterToSchedule( startSemester );
-		testInput.setStudents( new HashSet<StudentDTO>() { { this.add(student1); this.add(student2); } } );
-		testInput.setTeacherAssistants( new HashSet<Faculty>() { { this.add(ta1); this.add( ta2 ); } } );
-		testInput.setMaxCourseCapacity( 200 );
-		testInput.setNumberOfCoursesRequiredToGraduate( 3 );
-         */
-
         return scheduleInput;
-
     }
 
     @Transactional
@@ -112,7 +95,8 @@ public class ExecutionTrigger {
         Semester semester = new Semester("2015", "FALL");
         ScheduleInput scheduleInput = prepareScheduleInput(new HashSet<CourseOffering>(),semester);
         ScheduleSolution scheduleSolution =  engineInterface.createScheduleSolution(scheduleInput);
-        logger.info("Done running course optimization engine, solution : \n"+ JSONObjectMapper.jsonify(scheduleSolution));
+        //logger.info("Solution : "+JSONObjectMapper.jsonify(scheduleSolution));
+        logger.info("Done running course optimization engine, solution scheduled "+scheduleSolution.getSchedule().size() +" courses");
         // TODO: persist the solution
     }
 
