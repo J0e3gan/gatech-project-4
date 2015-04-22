@@ -42,7 +42,7 @@ public class ExecutionTrigger {
         logger.info("Gathering information for the execution engine");
         ScheduleInput scheduleInput = new ScheduleInput();
         scheduleInput.setMaxCourseCapacity(200);
-        scheduleInput.setAllowedClassesPerSemester(20);
+        scheduleInput.setAllowedClassesPerSemester(4);
         scheduleInput.setCoursesThatCanBeOffered(courseRepo.getCourseSet());
 
         List<Student> studentList = studentRepo.getAllStudents();
