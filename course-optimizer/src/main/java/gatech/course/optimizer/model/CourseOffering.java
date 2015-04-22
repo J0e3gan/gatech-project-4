@@ -28,7 +28,8 @@ public class CourseOffering {
     @OneToOne
     private Faculty professor;
 
-    @OneToMany
+    //@OneToMany
+    @ManyToMany
     private Set<Faculty> teacherAssistants;
 
     @ManyToMany

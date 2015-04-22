@@ -14,11 +14,14 @@ public class ScheduleSolutionDTO {
     private String triggeredReason;
     private boolean isOffline;
 
-    public ScheduleSolutionDTO() {}
+    public ScheduleSolutionDTO() {
+    }
 
     public ScheduleSolutionDTO(ScheduleSolution scheduleSolution) {
         this.id = scheduleSolution.getId();
-        this.computedTime = scheduleSolution.getComputedTime().getTime();
+        if (scheduleSolution.getComputedTime() != null) {
+            this.computedTime = scheduleSolution.getComputedTime().getTime();
+        }
         this.triggeredReason = scheduleSolution.getTriggeredReason();
         this.isOffline = scheduleSolution.isOffline();
     }

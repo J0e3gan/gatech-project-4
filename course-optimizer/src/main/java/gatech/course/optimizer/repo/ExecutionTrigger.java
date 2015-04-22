@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,7 +34,17 @@ public class ExecutionTrigger {
     @Autowired
     public FacultyRepo facultyRepo;
 
-    @Autowired StudentDetailsRepo studentDetailsRepo;
+    @Autowired
+    public SemesterRepo semesterRepo;
+
+    @Autowired
+    public StudentDetailsRepo studentDetailsRepo;
+
+    @Autowired
+    public CourseOfferingRepo courseOfferingRepo;
+
+    @Autowired
+    public ScheduleSolutionRepo scheduleSolutionRepo;
 
     public static Logger logger = LoggerFactory.getLogger(ExecutionTrigger.class);
 
@@ -95,9 +106,17 @@ public class ExecutionTrigger {
         Semester semester = new Semester("2015", "FALL");
         ScheduleInput scheduleInput = prepareScheduleInput(new HashSet<CourseOffering>(),semester);
         ScheduleSolution scheduleSolution =  engineInterface.createScheduleSolution(scheduleInput);
+        scheduleSolution.setComputedTime(new Date());
+        scheduleSolution.setTriggeredReason("Initial schedule solution");
+        scheduleSolution.setOffline(false);
         //logger.info("Solution : "+JSONObjectMapper.jsonify(scheduleSolution));
         logger.info("Done running course optimization engine, solution scheduled "+scheduleSolution.getSchedule().size() +" courses");
-        // TODO: persist the solution
+        logger.info("Persisting solution ....");
+        for(CourseOffering courseOffering : scheduleSolution.getSchedule()) {
+            semesterRepo.save(courseOffering.getSemester());
+            courseOfferingRepo.save(courseOffering);
+        }
+        scheduleSolutionRepo.save(scheduleSolution);
     }
 
     
