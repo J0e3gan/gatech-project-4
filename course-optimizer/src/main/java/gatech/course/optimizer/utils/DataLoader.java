@@ -310,10 +310,34 @@ public class DataLoader {
         }
         scanner.close();
 
+        // Create future semesters
+        createFutureSemesters();
 
         // Create first solution before any user changes
         executionTrigger.createScheduleSolution();
     }
+
+    private void createFutureSemesters() {
+        semesterRepo.save(new Semester("2015","SUMMER"));
+        semesterRepo.save(new Semester("2015","FALL"));
+
+        semesterRepo.save(new Semester("2016","SPRING"));
+        semesterRepo.save(new Semester("2016","SUMMER"));
+        semesterRepo.save(new Semester("2016","FALL"));
+
+        semesterRepo.save(new Semester("2017","SPRING"));
+        semesterRepo.save(new Semester("2017","SUMMER"));
+        semesterRepo.save(new Semester("2017","FALL"));
+
+        semesterRepo.save(new Semester("2018","SPRING"));
+        semesterRepo.save(new Semester("2018","SUMMER"));
+        semesterRepo.save(new Semester("2018","FALL"));
+
+        semesterRepo.save(new Semester("2019","SPRING"));
+        semesterRepo.save(new Semester("2019","SUMMER"));
+        semesterRepo.save(new Semester("2019","FALL"));
+    }
+
 
     private boolean courseAlreadyTaken(Course course, List<CourseOffering> takenCourses) {
         for(CourseOffering courseOffering : takenCourses){
