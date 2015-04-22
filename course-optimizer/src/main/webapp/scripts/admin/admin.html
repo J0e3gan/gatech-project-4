@@ -1,12 +1,10 @@
 <div class="container">
-      <div id="pastCourses">
+      <div id="solutions">
             <h2>Schedule Solutions Record</h2>
             <accordion  close-others="false">
-                  <accordion-group heading="{{parseDate(solution.computedTime)}}" ng-repeat="solution in solutions" style="font-size:18px;font-weight:bold;">
-                  <!-- <pre>{{solutionList | json}}</pre> -->
+                  <accordion-group heading="{{solution.computedTime|date:'medium'}}" ng-repeat="solution in solutions" style="font-size:18px;font-weight:bold;" ng-click="getSolutionData(solution.id)">
                         <accordion  close-others="false">
-                              <accordion-group heading="{{term[0].semester.term | titleCase}} {{term[0].semester.year}} Courses" ng-repeat="term in solutionList[$index+1]" style="border:none;font-size:18px;font-weight:bold;border-top: 1px solid #E5E5E5;">
-                                          <!-- <pre>{{year|json}}</pre> -->
+                              <accordion-group heading="{{term[0].semester.term | titleCase}} {{term[0].semester.year}} Courses" ng-repeat="term in currSolution" style="border:none;font-size:18px;font-weight:normal;border-top: 1px solid #E5E5E5;">
                                     <table class="table" style="font-size:14px;">
                                           <thead>
                                                 <th>Course Number</th>
@@ -15,7 +13,7 @@
                                                 <th>Details</th>
                                           </thead>
                                           <tbody style="font-weight:normal;">
-                                                <tr ng-repeat="course in term">
+                                                <tr ng-repeat="course in term | orderBy:'course.name'">
                                                       <td>{{course.course.number}}</td>
                                                       <td>{{course.course.name}}</td>
                                                       <td>{{course.demand}}</td>
@@ -52,7 +50,7 @@
             				</tr>
             			</tbody>
             		</table>
-          	</accordion-group>
+          	       </accordion-group>
       	</accordion>
       </div>
 </div>

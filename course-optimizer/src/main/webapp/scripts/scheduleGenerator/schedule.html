@@ -1,39 +1,66 @@
 <div class="container">
-	<h2 style="padding-bottom:20px;">Schedule Generator</h2>
-	Enter your desired number of courses:  <input ng-model="numDesiredCourses"></input><br>
+	<div style="display:inline-block;width:50%" class="pull-left">
+		<h2 style="padding-bottom:20px;">Schedule Generator</h2>
+		Enter your desired number of courses:  <input ng-model="numDesiredCourses"></input><br>
 
-	<div ng-repeat="i in arr track by $index" style="display:inline-block;">
-		{{$index+1}}. Course: 
-		<select class="desiredCourseSelector" ng-model="desiredCourses[$index]">
-			<option value="">---</option>
-			<option data-ng-repeat="course in courses" value="{{course.id}}">{{course.number}} {{course.name}}</option>
-		</select>
-		Preference: <select ng-model="courseRank[$index]">
-			<option value="">---</option>
-			<option ng-repeat="k in arr track by $index">{{$index+1}}</option>
-		</select><br>
+		<div ng-repeat="i in arr track by $index" style="display:inline-block;">
+			{{$index+1}}. Course: 
+			<select class="desiredCourseSelector" ng-model="desiredCourses[$index]">
+				<option value="">---</option>
+				<option data-ng-repeat="course in courses" value="{{course.id}}">{{course.number}} {{course.name}}</option>
+			</select>
+			Preference: <select ng-model="courseRank[$index]">
+				<option value="">---</option>
+				<option ng-repeat="k in arr track by $index">{{$index+1}}</option>
+			</select><br>
+		</div>
+		<div>
+			<button class="btn" ng-click="updateStudent()">Apply</button>
+		</div>
+		<div style="padding-top:30px;">
+			<h3>Current Desired Courses: </h3>
+			<span ng-show="studentDetails.desiredCourses.length==0"> No courses specified</span>
+			<table class="table" ng-show="studentDetails.desiredCourses.length!=0">
+				<thead>
+					<tr>
+						<th>Course Number</th>
+						<th>Course Name</th>
+						<th>Priority</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="course in studentDetails.desiredCourses">
+						<td>{{course.course.number}}</td>
+						<td>{{course.course.name}}</td>
+						<td>{{course.priority}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 	</div>
-	<div>
-		<button class="btn" ng-click="updateStudent()">Apply</button>
-	</div>
-	<div style="padding-top:30px;width:50%;">
-		<h3>Current Desired Courses: </h3>
-		<span ng-show="user.desiredCourses.length==0"> No courses specified</span>
-		<table class="table" ng-show="user.desiredCourses.length!=0">
-			<thead>
-				<tr>
-					<th>Course Number</th>
-					<th>Course Name</th>
-					<th>Priority</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr ng-repeat="course in user.desiredCourses">
-					<td>{{course.course.number}}</td>
-					<td>{{course.course.name}}</td>
-					<td>{{course.priority}}</td>
-				</tr>
-			</tbody>
-		</table>
+	<div class="pull-right" style="display:inline-block;width:50%">
+        <h2>Schedule Solutions Record</h2>
+        <accordion  close-others="false">
+              <accordion-group heading="{{key| date:'medium'}}" ng-repeat="(key, solution) in studentDetails.recommendedCourses" style="font-size:18px;font-weight:bold;">
+                    <table class="table" style="font-size:14px;">
+                          <thead>
+                                <th>Course Number</th>
+                                <th>Course Name</th>
+                                <th>Demand</th>
+                                <th>Semester</th>
+                                <th>Details</th>
+                          </thead>
+                          <tbody style="font-weight:normal;">
+                                <tr ng-repeat="course in solution | orderBy:'-semester.year'">
+                                      <td>{{course.course.number}}</td>
+                                      <td>{{course.course.name}}</td>
+                                      <td>{{course.demand}}</td>
+                                      <td>{{course.semester.term | titleCase}} {{course.semester.year}}</td>
+                                      <td style="cursor:pointer;" ui-sref="courseDetails({courseId:course.course.number})" ng-click="setCourse(course);"><i class="fa fa-file-text-o"/></td>
+                                </tr>
+                          </tbody>
+                    </table>
+        </accordion-group>
+        </accordion>
 	</div>
 </div>

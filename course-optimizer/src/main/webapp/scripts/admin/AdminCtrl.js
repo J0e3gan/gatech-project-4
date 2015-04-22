@@ -48,30 +48,18 @@ angular.module('courseOpt').controller('AdminCtrl', function ($rootScope, $scope
     var getSolutions = function(){
         $http.get('/solutions').success(function(response){
             $scope.solutions = response;
-
-            getSolutionData($scope.solutions);
-
         }).error(function(response){
 
         });
     }
 
-    var getSolutionData = function(solutions){
-        $scope.solutionList = []
-        for(var i=0; i<solutions.length; i++){
-            var id = solutions[i].id;
+    $scope.getSolutionData = function(id){
 
-            $http.get('/solution/'+id).success(function(response){
-                $scope.solutionList[i] = parseOfferings(response.schedule);
-            }).error(function(resposne){
+        $http.get('/solution/'+id).success(function(response){
+            $scope.currSolution = parseOfferings(response.schedule);
+        }).error(function(resposne){
 
-            });
-        }; //end for
-    }
-
-    $scope.parseDate = function(time){
-        var date = new Date(time);
-        return date.toString();
+        });
     }
 
     $scope.openModal = function(size, template){
