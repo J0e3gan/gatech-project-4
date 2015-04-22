@@ -421,7 +421,7 @@ public class GurobiEngine implements EngineInterface {
              * Still tries to minimize the class size, just not weighted heavily
              */
             GRBLinExpr objective = new GRBLinExpr();
-            objective.addTerm(-1, x);
+            //objective.addTerm(-1, x);
             for (int i = 0; i < numberOfStudents; i++) {
                 if (students[i].getDesiredCourses() != null && students[i].getDesiredCourses().size() > 0) {
                     for (DesiredCourse course : students[i].getDesiredCourses()) {
