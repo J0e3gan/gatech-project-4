@@ -6,7 +6,7 @@
 		{{$index+1}}. Course: 
 		<select class="desiredCourseSelector" ng-model="desiredCourses[$index]">
 			<option value="">---</option>
-			<option data-ng-repeat="course in courses" value="{{course}}">{{course.number}} {{course.name}}</option>
+			<option data-ng-repeat="course in courses" value="{{course.id}}">{{course.number}} {{course.name}}</option>
 		</select>
 		Preference: <select ng-model="courseRank[$index]">
 			<option value="">---</option>
@@ -14,7 +14,7 @@
 		</select><br>
 	</div>
 	<div>
-		<button class="btn">Apply</button>
+		<button class="btn" ng-click="updateStudent()">Apply</button>
 	</div>
 	<div style="padding-top:30px;width:50%;">
 		<h3>Current Desired Courses: </h3>
