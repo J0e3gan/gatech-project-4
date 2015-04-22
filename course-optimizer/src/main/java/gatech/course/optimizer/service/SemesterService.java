@@ -33,7 +33,7 @@ public class SemesterService {
     @RequestMapping(value = "/semester", method = RequestMethod.POST)
     public
     @ResponseBody
-    Semester createOffering(@RequestBody Semester semester) {
+    Semester createSemester(@RequestBody Semester semester) {
         logger.info("Creating new semester");
         return semesterRepo.save(semester);
     }

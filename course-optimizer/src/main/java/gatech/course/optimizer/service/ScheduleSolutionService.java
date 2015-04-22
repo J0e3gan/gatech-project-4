@@ -6,10 +6,7 @@ import gatech.course.optimizer.repo.ScheduleSolutionRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +34,13 @@ public class ScheduleSolutionService {
             solutionDTOList.add(new ScheduleSolutionDTO(scheduleSolution));
         }
         return solutionDTOList;
+    }
+
+    @RequestMapping(value = "/solution/{solutionId}", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    ScheduleSolution getSolution(@PathVariable("solutionId") Long id) {
+        return scheduleSolutionRepo.findOne(id);
     }
 
 

@@ -311,7 +311,7 @@ public class DataLoader {
         scanner.close();
 
         // Create future semesters
-        createFutureSemesters();
+        //createFutureSemesters();
 
         // Create first solution before any user changes
         executionTrigger.createScheduleSolution();
@@ -336,6 +336,18 @@ public class DataLoader {
         semesterRepo.save(new Semester("2019","SPRING"));
         semesterRepo.save(new Semester("2019","SUMMER"));
         semesterRepo.save(new Semester("2019","FALL"));
+
+        semesterRepo.save(new Semester("2020","SPRING"));
+        semesterRepo.save(new Semester("2020","SUMMER"));
+        semesterRepo.save(new Semester("2020","FALL"));
+
+        semesterRepo.save(new Semester("2021","SPRING"));
+        semesterRepo.save(new Semester("2021","SUMMER"));
+        semesterRepo.save(new Semester("2021","FALL"));
+
+        semesterRepo.save(new Semester("2022","SPRING"));
+        semesterRepo.save(new Semester("2022","SUMMER"));
+        semesterRepo.save(new Semester("2022","FALL"));
     }
 
 
