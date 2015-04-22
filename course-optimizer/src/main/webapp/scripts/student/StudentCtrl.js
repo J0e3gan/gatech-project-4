@@ -9,5 +9,5 @@ angular.module('courseOpt').controller('StudentCtrl', function ($rootScope, $sco
             console.log("Error getting user details. " + response);
     });;
 
-    
+ 
 });

@@ -13,12 +13,15 @@
 	</div>
 	<div>
 		<h4 class="inline">Professor: </h4>
-		<span ng-if="selectedCourse.professor!=null">{{selectedCourse.professor}}</span> <!--if null then show 'Not yet specified'-->
+		<span ng-if="selectedCourse.professor!=null">{{selectedCourse.professor.firstName}} {{selectedCourse.professor.lastName}}</span> <!--if null then show 'Not yet specified'-->
 		<span ng-if="selectedCourse.professor==null"> Not yet assigned</span>
 	</div>
 	<div>
 		<h4 class="inline">TAs: </h4>
-		<span ng-if="selectedCourse.teacherAssistants!=0" ng-repeat="ta in selectedCourse.teacherAssistants" style="padding-right:20px;">{{ta}}</span> <!--if null then show 'Not yet specified'-->
+		<span ng-if="selectedCourse.teacherAssistants!=0" ng-repeat="ta in selectedCourse.teacherAssistants" style="padding-right:20px;">
+			{{ta.firstName}} {{ta.lastName}}
+			<span ng-if="$index<selectedCourse.teacherAssistants-1">, </span>
+		</span> <!--if null then show 'Not yet specified'-->
 		<span ng-if="selectedCourse.teacherAssistants.length==0"> Not yet assigned</span>
 	</div>
 	<div>

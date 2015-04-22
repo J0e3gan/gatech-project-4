@@ -1,27 +1,58 @@
 <div class="container">
-	<h2>Course Offerings</h2>
-	<div style="padding-bottom:20px;margin-bottom:30px;">
-		<button class="btn pull-right" ng-click="openModal('lg', 'scripts/modal/addCourse.html')"><i class="fa fa-user-plus"> Add Course Offering</i></button>
-	</div>
-	<accordion  close-others="false">
-		<accordion-group heading="{{term[0].semester.term | titleCase}} {{term[0].semester.year}} Courses" ng-repeat="term in offerings" style="font-size:18px;font-weight:bold;">
-      			<!-- <pre>{{year|json}}</pre> -->
-      		<table class="table" style="font-size:14px;">
-      			<thead>
-      				<th>Course Number</th>
-      				<th>Course Name</th>
-      				<th>Capacity</th>
-      				<th>Details</th>
-      			</thead>
-      			<tbody style="font-weight:normal;">
-      				<tr ng-repeat="course in term">
-      					<td>{{course.course.number}}</td>
-      					<td>{{course.course.name}}</td>
-      					<td>{{course.studentCapacity}}</td>
-      					<td style="cursor:pointer;" ui-sref="courseDetails({courseId:course.course.number})" ng-click="setCourse(course);"><i class="fa fa-file-text-o"/></td>
-      				</tr>
-      			</tbody>
-      		</table>
-    	</accordion-group>
-	</accordion>
+      <div id="pastCourses">
+            <h2>Schedule Solutions Record</h2>
+            <accordion  close-others="false">
+                  <accordion-group heading="{{parseDate(solution.computedTime)}}" ng-repeat="solution in solutions" style="font-size:18px;font-weight:bold;">
+                  <!-- <pre>{{solutionList | json}}</pre> -->
+                        <accordion  close-others="false">
+                              <accordion-group heading="{{term[0].semester.term | titleCase}} {{term[0].semester.year}} Courses" ng-repeat="term in solutionList[$index+1]" style="border:none;font-size:18px;font-weight:bold;border-top: 1px solid #E5E5E5;">
+                                          <!-- <pre>{{year|json}}</pre> -->
+                                    <table class="table" style="font-size:14px;">
+                                          <thead>
+                                                <th>Course Number</th>
+                                                <th>Course Name</th>
+                                                <th>Demand</th>
+                                                <th>Details</th>
+                                          </thead>
+                                          <tbody style="font-weight:normal;">
+                                                <tr ng-repeat="course in term">
+                                                      <td>{{course.course.number}}</td>
+                                                      <td>{{course.course.name}}</td>
+                                                      <td>{{course.demand}}</td>
+                                                      <td style="cursor:pointer;" ui-sref="courseDetails({courseId:course.course.number})" ng-click="setCourse(course);"><i class="fa fa-file-text-o"/></td>
+                                                </tr>
+                                          </tbody>
+                                    </table>
+                              </accordion-group>
+                        </accordion>
+            </accordion-group>
+            </accordion>
+      </div>
+      <div id="pastCourses">
+      	<h2>Past Course Offerings</h2>
+      	<div style="padding-bottom:20px;margin-bottom:30px;">
+      		<button class="btn pull-right" ng-click="openModal('lg', 'scripts/modal/addCourse.html')"><i class="fa fa-user-plus"> Add Course Offering</i></button>
+      	</div>
+      	<accordion  close-others="false">
+      		<accordion-group heading="{{term[0].semester.term | titleCase}} {{term[0].semester.year}} Courses" ng-repeat="term in offerings" style="font-size:18px;font-weight:bold;">
+            			<!-- <pre>{{year|json}}</pre> -->
+            		<table class="table" style="font-size:14px;">
+            			<thead>
+            				<th>Course Number</th>
+            				<th>Course Name</th>
+            				<th>Capacity</th>
+            				<th>Details</th>
+            			</thead>
+            			<tbody style="font-weight:normal;">
+            				<tr ng-repeat="course in term">
+            					<td>{{course.course.number}}</td>
+            					<td>{{course.course.name}}</td>
+            					<td>{{course.studentCapacity}}</td>
+            					<td style="cursor:pointer;" ui-sref="courseDetails({courseId:course.course.number})" ng-click="setCourse(course);"><i class="fa fa-file-text-o"/></td>
+            				</tr>
+            			</tbody>
+            		</table>
+          	</accordion-group>
+      	</accordion>
+      </div>
 </div>
