@@ -142,7 +142,7 @@ public class StudentService {
     private boolean isRemovedFromList(List<DesiredCourseDTO> newDesiredCourses, DesiredCourse oldDesiredCourse) {
 
         for (DesiredCourseDTO desiredCourseDTO : newDesiredCourses) {
-            if (desiredCourseDTO.getCourseId().longValue() == oldDesiredCourse.getId().longValue()) {
+            if (desiredCourseDTO.getCourseId().longValue() == oldDesiredCourse.getCourse().getId().longValue()) {
                 return false;
             }
         }
