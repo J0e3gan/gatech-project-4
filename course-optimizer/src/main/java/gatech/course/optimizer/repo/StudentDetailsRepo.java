@@ -56,13 +56,13 @@ public class StudentDetailsRepo {
             }
             studentDTO.setTakenCourses(takenCourses);
 
-            Map<Long,List<TakenCourseDTO>> recommendedCourses = new HashMap<Long, List<TakenCourseDTO>>();
+            Map<Long, List<TakenCourseDTO>> recommendedCourses = new HashMap<Long, List<TakenCourseDTO>>();
 
-            for(ScheduleSolution scheduleSolution : scheduleSolutionRepo.getAll()){
+            for (ScheduleSolution scheduleSolution : scheduleSolutionRepo.getAll()) {
                 ScheduleSolutionDTO scheduleSolutionDTO = new ScheduleSolutionDTO(scheduleSolution);
                 recommendedCourses.put(scheduleSolutionDTO.getComputedTime().getTime(), new ArrayList<TakenCourseDTO>());
-                for(CourseOffering courseOffering : scheduleSolution.getSchedule()){
-                    if(courseOffering.getEnrolledStudents().contains(student)){
+                for (CourseOffering courseOffering : scheduleSolution.getSchedule()) {
+                    if (courseOffering.getEnrolledStudents().contains(student)) {
                         recommendedCourses.get(scheduleSolutionDTO.getComputedTime().getTime()).add(new TakenCourseDTO(courseOffering, ""));
                     }
                 }

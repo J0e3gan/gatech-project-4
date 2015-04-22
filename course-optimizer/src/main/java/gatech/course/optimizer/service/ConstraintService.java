@@ -25,7 +25,8 @@ public class ConstraintService {
 
     @RequestMapping(value = "/constraint/create", method = RequestMethod.POST)
     public
-    @ResponseBody Constraint createConstraint(@RequestBody Constraint constraint){
+    @ResponseBody
+    Constraint createConstraint(@RequestBody Constraint constraint) {
         return constraintRepo.save(constraint);
     }
 }

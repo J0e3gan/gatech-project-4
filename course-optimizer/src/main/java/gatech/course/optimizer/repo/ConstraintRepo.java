@@ -1,7 +1,6 @@
 package gatech.course.optimizer.repo;
 
 import gatech.course.optimizer.model.Constraint;
-import gatech.course.optimizer.model.Course;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 

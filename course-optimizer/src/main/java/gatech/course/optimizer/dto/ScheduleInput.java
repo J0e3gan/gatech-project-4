@@ -1,10 +1,6 @@
 package gatech.course.optimizer.dto;
 
-import gatech.course.optimizer.model.Course;
-import gatech.course.optimizer.model.CourseOffering;
-import gatech.course.optimizer.model.Faculty;
-import gatech.course.optimizer.model.Semester;
-import gatech.course.optimizer.model.Specialization;
+import gatech.course.optimizer.model.*;
 
 import java.util.Set;
 
@@ -20,7 +16,7 @@ public class ScheduleInput {
     private Set<Faculty> teacherAssistants;
     private Set<Specialization> availableSpecializations;
     private Semester semesterToSchedule;
-    
+
     private int allowedClassesPerSemester;
     private int maxCourseCapacity;
     private int coursesRequiredToGraduate = 12; // default to 12 courses (36 credits)
@@ -44,9 +40,9 @@ public class ScheduleInput {
     public Set<Course> getCoursesThatCanBeOffered() {
         return coursesThatCanBeOffered;
     }
-    
-    public Set<Specialization> getAvailableSpecializations(){
-    	return this.availableSpecializations;
+
+    public Set<Specialization> getAvailableSpecializations() {
+        return this.availableSpecializations;
     }
 
     public void setCoursesThatCanBeOffered(Set<Course> coursesThatCanBeOffered) {
@@ -76,32 +72,32 @@ public class ScheduleInput {
     public void setTeacherAssistants(Set<Faculty> teacherAssistants) {
         this.teacherAssistants = teacherAssistants;
     }
-    
-    public void setAvailableSpecializations(Set<Specialization> specializations){
-    	this.availableSpecializations = specializations;
+
+    public void setAvailableSpecializations(Set<Specialization> specializations) {
+        this.availableSpecializations = specializations;
     }
-    
-    public void setSemesterToSchedule(Semester semester){
-    	this.semesterToSchedule = semester;
+
+    public void setSemesterToSchedule(Semester semester) {
+        this.semesterToSchedule = semester;
     }
-    
-    public Semester getSemesterToSchedule(){
-    	return this.semesterToSchedule;
+
+    public Semester getSemesterToSchedule() {
+        return this.semesterToSchedule;
     }
-    
-    public int getMaxCourseCapacity(){
-    	return this.maxCourseCapacity;
+
+    public int getMaxCourseCapacity() {
+        return this.maxCourseCapacity;
     }
-    
-    public void setMaxCourseCapacity(int capacity){
-    	this.maxCourseCapacity = capacity;
+
+    public void setMaxCourseCapacity(int capacity) {
+        this.maxCourseCapacity = capacity;
     }
-    
-    public int getNumberOfCoursesRequiredToGraduate(){
-    	return this.coursesRequiredToGraduate;
+
+    public int getNumberOfCoursesRequiredToGraduate() {
+        return this.coursesRequiredToGraduate;
     }
-    
-    public void setNumberOfCoursesRequiredToGraduate(int numberOfCourses){
-    	this.coursesRequiredToGraduate = numberOfCourses;
+
+    public void setNumberOfCoursesRequiredToGraduate(int numberOfCourses) {
+        this.coursesRequiredToGraduate = numberOfCourses;
     }
 }

@@ -10,7 +10,8 @@ public class StudentUpdateRequest {
     String studentId;
     List<DesiredCourseDTO> desiredCourses;
 
-    public StudentUpdateRequest() {}
+    public StudentUpdateRequest() {
+    }
 
     public String getStudentId() {
         return studentId;

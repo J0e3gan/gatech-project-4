@@ -18,7 +18,8 @@ public class DesiredCourse {
     private int priority;
     private Long studentId;
 
-    public DesiredCourse() {}
+    public DesiredCourse() {
+    }
 
     public DesiredCourse(Long studentId, Course course, int priority) {
         this.studentId = studentId;

@@ -23,7 +23,7 @@ public class StudentDTO {
 
     private Specialization chosenSpecialization;
     private List<TakenCourseDTO> takenCourses;
-    private Map<Long,List<TakenCourseDTO>> recommendedCourses;
+    private Map<Long, List<TakenCourseDTO>> recommendedCourses;
 
     public StudentDTO() {
     }

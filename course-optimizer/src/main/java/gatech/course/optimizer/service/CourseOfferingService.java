@@ -35,7 +35,7 @@ public class CourseOfferingService {
     public
     @ResponseBody
     CourseOffering createOffering(@RequestBody CourseOffering courseOffering) {
-        logger.info("Scheduling course: "+ JSONObjectMapper.jsonify(courseOffering));
+        logger.info("Scheduling course: " + JSONObjectMapper.jsonify(courseOffering));
         return courseOfferingRepo.save(courseOffering);
     }
 

@@ -20,7 +20,8 @@ public class Constraint {
     private String value;
 
 
-    public Constraint() {}
+    public Constraint() {
+    }
 
     public Constraint(String name, String description, String value) {
         this.name = name;

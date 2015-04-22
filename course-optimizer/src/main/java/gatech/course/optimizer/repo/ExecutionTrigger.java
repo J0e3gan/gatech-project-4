@@ -59,7 +59,7 @@ public class ExecutionTrigger {
         List<Student> studentList = studentRepo.getAllStudents();
         Set<StudentDTO> studentDTOSet = new HashSet<StudentDTO>();
 
-        for(Student student : studentList){
+        for (Student student : studentList) {
             studentDTOSet.add(studentDetailsRepo.getStudentDetails(student.getStudentId()));
         }
 
@@ -69,7 +69,7 @@ public class ExecutionTrigger {
 
 
         Set<Faculty> tasWithNullCompetencies = new HashSet<Faculty>();
-        for(Faculty faculty : facultyRepo.getTASet()) {
+        for (Faculty faculty : facultyRepo.getTASet()) {
             faculty.setCompetencies(null);
             faculty.setAvailability(null);
             tasWithNullCompetencies.add(faculty);
@@ -78,7 +78,7 @@ public class ExecutionTrigger {
 
 
         Set<Faculty> professorsWithNullCompetencies = new HashSet<Faculty>();
-        for(Faculty faculty : facultyRepo.getProfessorsSet()){
+        for (Faculty faculty : facultyRepo.getProfessorsSet()) {
             faculty.setCompetencies(null);
             faculty.setAvailability(null);
             professorsWithNullCompetencies.add(faculty);
@@ -86,13 +86,13 @@ public class ExecutionTrigger {
         scheduleInput.setProfessors(professorsWithNullCompetencies);
 
         logger.info("Schedule Input Info :");
-        logger.info("Number of professors : "+scheduleInput.getProfessors().size());
+        logger.info("Number of professors : " + scheduleInput.getProfessors().size());
         logger.info("Number of TAs : " + scheduleInput.getTeacherAssistants().size());
         logger.info("Number of students : " + scheduleInput.getStudents().size());
-        logger.info("Number of courses that can be offered : "+scheduleInput.getCoursesThatCanBeOffered().size());
-        logger.info("Allowed classes per semester : "+scheduleInput.getAllowedClassesPerSemester());
-        logger.info("Max course capacity : "+scheduleInput.getMaxCourseCapacity());
-        logger.info("Semester to schedule : "+ JSONObjectMapper.jsonify(scheduleInput.getSemesterToSchedule()));
+        logger.info("Number of courses that can be offered : " + scheduleInput.getCoursesThatCanBeOffered().size());
+        logger.info("Allowed classes per semester : " + scheduleInput.getAllowedClassesPerSemester());
+        logger.info("Max course capacity : " + scheduleInput.getMaxCourseCapacity());
+        logger.info("Semester to schedule : " + JSONObjectMapper.jsonify(scheduleInput.getSemesterToSchedule()));
         logger.info("Required offerings size : " + scheduleInput.getRequiredOfferings().size());
         logger.info("Number of courses required to graduate : " + scheduleInput.getNumberOfCoursesRequiredToGraduate());
 
@@ -101,23 +101,23 @@ public class ExecutionTrigger {
     }
 
     @Transactional
-    public void createScheduleSolution(){
+    public void createScheduleSolution() {
         logger.info("Creating schedule solution");
         Semester semester = new Semester("2015", "FALL");
-        ScheduleInput scheduleInput = prepareScheduleInput(new HashSet<CourseOffering>(),semester);
-        ScheduleSolution scheduleSolution =  engineInterface.createScheduleSolution(scheduleInput);
+        ScheduleInput scheduleInput = prepareScheduleInput(new HashSet<CourseOffering>(), semester);
+        ScheduleSolution scheduleSolution = engineInterface.createScheduleSolution(scheduleInput);
         scheduleSolution.setComputedTime(new Date());
         scheduleSolution.setTriggeredReason("Initial schedule solution");
         scheduleSolution.setOffline(false);
         //logger.info("Solution : "+JSONObjectMapper.jsonify(scheduleSolution));
-        logger.info("Done running course optimization engine, solution scheduled "+scheduleSolution.getSchedule().size() +" courses");
+        logger.info("Done running course optimization engine, solution scheduled " + scheduleSolution.getSchedule().size() + " courses");
         logger.info("Persisting solution ....");
-        for(CourseOffering courseOffering : scheduleSolution.getSchedule()) {
+        for (CourseOffering courseOffering : scheduleSolution.getSchedule()) {
             semesterRepo.save(courseOffering.getSemester());
             courseOfferingRepo.save(courseOffering);
         }
         scheduleSolutionRepo.save(scheduleSolution);
     }
 
-    
+
 }

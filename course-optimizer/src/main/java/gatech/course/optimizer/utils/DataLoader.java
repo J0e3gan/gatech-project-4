@@ -10,9 +10,7 @@ import org.springframework.stereotype.Component;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.System;
 import java.util.*;
-import java.util.Iterator;
 
 /**
  * Created by 204069126 on 2/6/15.
@@ -290,17 +288,17 @@ public class DataLoader {
             int desiredCount = 1;
             int randomSkip = getRandomNumber() / 2;
             int numOfSkips = 0;
-            for(String courseKey : courseMap.keySet()){
+            for (String courseKey : courseMap.keySet()) {
 
                 // Introducing some randomness
-                if(numOfSkips < randomSkip){
+                if (numOfSkips < randomSkip) {
                     numOfSkips++;
                     continue;
                 }
 
-                if(!courseAlreadyTaken(courseMap.get(courseKey),takenCourses) && desiredCount < 3 ) {
-                    DesiredCourse desiredCourse = new DesiredCourse(student.getId(),courseMap.get(courseKey), desiredCount);
-                    desiredCourse =  desiredCourseRepo.save(desiredCourse);
+                if (!courseAlreadyTaken(courseMap.get(courseKey), takenCourses) && desiredCount < 3) {
+                    DesiredCourse desiredCourse = new DesiredCourse(student.getId(), courseMap.get(courseKey), desiredCount);
+                    desiredCourse = desiredCourseRepo.save(desiredCourse);
                     desiredCourses.add(desiredCourse);
                     desiredCount++;
                 }
@@ -318,42 +316,42 @@ public class DataLoader {
     }
 
     private void createFutureSemesters() {
-        semesterRepo.save(new Semester("2015","SUMMER"));
-        semesterRepo.save(new Semester("2015","FALL"));
+        semesterRepo.save(new Semester("2015", "SUMMER"));
+        semesterRepo.save(new Semester("2015", "FALL"));
 
-        semesterRepo.save(new Semester("2016","SPRING"));
-        semesterRepo.save(new Semester("2016","SUMMER"));
-        semesterRepo.save(new Semester("2016","FALL"));
+        semesterRepo.save(new Semester("2016", "SPRING"));
+        semesterRepo.save(new Semester("2016", "SUMMER"));
+        semesterRepo.save(new Semester("2016", "FALL"));
 
-        semesterRepo.save(new Semester("2017","SPRING"));
-        semesterRepo.save(new Semester("2017","SUMMER"));
-        semesterRepo.save(new Semester("2017","FALL"));
+        semesterRepo.save(new Semester("2017", "SPRING"));
+        semesterRepo.save(new Semester("2017", "SUMMER"));
+        semesterRepo.save(new Semester("2017", "FALL"));
 
-        semesterRepo.save(new Semester("2018","SPRING"));
-        semesterRepo.save(new Semester("2018","SUMMER"));
-        semesterRepo.save(new Semester("2018","FALL"));
+        semesterRepo.save(new Semester("2018", "SPRING"));
+        semesterRepo.save(new Semester("2018", "SUMMER"));
+        semesterRepo.save(new Semester("2018", "FALL"));
 
-        semesterRepo.save(new Semester("2019","SPRING"));
-        semesterRepo.save(new Semester("2019","SUMMER"));
-        semesterRepo.save(new Semester("2019","FALL"));
+        semesterRepo.save(new Semester("2019", "SPRING"));
+        semesterRepo.save(new Semester("2019", "SUMMER"));
+        semesterRepo.save(new Semester("2019", "FALL"));
 
-        semesterRepo.save(new Semester("2020","SPRING"));
-        semesterRepo.save(new Semester("2020","SUMMER"));
-        semesterRepo.save(new Semester("2020","FALL"));
+        semesterRepo.save(new Semester("2020", "SPRING"));
+        semesterRepo.save(new Semester("2020", "SUMMER"));
+        semesterRepo.save(new Semester("2020", "FALL"));
 
-        semesterRepo.save(new Semester("2021","SPRING"));
-        semesterRepo.save(new Semester("2021","SUMMER"));
-        semesterRepo.save(new Semester("2021","FALL"));
+        semesterRepo.save(new Semester("2021", "SPRING"));
+        semesterRepo.save(new Semester("2021", "SUMMER"));
+        semesterRepo.save(new Semester("2021", "FALL"));
 
-        semesterRepo.save(new Semester("2022","SPRING"));
-        semesterRepo.save(new Semester("2022","SUMMER"));
-        semesterRepo.save(new Semester("2022","FALL"));
+        semesterRepo.save(new Semester("2022", "SPRING"));
+        semesterRepo.save(new Semester("2022", "SUMMER"));
+        semesterRepo.save(new Semester("2022", "FALL"));
     }
 
 
     private boolean courseAlreadyTaken(Course course, List<CourseOffering> takenCourses) {
-        for(CourseOffering courseOffering : takenCourses){
-            if(courseOffering.getCourse().getNumber().equals(course.getNumber())){
+        for (CourseOffering courseOffering : takenCourses) {
+            if (courseOffering.getCourse().getNumber().equals(course.getNumber())) {
                 return true;
             }
         }

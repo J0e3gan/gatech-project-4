@@ -1,10 +1,6 @@
 package gatech.course.optimizer.model;
 
-import gatech.course.optimizer.model.User.Role;
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Joe Egan on 4/13/15.

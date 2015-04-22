@@ -55,8 +55,8 @@ public class OptimizerConfiguration {
             loader.loadData(studentFile, courseFile, professorFile, taFile);
 
             // Create sample constraints
-            constraintRepo.save(new Constraint("MAX_COURSE_PER_SEMSESTER","Student can only take a certain amount of courses per semester", "3"));
-            constraintRepo.save(new Constraint("SMARTNESS_LEVEL","Students must be smart to attend GA-Tech", "IQ of at least 120"));
+            constraintRepo.save(new Constraint("MAX_COURSE_PER_SEMSESTER", "Student can only take a certain amount of courses per semester", "3"));
+            constraintRepo.save(new Constraint("SMARTNESS_LEVEL", "Students must be smart to attend GA-Tech", "IQ of at least 120"));
 
         } else {
             logger.info("Loading data from CSV files skipped");
