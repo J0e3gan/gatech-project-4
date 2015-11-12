@@ -142,7 +142,7 @@ public class DataLoader {
 
             // Ensure no duplicates are loaded.
             String profKey = profFirstName + " " + profLastName;
-            //System.out.println("** DEBUG:  Loading competencies for " + profKey + "..."); // FORNOW
+            System.out.println("** DEBUG:  Loading competencies for " + profKey + "..."); // FORNOW
             if (!professorMap.containsKey(profKey)) {
                 Professor prof = new Professor(profFirstName, profLastName);
 
@@ -150,7 +150,7 @@ public class DataLoader {
                 // Elements 3 through n are the course numbers (e.g. "CS 6310") for the professor's competencies.
                 for (int i = 2; i < parts.length; i++) {
                     String courseNumber = parts[i].replace("\"", "");
-                    //System.out.println("** DEBUG:  courseNumber == \"" + courseNumber + "\""); // FORNOW
+                    System.out.println("** DEBUG:  courseNumber == \"" + courseNumber + "\""); // FORNOW
                     Course competency = courseRepo.getCourseByNumber(courseNumber);
                     if (competency != null && !competencies.contains(competency)) {
                         competencies.add(competency);
@@ -158,7 +158,7 @@ public class DataLoader {
                 }
                 prof.setCompetencies(competencies);
 
-                /*
+                ///*
                 // FORNOW
                 System.out.print("** DEBUG:  Competencies to save for " + profKey + " are");
                 Iterator<Course> competenciesIter = competencies.iterator();
@@ -171,7 +171,7 @@ public class DataLoader {
                     i++;
                 }
                 System.out.println(".");
-                */
+                //*/
 
                 Professor savedProf = professorRepo.save(prof);
                 professorMap.put(profKey, savedProf);
